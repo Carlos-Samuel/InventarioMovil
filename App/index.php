@@ -1,41 +1,90 @@
 <!doctype html>
-<html lang="en" data-bs-theme="auto">
+<html lang="es" data-bs-theme="auto">
     <head>
         <?php
             include('partes/head.php')
         ?>
-        <style>
-            .primeButton {
-                height: 50px;
-                border-radius: 25px;
-            }
-        </style>
+		<style>
+			html,body { 
+				height: 100%; 
+			}
+
+			.global-container{
+				height:100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background-color: #f5f5f5;
+			}
+
+			form{
+				padding-top: 10px;
+				font-size: 14px;
+				margin-top: 30px;
+			}
+
+			.card-title{ font-weight:300; }
+
+			.btn{
+				font-size: 14px;
+				margin-top:20px;
+			}
+
+
+			.login-form{ 
+				width:330px;
+				margin:20px;
+			}
+
+			.sign-up{
+				text-align:center;
+				padding:20px 0 0;
+			}
+
+			.alert{
+				margin-bottom:-30px;
+				font-size: 13px;
+				margin-top:20px;
+			}
+
+			#footer {
+				position: fixed;
+				bottom: 0;
+				width: 100%;
+				/* Agrega cualquier otro estilo necesario para evitar superposiciones */
+				z-index: 9999; /* Por ejemplo, aumenta el valor del z-index para asegurar que esté por encima de otros elementos */
+				/* Agrega más estilos según tus necesidades */
+			}
+		</style>
     </head>
     <body>
         <?php
             include('partes/header.php')
-        ?>     
-        <div class = "container fullwidth mt-5">  
-            <div class="col-lg-6 col-xxl-4 my-5 mx-auto">
-                <div class="d-grid gap-2">
-                    <a class="btn btn-primary primeButton" href = "lista_alistamiento.php" role = "button">Alistamiento</a>
-                </div>
-                <br>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-secondary primeButton" type="button">Verificación</button>
-                </div>
-                <br>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-success primeButton" type="button">Entrega</button>
-                </div>
-                <br>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-danger primeButton" type="button">Logout</button>
-                </div>
-            </div>
-        </div>
-        <?php
+        ?>
+		<div class="global-container">
+			<div class="card login-form">
+				<div class="card-body">
+					<br>
+					<h3 class="text-center"><strong>Iniciar Sesión</strong></h3>
+					<div class="card-text">
+						<form action = "dashboard.php" method = "POST">
+							<div class="form-group">
+								<label for="usuarioCorreo">Usuario (Cédula)</label>
+								<input type="text" class="form-control form-control-sm" name = "cedula" id="cedula">
+							</div>
+							<div class="form-group">
+								<label for="contraseña">Contraseña</label>
+								<input type="password" class="form-control form-control-sm" name = "password" id="password">
+							</div>
+							<button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<?php
             include('partes/foot.php')
-        ?>   
+        ?>
     </body>
 </html>

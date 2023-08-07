@@ -1,4 +1,4 @@
-<title>AdminCS</title>
+<title>Inventario</title>
 
 <!-- Basico de la pagina -->
 <meta charset="utf-8">
@@ -7,7 +7,7 @@
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" name="viewport">
 
 <!-- Para movil -->
-<meta name = "viewport" content = "with=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 <!-- Icono de página -->
@@ -19,6 +19,6 @@
 <link rel="stylesheet" href="bootstrap-5.1.3-dist/css/bootstrap.min.css">
 <style>
     .current {
-        font-size: 24px; /* Puedes ajustar el tamaño según tus necesidades */
+        font-size: 24px;
     }
 </style>

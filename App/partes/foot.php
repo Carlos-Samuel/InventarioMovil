@@ -11,3 +11,7 @@
 <script src="js/magnific-popup.min.js"></script>
 <script src="js/slick.min.js"></script>
 <script src="js/custom.js"></script>
+
+<!-- Plugins JS start-->
+<script src="js/datatable/datatables/jquery.dataTables.min.js"></script>
+<script src="js/datatable/datatables/datatable.custom.js"></script>

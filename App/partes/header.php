@@ -6,10 +6,25 @@
     <div id="header">
         <div class="container">
             
-            <!-- Logo -->
-            <div id="logo">
-                <a href="/"><img src="images/logo.png" alt=""></a>
+            <!-- User Menu -->
+            <div class="header-widget">
+
+                <!-- Messages -->
+                <div class="header-notifications user-menu">
+                    <div class="header-notifications-trigger">
+                        <a href="#"><div class="user-avatar"><img src="images/icon.png" alt=""></div></a>
+                    </div>
+
+                    <div class="header-notifications-dropdown">
+                    
+                        <ul class="user-menu-small-nav">
+                            <li><a href="index.php"><i class="icon-material-outline-dashboard"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
+            <!-- User Menu / End -->
                 
         </div>
     </div>
