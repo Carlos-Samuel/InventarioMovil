@@ -163,11 +163,7 @@
         </style>
     </head>
     <body>
-        <?php
-            include('partes/header.php')
-        ?>
             <div class = "container fullwidth mt-5"> 
-                <br>
                 <a href = "lista_alistamiento.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
                 <br>
                 <br>

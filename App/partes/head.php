@@ -17,8 +17,24 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/colors/blue.css">
 <link rel="stylesheet" href="bootstrap-5.1.3-dist/css/bootstrap.min.css">
+
+<!-- Librerías CSS del sidebar -->
+<link rel='stylesheet' href='css/remixicon.css'>
+<link rel='stylesheet' href='css/css-pro-layout.css'>
+<link rel='stylesheet' href='css/fonts_googleapis.css'>
+<link rel="stylesheet" href="css/style_sidebar.css">
+
 <style>
     .current {
         font-size: 24px;
     }
+    @media screen and (max-width: 600px) {
+                /* Estilos para la alineación de los botones en una fila */
+                .layout.has-sidebar.fixed-sidebar.fixed-header {
+                    display: none;
+                }
+                .container.fullwidth.mt-5 {
+                    display: block;
+                }
+            }
 </style>

@@ -58,9 +58,6 @@
 		</style>
     </head>
     <body>
-        <?php
-            include('partes/header.php')
-        ?>
 		<div class="global-container">
 			<div class="card login-form">
 				<div class="card-body">

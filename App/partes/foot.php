@@ -15,3 +15,7 @@
 <!-- Plugins JS start-->
 <script src="js/datatable/datatables/jquery.dataTables.min.js"></script>
 <script src="js/datatable/datatables/datatable.custom.js"></script>
+
+<!-- JS de sidebar-->
+<script src='js/popper.min.js'></script>
+<script src="js/script_sidebar.js"></script>

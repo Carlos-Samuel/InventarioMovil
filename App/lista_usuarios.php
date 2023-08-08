@@ -36,6 +36,10 @@
 
             @media screen and (max-width: 600px) {
 
+                #saltoLinea {
+                    display: none;
+                }
+
                 table {
                     border: 0;
                 }
@@ -76,8 +80,10 @@
             include('partes/header.php')
         ?>
             <div class = "container fullwidth mt-5"> 
-                <br>
-                <br>
+                <div id ="saltoLinea">
+                    <br>
+                    <br>
+                </div>
                 <div class="col-sm-12">
                     <br>
                         <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>

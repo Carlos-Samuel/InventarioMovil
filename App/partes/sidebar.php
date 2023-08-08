@@ -1,41 +1,112 @@
-<div class="wrapper d-flex align-items-stretch">
-      <nav id="sidebar">
-        <div class="custom-menu">
-          <button type="button" id="sidebarCollapse" class="btn btn-primary">
-            <i class="fa fa-bars"></i>
-            <span class="sr-only">Toggle Menu</span>
-          </button>
-        </div>
-        <div class="p-4 pt-5">
-          <h1>Splash</h1>
-          <ul class="list-unstyled components mb-5">
-            <li class="active">
-              <a href="#" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-              <ul class="collapse list-unstyled" id="homeSubmenu">
-                <li>
-                  <a href="#">Home 1</a>
-                </li>
-                <li>
-                  <a href="#">Home 2</a>
-                </li>
-                <li>
-                  <a href="#">Home 3</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <a href="#">Portfolio</a>
-            </li>
-          </ul>
-          <div class="mb-5">
-          </div>
-          <div class="footer">
-            <p>
-              Copyright Mensaje de Samuel
-            </p>
-          </div>
-        </div>
-      </nav>
-      <div id="content" class="p-4 p-md-5 pt-5">
+<aside id="sidebar" class="sidebar break-point-sm has-bg-image">
+  <a id="btn-collapse" class="sidebar-collapser"><i class="ri-arrow-left-s-line"></i></a>
+  <div class="sidebar-layout">
+    <div class="sidebar-header">
+      <div class="pro-sidebar-logo">
+        <div>A</div>
+        <p id = "titulo_sidebar">Admin CS<p>
       </div>
     </div>
+    <div class="sidebar-content">
+      <nav class="menu open-current-submenu">
+        <ul>
+          <li class="menu-header"><span> INVENTARIO </span></li>
+          <li class="menu-item">
+            <a href="lista_alistamiento.php">
+              <span class="menu-icon">
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Alistamiento</span>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="lista_verificacion.php">
+              <span class="menu-icon">
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Verificación</span>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="#">
+              <span class="menu-icon">
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Entrega</span>
+            </a>
+          </li>
+          <li class="menu-header" style="padding-top: 20px"><span> REPORTES </span></li>
+          <li class="menu-item">
+            <a href="#">
+              <span class="menu-icon">
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Consulta de trazabilidad</span>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="#">
+              <span class="menu-icon">
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Estadisticas de carga</span>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="#">
+              <span class="menu-icon">
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Reporte de documentos</span>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a href="#">
+              <span class="menu-icon">
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Estadísticas</span>
+            </a>
+          </li>
+          <li class="menu-header" style="padding-top: 20px"><span> ADMINISTRACION </span></li>
+          <li class="menu-item">
+            <a href="#">
+              <span class="menu-icon">
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Perfiles y permisos</span>
+            </a>
+            <a href="index.php">
+              <span class="menu-icon">
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Logout</span>
+            </a>
+          </li>
+          <!-- <li class="menu-item sub-menu">
+            <a href="#">
+              <span class="menu-icon">
+                <i class="ri-vip-diamond-fill"></i>
+              </span>
+              <span class="menu-title">Components</span>
+            </a>
+            <div class="sub-menu-list">
+              <ul>
+                <li class="menu-item">
+                  <a href="#">
+                    <span class="menu-title">Grid</span>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="#">
+                    <span class="menu-title">Layout</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </li> -->
+        </ul>
+      </nav>
+    </div>
+  </div>
+</aside>
