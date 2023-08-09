@@ -280,9 +280,6 @@
                     <button id="cancelarForzado" class="btn btn-danger primeButton">Cancelar</button>
                 </div>
             </div>
-        <?php
-            include('partes/foot.php')
-        ?>
         <script>
             function vaciarEspacioTexto() {
                 document.getElementById('busqueda').value = '';

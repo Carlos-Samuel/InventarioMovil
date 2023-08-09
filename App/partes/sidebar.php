@@ -1,4 +1,4 @@
-<aside id="sidebar" class="sidebar break-point-sm has-bg-image">
+<aside id="sidebar" class="sidebar break-point-sm has-bg-image" style="display: none;">
   <a id="btn-collapse" class="sidebar-collapser"><i class="ri-arrow-left-s-line"></i></a>
   <div class="sidebar-layout">
     <div class="sidebar-header">

@@ -72,7 +72,6 @@
         </style>
     </head>
     <body>
-
         <div class="layout has-sidebar fixed-sidebar fixed-header">
             <?php
                 include('partes/sidebar.php')
@@ -80,10 +79,12 @@
             <div id="overlay" class="overlay"></div>
             <div class="layout">
                 <main class="content">
-                    <br>
-                    <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
-                    <br>
-                    <br>
+                    <div id = "contenidoMovil" style="display: none;">
+                        <br>
+                        <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
+                        <br>
+                        <br>
+                    </div>
                     <div class="table">
                         <table>
                             <thead>
@@ -135,11 +136,5 @@
         <?php
             include('partes/foot.php')
         ?>  
-
-
-
-
-
-
     </body>
 </html>

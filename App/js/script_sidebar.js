@@ -257,12 +257,17 @@ INNER_SUB_MENUS_BTN.forEach(element => {
 var sidebar = document.querySelector('#sidebar');
 var lista = document.querySelector('.col-lg-6.col-xxl-4.my-5.mx-auto');
 
+var contenido_movil = document.querySelector('#contenidoMovil');
+
 window.addEventListener('resize', function() {
     var screenWidth = window.innerWidth;
     if (screenWidth >= 600) {
       //Escritorio
       if (!!lista){
-        lista.style.display = 'none';
+        lista.style.display = 'none';   
+      }
+      if (!!contenido_movil){
+        contenido_movil.style.display = 'none';
       }
       if (!!sidebar){
         sidebar.style.display = 'block';
@@ -271,6 +276,9 @@ window.addEventListener('resize', function() {
       //Movil
       if (!!lista){
         lista.style.display = 'block';
+      }
+      if (!!contenido_movil){
+        contenido_movil.style.display = 'block';
       }
       if (!!sidebar){
         sidebar.style.display = 'none';
