@@ -6176,7 +6176,7 @@ table.basic-table tr:nth-child(odd) {
 table.basic-table { margin-bottom: 0; }
 
 
-@media screen and (max-width: 600px) {
+/* @media screen and (max-width: 600px) {
 
 	table { border: 0; }
 	table th { display: none; }
@@ -6199,7 +6199,7 @@ table.basic-table { margin-bottom: 0; }
 	}
 
 	table td:last-child { border-bottom: 0; }
-}
+} */
 
 /* ---------------------------------- */
 /* Accordion
@@ -16867,12 +16867,13 @@ ul.dashboard-box-list > li:hover {
 		font-size: 24px;
 	}
 
+	/* Estilos para la alineación de los botones en una fila  
 	@media screen and (max-width: 600px) {
-		/* Estilos para la alineación de los botones en una fila */
-		.layout.has-sidebar.fixed-sidebar.fixed-header {
+		#sidebar {
 			display: none;
 		}
-		.container.fullwidth.mt-5 {
+		 .container.fullwidth.mt-5 {
 			display: block;
-		}
+		} 
 	}
+*/

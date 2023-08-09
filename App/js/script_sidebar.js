@@ -202,11 +202,11 @@ document.getElementById("btn-collapse").addEventListener("click", () => {
 /**
  * sidebar toggle handler (on break point )
  */
-document.getElementById("btn-toggle").addEventListener("click", () => {
-  SIDEBAR_EL.classList.toggle("toggled");
+// document.getElementById("btn-toggle").addEventListener("click", () => {
+//   SIDEBAR_EL.classList.toggle("toggled");
 
-  updatePoppersTimeout();
-});
+//   updatePoppersTimeout();
+// });
 
 /**
  * toggle sidebar on overlay click
@@ -254,20 +254,27 @@ INNER_SUB_MENUS_BTN.forEach(element => {
 
 //Codigo personal
 
-var hideElement = document.querySelector('.layout.has-sidebar.fixed-sidebar.fixed-header');
-var showElement = document.querySelector('.container.fullwidth.mt-5');
+var sidebar = document.querySelector('#sidebar');
+var lista = document.querySelector('.col-lg-6.col-xxl-4.my-5.mx-auto');
 
 window.addEventListener('resize', function() {
     var screenWidth = window.innerWidth;
-    console.log("Revisar");
-    if (screenWidth <= 600) {
-        hideElement.style.display = 'none';
-        showElement.style.display = 'block';
-        console.log("Movil");
+    if (screenWidth >= 600) {
+      //Escritorio
+      if (!!lista){
+        lista.style.display = 'none';
+      }
+      if (!!sidebar){
+        sidebar.style.display = 'block';
+      }
     } else {
-        hideElement.style.display = 'block';
-        showElement.style.display = 'none';
-        console.log("Escritorio");
+      //Movil
+      if (!!lista){
+        lista.style.display = 'block';
+      }
+      if (!!sidebar){
+        sidebar.style.display = 'none';
+      }
     }
 });
 
