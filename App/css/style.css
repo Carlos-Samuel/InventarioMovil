@@ -16859,3 +16859,20 @@ ul.dashboard-box-list > li:hover {
 	.padding-left-90 { padding-left: 90px !important; }
 	.padding-left-95 { padding-left: 95px !important; }
 	.padding-left-100 { padding-left: 100px !important; }
+
+
+	/* Estilos personales */
+
+	.current {
+		font-size: 24px;
+	}
+
+	@media screen and (max-width: 600px) {
+		/* Estilos para la alineación de los botones en una fila */
+		.layout.has-sidebar.fixed-sidebar.fixed-header {
+			display: none;
+		}
+		.container.fullwidth.mt-5 {
+			display: block;
+		}
+	}

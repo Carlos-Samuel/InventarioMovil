@@ -25,16 +25,5 @@
 <link rel="stylesheet" href="css/style_sidebar.css">
 
 <style>
-    .current {
-        font-size: 24px;
-    }
-    @media screen and (max-width: 600px) {
-                /* Estilos para la alineación de los botones en una fila */
-                .layout.has-sidebar.fixed-sidebar.fixed-header {
-                    display: none;
-                }
-                .container.fullwidth.mt-5 {
-                    display: block;
-                }
-            }
+
 </style>

@@ -28,7 +28,7 @@
             </main>
             </div>
         </div>
-        <div class = "container fullwidth mt-5" display = "none">
+        <div class = "container fullwidth mt-5">
             <div class="col-lg-6 col-xxl-4 my-5 mx-auto">
                 <div class="d-grid gap-2">
                     <a class="btn btn-danger primeButton" href = "lista_alistamiento.php" role = "button">Alistamiento</a>

@@ -251,3 +251,24 @@ INNER_SUB_MENUS_BTN.forEach(element => {
     slideToggle(element.nextElementSibling);
   });
 });
+
+//Codigo personal
+
+var hideElement = document.querySelector('.layout.has-sidebar.fixed-sidebar.fixed-header');
+var showElement = document.querySelector('.container.fullwidth.mt-5');
+
+window.addEventListener('resize', function() {
+    var screenWidth = window.innerWidth;
+    console.log("Revisar");
+    if (screenWidth <= 600) {
+        hideElement.style.display = 'none';
+        showElement.style.display = 'block';
+        console.log("Movil");
+    } else {
+        hideElement.style.display = 'block';
+        showElement.style.display = 'none';
+        console.log("Escritorio");
+    }
+});
+
+window.dispatchEvent(new Event('resize'));
