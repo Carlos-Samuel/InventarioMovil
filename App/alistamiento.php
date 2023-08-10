@@ -4,164 +4,7 @@
         <?php
             include('partes/head.php')
         ?>
-        <style>
-            body {
-                font-family: arial;
-            }
-
-            table {
-                border: 1px solid #ccc;
-                width: 100%;
-                margin:0;
-                padding:0;
-                border-collapse: collapse;
-                border-spacing: 0;
-            }
-
-            table tr {
-                border: 1px solid #ddd;
-                padding: 5px;
-            }
-
-            table th, table td {
-                padding: 10px;
-                text-align: center;
-            }
-
-            table th {
-                text-transform: uppercase;
-                font-size: 14px;
-                letter-spacing: 1px;
-            }
-
-            .input-container {
-                text-align: right;
-            }
-
-            .input-container input{
-                width: 100px;
-                display: inline-block;
-                text-align: center;
-            }
-
-            .buscador {
-                text-align: center;
-            }
-
-            #busqueda {
-                max-width: 200px;
-                width: 100%; 
-                margin: 0 auto;
-            }
-
-            .btn {
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-                margin: 10px;
-            }
-
-            /* Estilos para el diálogo */
-            .dialogo {
-                display: none;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                padding: 20px;
-                border-radius: 6px;
-                box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
-            }
-
-            #dialogoConfirmacionCerrar {
-                display: none; /* Ocultar el diálogo inicialmente */
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                padding: 20px;
-                border-radius: 6px;
-                box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
-            }
-
-            /* Estilos para los botones dentro del diálogo específico */
-            #dialogoConfirmacionCerrar button {
-                margin: 10px;
-            }
-
-            /* Estilos para la alineación de los botones en una fila */
-            #dialogoConfirmacionCerrar .boton-container {
-                display: flex;
-                justify-content: center;
-            }
-
-            #dialogoConfirmacionForzado {
-                display: none; /* Ocultar el diálogo inicialmente */
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                padding: 20px;
-                border-radius: 6px;
-                box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
-            }
-
-            /* Estilos para los botones dentro del diálogo específico */
-            #dialogoConfirmacionForzado button {
-                margin: 10px;
-            }
-
-            /* Estilos para la alineación de los botones en una fila */
-            #dialogoConfirmacionForzado .boton-container {
-                display: flex;
-                justify-content: center;
-            }
-
-            @media screen and (max-width: 600px) {
-
-                table {
-                    border: 0;
-                }
-
-                table thead {
-                    display: none;
-                }
-
-                table tr {
-                    margin-bottom: 10px;
-                    display: block;
-                    border-bottom: 2px solid #ddd;
-                }
-
-                table td {
-                    display: block;
-                    text-align: right;
-                    font-size: 13px;
-                    border-bottom: 1px dotted #ccc;
-                }
-
-                table td:last-child {
-                    border-bottom: 0;
-                }
-
-                table td:before {
-                    content: attr(data-label);
-                    float: left;
-                    text-transform: uppercase;
-                    font-weight: bold;
-                }
-
-                .dialogo {
-                    width: 80%;
-                }
-            }
-
-        </style>
+        <link rel="stylesheet" href="css_individuales/alistamiento.css">
     </head>
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
@@ -208,13 +51,13 @@
                         </div>
                         <br>
                         <div class="d-grid gap-2">
-                            <button class="btn btn-danger primeButton" type="button">Pendiente</button>
+                            <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
                         </div>
                         <div class="d-grid gap-2">
-                            <button id="botonCerrar" class="btn btn-warning primeButton" type="button">Cerrar</button>
+                            <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
                         </div>
                         <div class="d-grid gap-2">
-                            <button id="botonDevolver" class="btn btn-secondary primeButton" type="button">Devolver</button>
+                            <button id="botonDevolver" class="btn btn-danger primeButton" type="button">Devolver</button>
                         </div>
                         <div class="d-grid gap-2">
                             <button id="botonForzado" class="btn btn-info primeButton" type="button">Cierre forzado</button>
@@ -275,101 +118,40 @@
                 </main>
             </div>
         </div>
-        <div id="dialogoConfirmacionCerrar" class="dialogo">
-            <p>¿Estás seguro de que desea cerrar el proceso?</p>
-            <div class="boton-container">
-                <button id="confirmarCerrar" class="btn btn-success primeButton">Aceptar</button>
-                <button id="cancelarCerrar" class="btn btn-danger primeButton">Cancelar</button>
+        <div id="modalConfirmarCerrar" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>¿Estás seguro de que desea cerrar el proceso?</p>
+                <div class="boton-container">
+                    <button id="confirmarCerrar" class="btn btn-success primeButton">Aceptar</button>
+                    <button id="cancelarCerrar" class="btn btn-danger primeButton">Cancelar</button>
+                </div>
             </div>
         </div>
-        <div id="dialogoConfirmacionForzado" class="dialogo">
-            <p>¿Estás seguro de que desea cerrar el proceso?</p>
-            <input type="password" placeholder="Ingrese la clave de usuario">
-            <div class="boton-container">
-                <button id="confirmarForzado" class="btn btn-success primeButton">Aceptar</button>
-                <button id="cancelarForzado" class="btn btn-danger primeButton">Cancelar</button>
+        <div id="modalConfirmarDevolver" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>¿Estás seguro de que desea devolver la factura?</p>
+                <div class="boton-container">
+                    <button id="confirmarDevolver" class="btn btn-success primeButton">Aceptar</button>
+                    <button id="cancelarDevolver" class="btn btn-danger primeButton">Cancelar</button>
+                </div>
             </div>
         </div>
+        <div id="modalConfirmarForzado" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>¿Estás seguro de que desea forzar el proceso?</p>
+                <input type="password" placeholder="Ingrese la clave de usuario">
+                <div class="boton-container">
+                    <button id="confirmarForzado" class="btn btn-success primeButton">Aceptar</button>
+                    <button id="cancelarForzado" class="btn btn-danger primeButton">Cancelar</button>
+                </div>
+            </div>
+        </div>
+        <script src="scripts/alistamiento.js"></script>
         <?php
             include('partes/foot.php')
         ?>  
-        <script>
-            function vaciarEspacioTexto() {
-                document.getElementById('busqueda').value = '';
-            }
-            const botonConfirmar = document.getElementById('botonConfirmar');
-            const botonCerrar = document.getElementById('botonCerrar');
-            const botonForzado = document.getElementById('botonForzado');
-            const dialogoConfirmacionCerrar = document.getElementById('dialogoConfirmacionCerrar');
-            const dialogoConfirmacionForzado = document.getElementById('dialogoConfirmacionForzado');
-        
-            const btnAceptarCerrar = document.getElementById('confirmarCerrar');
-            const btnCancelarCerrar = document.getElementById('cancelarCerrar');
-
-            const btnAceptarForzado = document.getElementById('confirmarForzado');
-            const btnCancelarForzado = document.getElementById('cancelarForzado');
-
-            botonCerrar.addEventListener('click', mostrarDialogoCerrar);
-            botonForzado.addEventListener('click', mostrarDialogoForzado);
-
-            btnAceptarCerrar.addEventListener('click', confirmarAccionCerrar);
-            btnCancelarCerrar.addEventListener('click', ocultarDialogo);
-
-            btnAceptarForzado.addEventListener('click', confirmarAccionForzado);
-            btnCancelarForzado.addEventListener('click', ocultarDialogo);
-
-            function mostrarDialogoCerrar() {
-                dialogoConfirmacionCerrar.style.display = 'block';
-            }
-
-            function mostrarDialogoForzado() {
-                dialogoConfirmacionForzado.style.display = 'block';
-            }
-
-            function ocultarDialogo() {
-                dialogoConfirmacionCerrar.style.display = 'none';
-                dialogoConfirmacionForzado.style.display = 'none';
-            }
-
-            function confirmarAccionCerrar() {
-                ocultarDialogo();
-                window.location.href = 'lista_alistamiento.php';
-            }
-
-            function confirmarAccionForzado() {
-                ocultarDialogo();
-                window.location.href = 'lista_alistamiento.php';
-            }
-
-            document.getElementById('busqueda').addEventListener('keyup', busqueda);
-
-            function busqueda(){
-                let input, filter, table, tr, td, i, j, txtValue;
-                input = document.getElementById('busqueda');
-                filter = input.value.toUpperCase();
-                table = document.getElementById('tablaAlistamiento');
-                tbody = table.getElementsByTagName('tbody')[0];
-                tr = tbody.getElementsByTagName('tr');
-
-                for (i = 0; i < tr.length; i++) {
-                    td = tr[i].getElementsByTagName('td');
-                    var cont = 0;
-                    for (j = 0; j < 2; j++) {
-                        if (td[j]) {
-                            txtValue = td[j].textContent || td[j].innerText;
-                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                                tr[i].style.display = '';
-                                cont++;
-                            } 
-                        }
-                    }
-                    if (cont == 0){
-                        tr[i].style.display = 'none';
-                    }
-                }
-            };
-
-
-        </script>   
     </body>
 </html>

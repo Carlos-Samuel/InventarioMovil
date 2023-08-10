@@ -168,37 +168,47 @@ const slideDown = (target, duration = ANIMATION_DURATION) => {
   }, duration);
 };
 
-const slideToggle = (target, duration = ANIMATION_DURATION) => {
-  if (window.getComputedStyle(target).display === "none")
-  return slideDown(target, duration);
-  return slideUp(target, duration);
-};
+try{
+  const slideToggle = (target, duration = ANIMATION_DURATION) => {
+    if (window.getComputedStyle(target).display === "none")
+    return slideDown(target, duration);
+    return slideUp(target, duration);
+  };
+}catch(error){
+  console.log(error);
+}
 
 const PoppersInstance = new Poppers();
+
 
 /**
  * wait for the current animation to finish and update poppers position
  */
-const updatePoppersTimeout = () => {
-  setTimeout(() => {
-    PoppersInstance.updatePoppers();
-  }, ANIMATION_DURATION);
-};
-
+try{
+  const updatePoppersTimeout = () => {
+    setTimeout(() => {
+      PoppersInstance.updatePoppers();
+    }, ANIMATION_DURATION);
+  };
+}catch(error){
+  console.log(error);
+}
 /**
  * sidebar collapse handler
  */
-document.getElementById("btn-collapse").addEventListener("click", () => {
-  SIDEBAR_EL.classList.toggle("collapsed");
-  PoppersInstance.closePoppers();
-  if (SIDEBAR_EL.classList.contains("collapsed"))
-  FIRST_SUB_MENUS_BTN.forEach(element => {
-    element.parentElement.classList.remove("open");
+try{
+  document.getElementById("btn-collapse").addEventListener("click", () => {
+    SIDEBAR_EL.classList.toggle("collapsed");
+    PoppersInstance.closePoppers();
+    if (SIDEBAR_EL.classList.contains("collapsed"))
+    FIRST_SUB_MENUS_BTN.forEach(element => {
+      element.parentElement.classList.remove("open");
+    });
+    updatePoppersTimeout();
   });
-
-  updatePoppersTimeout();
-});
-
+}catch(error){
+  console.log(error);
+}
 /**
  * sidebar toggle handler (on break point )
  */
@@ -211,79 +221,104 @@ document.getElementById("btn-collapse").addEventListener("click", () => {
 /**
  * toggle sidebar on overlay click
  */
-document.getElementById("overlay").addEventListener("click", () => {
-  SIDEBAR_EL.classList.toggle("toggled");
-});
+try{
+  document.getElementById("overlay").addEventListener("click", () => {
+    SIDEBAR_EL.classList.toggle("toggled");
+  });
 
-const defaultOpenMenus = document.querySelectorAll(".menu-item.sub-menu.open");
+  const defaultOpenMenus = document.querySelectorAll(".menu-item.sub-menu.open");
 
-defaultOpenMenus.forEach(element => {
-  element.lastElementChild.style.display = "block";
-});
+  defaultOpenMenus.forEach(element => {
+    element.lastElementChild.style.display = "block";
+  });
+}catch(error){
+  console.log(error);
+}
 
 /**
  * handle top level submenu click
  */
-FIRST_SUB_MENUS_BTN.forEach(element => {
-  element.addEventListener("click", () => {
-    if (SIDEBAR_EL.classList.contains("collapsed"))
-    PoppersInstance.togglePopper(element.nextElementSibling);else
-    {
-      const parentMenu = element.closest(".menu.open-current-submenu");
-      if (parentMenu)
-      parentMenu.
-      querySelectorAll(":scope > ul > .menu-item.sub-menu > a").
-      forEach(
-      (el) =>
-      window.getComputedStyle(el.nextElementSibling).display !==
-      "none" && slideUp(el.nextElementSibling));
+try{
+  FIRST_SUB_MENUS_BTN.forEach(element => {
+    element.addEventListener("click", () => {
+      if (SIDEBAR_EL.classList.contains("collapsed"))
+      PoppersInstance.togglePopper(element.nextElementSibling);else
+      {
+        const parentMenu = element.closest(".menu.open-current-submenu");
+        if (parentMenu)
+        parentMenu.
+        querySelectorAll(":scope > ul > .menu-item.sub-menu > a").
+        forEach(
+        (el) =>
+        window.getComputedStyle(el.nextElementSibling).display !==
+        "none" && slideUp(el.nextElementSibling));
 
-      slideToggle(element.nextElementSibling);
-    }
+        slideToggle(element.nextElementSibling);
+      }
+    });
   });
-});
+}catch(error){
+  console.log(error);
+}
+
 
 /**
  * handle inner submenu click
  */
-INNER_SUB_MENUS_BTN.forEach(element => {
-  element.addEventListener("click", () => {
-    slideToggle(element.nextElementSibling);
+
+try{
+
+  INNER_SUB_MENUS_BTN.forEach(element => {
+    element.addEventListener("click", () => {
+      slideToggle(element.nextElementSibling);
+    });
   });
-});
+
+}catch(error){
+  console.log(error);
+}
+
+
+
+
 
 //Codigo personal
 
-var sidebar = document.querySelector('#sidebar');
-var lista = document.querySelector('.col-lg-6.col-xxl-4.my-5.mx-auto');
+try{
 
-var contenido_movil = document.querySelector('#contenidoMovil');
+  var sidebar = document.querySelector('#sidebar');
+  var lista = document.querySelector('.col-lg-6.col-xxl-4.my-5.mx-auto');
+  var contenido_movil = document.querySelector('#contenidoMovil');
 
-window.addEventListener('resize', function() {
-    var screenWidth = window.innerWidth;
-    if (screenWidth >= 600) {
-      //Escritorio
-      if (!!lista){
-        lista.style.display = 'none';   
+  window.addEventListener('resize', function() {
+      var screenWidth = window.innerWidth;
+      if (screenWidth >= 600) {
+        //Escritorio
+        if (!!lista){
+          lista.style.display = 'none';   
+        }
+        if (!!contenido_movil){
+          contenido_movil.style.display = 'none';
+        }
+        if (!!sidebar){
+          sidebar.style.display = 'block';
+        }
+      } else {
+        //Movil
+        if (!!lista){
+          lista.style.display = 'block';
+        }
+        if (!!contenido_movil){
+          contenido_movil.style.display = 'block';
+        }
+        if (!!sidebar){
+          sidebar.style.display = 'none';
+        }
       }
-      if (!!contenido_movil){
-        contenido_movil.style.display = 'none';
-      }
-      if (!!sidebar){
-        sidebar.style.display = 'block';
-      }
-    } else {
-      //Movil
-      if (!!lista){
-        lista.style.display = 'block';
-      }
-      if (!!contenido_movil){
-        contenido_movil.style.display = 'block';
-      }
-      if (!!sidebar){
-        sidebar.style.display = 'none';
-      }
-    }
-});
+  });
 
-window.dispatchEvent(new Event('resize'));
+  window.dispatchEvent(new Event('resize'));
+
+}catch(error){
+  console.log(error);
+}

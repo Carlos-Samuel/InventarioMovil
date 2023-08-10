@@ -111,7 +111,7 @@
                                     <td data-label="HoraDoc">8:30 AM</td>
                                     <td data-label="Observacion">Ser muy demasiado muchisimo cuidadoso</td>
                                     <td data-label="Accion">
-                                        <a href = "alistamiento.php" ><button class="btn btn-primary primeButton" type="button">Detalles</button></a>
+                                        <a href = "alistamiento.php" ><button class="btn btn-primary primeButton" type="button">Procesar</button></a>
                                     </td>
                                 </tr>
                                 <tr>
@@ -124,7 +124,7 @@
                                     <td data-label="HoraDoc">8:30 AM</td>
                                     <td data-label="Observacion">Ser muy demasiado muchisimo cuidadoso</td>
                                     <td data-label="Accion">
-                                        <a href = "alistamiento.php" ><button class="btn btn-primary primeButton" type="button">Detalles</button></a>
+                                        <a href = "alistamiento.php" ><button class="btn btn-primary primeButton" type="button">Procesar</button></a>
                                     </td>
                                 </tr>
                             </tbody>
