@@ -37,7 +37,7 @@
           </li>
           <li class="menu-header" style="padding-top: 20px"><span> REPORTES </span></li>
           <li class="menu-item">
-            <a href="#">
+            <a href="trazabilidad.php">
               <span class="menu-icon">
                 <i class="ri-book-2-fill"></i>
               </span>
@@ -76,7 +76,7 @@
               </span>
               <span class="menu-title">Usuarios</span>
             </a>
-            <a href="#">
+            <a href="lista_bitacora.php">
               <span class="menu-icon" >
                 <i class="ri-book-2-fill"></i>
               </span>
@@ -90,7 +90,7 @@
             </a>
             <hr>
             <div class = "container" style = "text-align: center;">
-              <small>Softwares CS todos los derechos reservados</small>
+              <small>Software CS, todos los derechos reservados.</small>
             </div>
           <!-- 
           </li> -->
