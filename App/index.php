@@ -79,7 +79,7 @@
 			}
 
 			.global-container {
-				background-color: #18519c !important;
+				background-color: #219ebc !important;
 			}
 
 			@media screen and (max-width: 600px) {

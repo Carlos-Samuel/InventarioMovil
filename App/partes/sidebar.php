@@ -41,7 +41,7 @@
               <span class="menu-icon">
                 <i class="ri-book-2-fill"></i>
               </span>
-              <span class="menu-title">Consulta de trazabilidad</span>
+              <span class="menu-title">Trazabilidad</span>
             </a>
           </li>
           <li class="menu-item">
@@ -57,24 +57,30 @@
               <span class="menu-icon">
                 <i class="ri-book-2-fill"></i>
               </span>
-              <span class="menu-title">Reporte de documentos</span>
+              <span class="menu-title">Documentos</span>
             </a>
           </li>
-          <li class="menu-item">
+          <!-- <li class="menu-item">
             <a href="#">
               <span class="menu-icon">
                 <i class="ri-book-2-fill"></i>
               </span>
               <span class="menu-title">Estadísticas</span>
             </a>
-          </li>
+          </li> -->
           <li class="menu-header" style="padding-top: 20px"><span> ADMINISTRACION </span></li>
           <li class="menu-item">
-            <a href="#">
+            <a href="lista_usuarios.php">
               <span class="menu-icon">
                 <i class="ri-book-2-fill"></i>
               </span>
-              <span class="menu-title">Perfiles y permisos</span>
+              <span class="menu-title">Usuarios</span>
+            </a>
+            <a href="#">
+              <span class="menu-icon" >
+                <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Bitacora</span>
             </a>
             <a href="index.php">
               <span class="menu-icon">
@@ -82,7 +88,13 @@
               </span>
               <span class="menu-title">Logout</span>
             </a>
-          </li>
+            <hr>
+            <div class = "container" style = "text-align: center;">
+              <small>Softwares CS todos los derechos reservados</small>
+            </div>
+          <!-- 
+          </li> -->
+   
           <!-- <li class="menu-item sub-menu">
             <a href="#">
               <span class="menu-icon">
