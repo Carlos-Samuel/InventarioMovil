@@ -19,3 +19,6 @@
 <!-- JS de sidebar-->
 <script src='js/popper.min.js'></script>
 <script src="js/script_sidebar.js"></script>
+
+<!-- Js de sweet alert -->
+<script src="js/sweetalert2@10.js"></script>

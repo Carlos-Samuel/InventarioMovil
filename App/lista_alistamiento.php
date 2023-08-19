@@ -1,3 +1,19 @@
+<?php
+    session_start(); 	
+
+    if (!isset($_SESSION["cedula"]) || !isset($_SESSION["nombres"])) {
+        header("Location: index.php");
+        exit();
+    }
+
+    $permiso1 = "Admin";
+    $permiso2 = "Alistamiento";
+
+    if (!(strpos($_SESSION['permisos'], $permiso1) || strpos($_SESSION['permisos'], $permiso2))) {
+        header("Location: dashboard.php");
+        exit();
+    }
+?>
 <!doctype html>
 <html lang="es" data-bs-theme="auto">
     <head>
@@ -10,6 +26,7 @@
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
             <?php
+                $activado = "Alistamiento";
                 include('partes/sidebar.php')
             ?>  
             <div id="overlay" class="overlay"></div>

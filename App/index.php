@@ -1,3 +1,12 @@
+<?php
+	session_start(); 	
+
+	if (isset($_SESSION["cedula"]) && isset($_SESSION["nombres"])) {
+		header("Location: dashboard.php");
+		exit();
+	}
+?>
+
 <!doctype html>
 <html lang="es" data-bs-theme="auto">
     <head>
@@ -98,13 +107,19 @@
 			<div class="card login-form">
 				<div class="card-body">
 					<h3 class="text-center"><strong>Iniciar Sesión</strong></h3>
+					<?php 
+						if(isset($_GET['mensaje'])) {
+							$mensaje = $_GET['mensaje'];
+							include('partes/mensaje.php');
+						}
+                	?>
 					<div class="card-text">
-						<form action = "dashboard.php" method = "POST">
+						<form action = "controladores/iniciarSesion.php" method = "POST">
 							<div class="form-group">
 								<label for="usuarioCorreo">Usuario (Cédula)</label>
 								<br>
 								<br>
-								<input type="text" class="form-control form-control-sm" name = "cedula" id="cedula">
+								<input type="text" class="form-control form-control-sm" name = "cedula" id="cedula" required>
 							</div>
 							<br>
 							<div class="form-group">
@@ -112,7 +127,7 @@
 								<div class="row">
 									<div class="col-10">
 										<br>
-										<input type="password" class="form-control form-control-sm" name = "password" id="password">
+										<input type="password" class="form-control form-control-sm" name = "password" id="password" required>
 									</div>
 									<div class="col-2">
 										<button id = "botonMostrar"class = "btn btn-primary" type = "button" onclick = "mostrarContrasena()">Mostrar</button>

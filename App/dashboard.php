@@ -1,3 +1,11 @@
+<?php
+    session_start(); 	
+
+    if (!isset($_SESSION["cedula"]) || !isset($_SESSION["nombres"])) {
+        header("Location: index.php");
+        exit();
+    }
+?>
 <!doctype html>
 <html lang="es" data-bs-theme="auto">
     <head>
@@ -15,7 +23,7 @@
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
             <?php
-                include('partes/sidebar.php')
+                include('partes/sidebar.php');
             ?>  
             <div id="overlay" class="overlay"></div>
             <div class="layout">

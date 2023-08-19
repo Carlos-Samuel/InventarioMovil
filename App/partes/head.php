@@ -18,12 +18,33 @@
 <link rel="stylesheet" href="css/colors/blue.css">
 <link rel="stylesheet" href="bootstrap-5.1.3-dist/css/bootstrap.min.css">
 
+<style>
+    .mensaje {
+        position: relative;
+        background-color: #c3e3fc;
+        padding: 20px;
+        border: 1px solid #369;
+        text-align: center;
+        font-size: 18px;
+        color: #333;
+    }
+    .cerrar {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 20px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
 <!-- Librerías CSS del sidebar -->
 <link rel='stylesheet' href='css/remixicon.css'>
 <link rel='stylesheet' href='css/css-pro-layout.css'>
 <link rel='stylesheet' href='css/fonts_googleapis.css'>
 <link rel="stylesheet" href="css/style_sidebar.css">
 
-<style>
 
-</style>
+<!-- Para iconos -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">

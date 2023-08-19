@@ -9,7 +9,8 @@
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
             <?php
-                include('partes/sidebar.php')
+                $activado = "Alistamiento";
+                include('partes/sidebar.php');
             ?>  
             <div id="overlay" class="overlay"></div>
             <div class="layout">
