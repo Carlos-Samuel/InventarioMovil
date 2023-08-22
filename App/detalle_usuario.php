@@ -35,7 +35,7 @@
                 $Correo = $row['Correo'];
     
             } else {
-
+                echo "No se encontro el usuario.";
             }
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();

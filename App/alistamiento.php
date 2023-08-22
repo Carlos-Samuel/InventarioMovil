@@ -1,3 +1,69 @@
+<?php
+    session_start(); 	
+
+    if (!isset($_SESSION["cedula"]) || !isset($_SESSION["nombres"])) {
+        header("Location: index.php");
+        exit();
+    }
+
+    $permiso1 = "Admin";
+    $permiso2 = "Alistamiento";
+
+    if (!(strpos($_SESSION['permisos'], $permiso1) || strpos($_SESSION['permisos'], $permiso2))) {
+        header("Location: dashboard.php");
+        exit();
+    }
+
+    require_once 'controladores/Connection.php';
+
+    if(isset($_GET['id'])) {
+        try{
+            $id_recibido = urldecode($_GET['id']);
+
+            $con = Connection::getInstance()->getConnection();
+            $quer = $con->query("select * from Facturas where vtaid = " . $id_recibido . ";");
+    
+            if ($quer->num_rows > 0) {
+                $row = $quer->fetch_assoc();
+        
+                $prefijo = $row['PrfId'];
+                $numDoc = $row['VtaNum'];
+                $fecha = $row['vtafec'];
+                $nombre = $row['TerNom'];
+                $razon = $row['TerRaz'];
+                $ciudad = $row['CiuNom'];
+                $vendedor = $row['VenNom'];
+                $hora = $row['vtahor'];
+    
+            } else {
+                echo "No se encontro la factura.";
+            }
+
+            $con2 = Connection::getInstance()->getConnection();
+            $quer2 = $con2->query("select * from Productos where vtaid = " . $id_recibido . ";");
+
+            $datosProductos = array();
+    
+            while ($columna = $quer2->fetch_assoc()) {
+                $row['item'] = $columna['ProId'];
+                $row['descripcion'] = $columna['ProNom'];
+                $row['ubicacion'] = $columna['ProUbica'];
+                $row['presentacion'] = $columna['ProPresentacion'];
+                $row['cantidad'] = $columna['VtaCant'];
+                $row['alistado'] = $columna['AlisCant'];
+                $row['diferencia'] = $columna['VtaCant'] - $columna['AlisCant'];
+    
+                $datosProductos[] = $row;
+            }
+
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    } else {
+        echo "No se recibió ningún valor.";
+    }
+
+?>
 <!doctype html>
 <html lang="es" data-bs-theme="auto">
     <head>
@@ -38,14 +104,14 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td data-label="Prefijo">RMV</td>
-                                        <td data-label="Doc">1234</td>
-                                        <td data-label="Fecha">01/11/2021</td>
-                                        <td data-label="NombreCliente">Sofia Pérez</td>
-                                        <td data-label="RazonSocial">Tienda Sofia</td>
-                                        <td data-label="Ciudad">Villavicencio</td>
-                                        <td data-label="Vendedor">Carlos</td>
-                                        <td data-label="HoraDoc">8:30 AM</td>
+                                        <td data-label="Prefijo"><?php echo $prefijo ?></td>
+                                        <td data-label="Doc"><?php echo $numDoc ?></td>
+                                        <td data-label="Fecha"><?php echo $fecha ?></td>
+                                        <td data-label="NombreCliente"><?php echo $nombre ?></td>
+                                        <td data-label="RazonSocial"><?php echo $razon ?></td>
+                                        <td data-label="Ciudad"><?php echo $ciudad ?></td>
+                                        <td data-label="Vendedor"><?php echo $vendedor ?></td>
+                                        <td data-label="HoraDoc"><?php echo $hora ?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -84,33 +150,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td data-label="Item">010101</td>
-                                        <td data-label="Descripcion">Galón pintura</td>
-                                        <td data-label="Ubicacion">P1 E2 E3</td>
-                                        <td data-label="Presentacion">Galón</td>
-                                        <td data-label="Cantidad">2</td>
-                                        <td data-label="Alistado" class="input-container"><input type="number" id="numero" name="numero" value="2"></td>
-                                        <td data-label="Diferencia">0</td>
-                                    </tr>
-                                    <tr>
-                                        <td data-label="Item">100109</td>
-                                        <td data-label="Descripcion">Puntilla de pulgada</td>
-                                        <td data-label="Ubicacion">P2 E4 E1</td>
-                                        <td data-label="Presentacion">Caja</td>
-                                        <td data-label="Cantidad">2</td>
-                                        <td data-label="Alistado" class="input-container"><input type="number" id="numero" name="numero" value="1"></td>
-                                        <td data-label="Diferencia">1</td>
-                                    </tr>
-                                    <tr>
-                                        <td data-label="Item">200234</td>
-                                        <td data-label="Descripcion">Varilla</td>
-                                        <td data-label="Ubicacion">P5 E5 E6</td>
-                                        <td data-label="Presentacion">Unidad</td>
-                                        <td data-label="Cantidad">50</td>
-                                        <td data-label="Alistado" class="input-container"><input type="number" id="numero" name="numero" value="48"></td>
-                                        <td data-label="Diferencia">2</td>
-                                    </tr>
+                                    <?php
+                                        foreach ($datosProductos as $producto) {
+                                    ?>
+                                        <tr>
+                                            <td data-label="Item"><?php echo $producto['item'] ?></td>
+                                            <td data-label="Descripcion"><?php echo $producto['descripcion'] ?></td>
+                                            <td data-label="Ubicacion"><?php echo $producto['ubicacion'] ?></td>
+                                            <td data-label="Presentacion"><?php echo $producto['presentacion'] ?></td>
+                                            <td data-label="Cantidad"><?php echo $producto['cantidad'] ?></td>
+                                            <td data-label="Alistado" class="input-container"><input type="number" id="numero" name="numero" value="<?php echo $producto['alistado'] ?>"></td>
+                                            <td data-label="Diferencia"><?php echo $producto['diferencia'] ?></td>
+                                        </tr>
+                                    <?php
+                                        }
+                                    ?>
                                 </tbody>
                             </table>
                             <br>
