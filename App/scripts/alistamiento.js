@@ -162,3 +162,78 @@ function guardar(estado) {
         });
 
 }
+
+function reproducirSonido(nombreSonido) {
+    const audio = new Audio('audio/' + nombreSonido + '.mp3');
+    audio.play();
+}
+
+
+const tablaAlistamiento = document.getElementById('tablaAlistamiento');
+
+let selectedItem = null;
+
+tablaAlistamiento.addEventListener('click', seleccionarFila);
+tablaAlistamiento.addEventListener('touchstart', seleccionarFila);
+
+function seleccionarFila(event) {
+    const filas = tablaAlistamiento.querySelectorAll('tr');
+    filas.forEach(fila => fila.classList.remove('selected-row'));
+
+    const filaSeleccionada = event.target.closest('tr');
+
+    if (filaSeleccionada) {
+        filaSeleccionada.classList.add('selected-row');
+        
+        selectedItem = filaSeleccionada.querySelector('[data-label="Item"]').textContent;
+
+    }
+}
+
+function RevisarBarCode(){
+
+    if (selectedItem == null){
+
+        reproducirSonido('error');
+
+        new Noty({
+            type: 'warning',
+            text: 'No has seleccionado ningún elemento.',
+            timeout: 4000, 
+        }).show();
+
+    }else{
+
+        let input = document.getElementById('busqueda').value;
+
+        console.log("Este es el input : " + input);
+
+        console.log("Este es el elemento seleccionado : " + selectedItem);
+
+        if(input == selectedItem){
+
+            reproducirSonido('correcto');
+
+            new Noty({
+                type: 'success',
+                text: 'Elemento correcto',
+                timeout: 4000,
+            }).show();
+
+            selectedItem = null;
+        }else{
+
+            reproducirSonido('incorrecto');
+
+            new Noty({
+                type: 'error',
+                text: 'Elemento erroneo',
+                timeout: 4000,
+            }).show();
+
+        }
+
+    }
+
+    
+}

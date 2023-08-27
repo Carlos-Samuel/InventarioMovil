@@ -75,6 +75,21 @@
             include('partes/head.php')
         ?>
         <link rel="stylesheet" href="css_individuales/alistamiento.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css">
+        <style>
+            /* Ajusta el tamaño del contenedor de la notificación */
+            .noty_body {
+                font-size: 16px;
+                padding: 15px; /* Ajusta el espacio alrededor del contenido de la notificación */
+            }
+
+            /* Ajusta el tamaño del texto de la notificación */
+            .noty_body .noty_text {
+                font-size: 18px;
+            }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+
     </head>
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
@@ -139,6 +154,7 @@
                             <input type="text" id="busqueda" placeholder="" style="max-width: 400px;">
                             <br>
                             <a class="btn btn-primary primeButton"  onclick="vaciarEspacioTexto(); busqueda();" role = "button">Vaciar</a>
+                            <a class="btn btn-success primeBUtton"  onclick="RevisarBarCode();" role = "button">Revisar</a>
                         </div>
                         <br>
                         <div class="table">
