@@ -4,7 +4,7 @@
     try {
 
         $con = Connection::getInstance()->getConnection();
-        $quer = $con->query("select * from Facturas where facEstado = 1");
+        $quer = $con->query("SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2");
 
         $response = array();
 
@@ -20,6 +20,10 @@
 
             $boton = "<a href='alistamiento.php?id=" . $columna['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
             $row['accion'] = $boton;
+
+            $rowClass = $columna['facEstado'] == '2' ? 'fila-verde' : '';
+            $row['DT_RowClass'] = $rowClass;
+
 
             $response[] = $row;
         }

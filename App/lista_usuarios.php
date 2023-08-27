@@ -8,7 +8,6 @@
 
     $permiso = "Admin";
 
-
     if (!strpos($_SESSION['permisos'], $permiso)) {
 		header("Location: dashboard.php");
 		exit();
@@ -127,12 +126,12 @@
                     ],
                 });
 
-
                 $('.btnMostrar').on('click', function() {
                     var id = $(this).closest('tr').find('td[data-id]').data('id');
                     console.log('Valor de data-id:', id);
                     window.location.href = 'detalle_usuario.php';
                 });
+
                 $('#recargar').on('click', function() {
                     miTabla.ajax.reload(null, false); // Recarga la tabla sin perder la paginación
                 });

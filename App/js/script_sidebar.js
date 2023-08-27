@@ -289,6 +289,7 @@ try{
   var sidebar = document.querySelector('#sidebar');
   var lista = document.querySelector('.col-lg-6.col-xxl-4.my-5.mx-auto');
   var contenido_movil = document.querySelector('#contenidoMovil');
+  var contenido_escritorio = document.querySelector('#contenidoEscritorio');
 
   window.addEventListener('resize', function() {
       var screenWidth = window.innerWidth;
@@ -300,6 +301,9 @@ try{
         if (!!contenido_movil){
           contenido_movil.style.display = 'none';
         }
+        if (!!contenido_escritorio){
+          contenido_escritorio.style.display = 'block';
+        }
         if (!!sidebar){
           sidebar.style.display = 'block';
         }
@@ -310,6 +314,9 @@ try{
         }
         if (!!contenido_movil){
           contenido_movil.style.display = 'block';
+        }
+        if (!!contenido_escritorio){
+          contenido_escritorio.style.display = 'none';
         }
         if (!!sidebar){
           sidebar.style.display = 'none';

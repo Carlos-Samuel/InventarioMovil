@@ -9,10 +9,10 @@ btnMenuCerrar = document.getElementById("botonCerrar");
 btnMenuDevolver = document.getElementById("botonDevolver");
 btnMenuForzado = document.getElementById("botonForzado");
 
-btnMenuPendiente.addEventListener('click', function() {
-    ocultarDialogo();
-    window.location.href = 'lista_alistamiento.php';
-});
+// btnMenuPendiente.addEventListener('click', function() {
+//     ocultarDialogo();
+//     window.location.href = 'lista_alistamiento.php';
+// });
 
 btnMenuCerrar.addEventListener('click', function() {
     modalCerrar.style.display = "block";
@@ -51,17 +51,22 @@ function ocultarDialogo() {
 
 function confirmarAccionCerrar() {
     ocultarDialogo();
-    window.location.href = 'lista_alistamiento.php';
+    console.log("llega al accion cerrar");
+    guardar(3);
+    //window.location.href = 'lista_alistamiento.php';
 }
 
 function confirmarAccionDevolver() {
     ocultarDialogo();
-    window.location.href = 'lista_alistamiento.php';
+    console.log("llega al accion devolver");
+    guardar(0);
+    //window.location.href = 'lista_alistamiento.php';
 }
 
 function confirmarAccionForzado() {
+    console.log("llega al accion forzado");
     ocultarDialogo();
-    window.location.href = 'lista_alistamiento.php';
+    //window.location.href = 'lista_alistamiento.php';
 }
 
 // Funcionalidades de la busqueda
@@ -114,4 +119,46 @@ window.onclick = function(event) {
 
 function vaciarEspacioTexto() {
     document.getElementById('busqueda').value = '';
+}
+
+btnMenuPendiente.addEventListener('click', function() {
+    guardar(2);
+});
+
+function guardar(estado) {
+
+    var dataToSend = {
+        idFactura: $('#idFactura').val(),
+        idEstado: estado
+    };
+
+    // Configuración de la solicitud
+    var requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+    };
+
+    // Realizar la solicitud utilizando fetch
+    fetch('controladores/guardarAlistamiento.php', requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta de la red');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Respuesta:', data);
+            if(data.status == 1){
+                window.location.href = 'lista_alistamiento.php';
+            }else{
+                alert ("Error al guardar");
+            }
+        })
+        .catch(error => {
+            alert('Error:', error);
+        });
+
 }

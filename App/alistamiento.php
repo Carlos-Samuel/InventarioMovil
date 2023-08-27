@@ -1,5 +1,6 @@
 <?php
     session_start(); 	
+    date_default_timezone_set('America/Bogota');
 
     if (!isset($_SESSION["cedula"]) || !isset($_SESSION["nombres"])) {
         header("Location: index.php");
@@ -39,8 +40,7 @@
                 echo "No se encontro la factura.";
             }
 
-            $con2 = Connection::getInstance()->getConnection();
-            $quer2 = $con2->query("select * from Productos where vtaid = " . $id_recibido . ";");
+            $quer2 = $con->query("select * from Productos where vtaid = " . $id_recibido . ";");
 
             $datosProductos = array();
     
@@ -55,6 +55,10 @@
     
                 $datosProductos[] = $row;
             }
+
+            $horaLocal = date('Y-m-d H:i:s');
+            $sql = "UPDATE Facturas SET MomentoCarga = CONCAT(vtafec, ' ', vtahor), InicioAlistamiento = '$horaLocal' WHERE vtaid = $id_recibido AND InicioAlistamiento IS NULL";
+            $resultado = $con->query($sql);
 
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
@@ -117,6 +121,7 @@
                             </table>
                         </div>
                         <br>
+                        <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
                         <div class="d-grid gap-2">
                             <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
                         </div>
@@ -205,6 +210,8 @@
             </div>
         </div>
         <script src="scripts/alistamiento.js"></script>
+        <!-- Incluye la biblioteca jQuery -->
+        <script src="js/jquery-3.6.0.min.js"></script>
         <?php
             include('partes/foot.php')
         ?>  

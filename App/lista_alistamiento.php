@@ -13,6 +13,12 @@
         header("Location: dashboard.php");
         exit();
     }
+
+    require_once 'controladores/Connection.php';
+
+    $con = Connection::getInstance()->getConnection();
+    $querF = $con->query("SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2");
+
 ?>
 <!doctype html>
 <html lang="es" data-bs-theme="auto">
@@ -22,6 +28,13 @@
         ?>
         <link rel="stylesheet" href="css_individuales/alistamiento.css">
         <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
+        <style>
+            /* Estilo para las filas con facEstado igual a 2 */
+            .fila-verde {
+                background-color: #10B03E !important; /* Cambia esto al color verde que desees */
+                color: white !important; /* Cambia esto al color de texto deseado para las filas verdes */
+            }
+        </style>
     </head>
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
@@ -37,8 +50,47 @@
                         <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
                         <br>
                         <br>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>#Factura</th>
+                                    <th>Fecha</th>
+                                    <th>Nombre Cliente</th>
+                                    <th>Razón Social</th>
+                                    <th>Ciudad</th>
+                                    <th>Vendedor</th>
+                                    <th>Hora Doc</th>
+                                    <th>Observacion</th>
+                                    <th>Procesar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    while ($alistamiento = $querF->fetch_assoc()) {
+                                    $filaClase = $alistamiento['facEstado'] == '2' ? 'fila-verde' : ''; // Determinar la clase de la fila
+                                ?>
+                                    <tr class="<?php echo $filaClase; ?>">
+                                        <td><?php echo $alistamiento['PrfId'] . " " . $alistamiento['VtaNum'] ?></td>
+                                        <td><?php echo $alistamiento['vtafec'] ?></td>
+                                        <td><?php echo $alistamiento['TerNom'] ?></td>
+                                        <td><?php echo $alistamiento['TerRaz'] ?></td>
+                                        <td><?php echo $alistamiento['CiuNom'] ?></td>
+                                        <td><?php echo $alistamiento['VenNom'] ?></td>
+                                        <td><?php echo $alistamiento['vtahor'] ?></td>
+                                        <td><?php echo $alistamiento['facObservaciones'] ?></td>
+                                        <td>
+                                            <?php 
+                                                echo "<a href='alistamiento.php?id=" . $alistamiento['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
+                                            ?>
+                                        </td>
+                                    </tr>
+                                <?php
+                                    }
+                                ?>
+                            </tbody>
+                        </table>     
                     </div>
-                    <div class="table">
+                    <div class="table" id = "contenidoEscritorio" style="display: none;">
                         <br>
                         <br>
                         <table id="tablaAlistamiento">
@@ -108,6 +160,7 @@
                         {data: 'accion', observacion:'accion', orderable: true, searchable: true, className: 'dt-body-center'}
 
                     ],
+
                 });
 
 
