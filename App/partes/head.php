@@ -18,6 +18,9 @@
 <link rel="stylesheet" href="css/colors/blue.css">
 <link rel="stylesheet" href="bootstrap-5.1.3-dist/css/bootstrap.min.css">
 
+<!-- Noty -->
+<link rel="stylesheet" href="css/noty.min.css">
+
 <style>
     .mensaje {
         position: relative;
@@ -28,6 +31,7 @@
         font-size: 18px;
         color: #333;
     }
+
     .cerrar {
         position: absolute;
         top: 10px;
@@ -36,6 +40,32 @@
         background: transparent;
         border: none;
         cursor: pointer;
+    }
+
+    .noty_body {
+        font-size: 16px !important;
+        padding: 15px !important; 
+    }
+
+    .noty_body .noty_text {
+        font-size: 18px !important;
+    }
+
+    .alistamiento-completo {
+        background-color: lightgreen !important;
+    }
+
+    .alistamiento-incompleto {
+        background-color: lightyellow !important;
+    }
+
+    .fila-amarilla {
+        background-color: #FCE605 !important;
+    }
+
+    .fila-verde {
+        background-color: #FC7D05 !important; /* Cambia esto al color verde que desees */
+        color: white !important; /* Cambia esto al color de texto deseado para las filas verdes */
     }
 </style>
 
@@ -47,4 +77,7 @@
 
 
 <!-- Para iconos -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css" rel="stylesheet">
+<link href="css/all.min.css" rel="stylesheet">
+
+<!-- Noty -->
+<script src="js/noty.min.js"></script>

@@ -159,17 +159,27 @@
               <span class="menu-title">Documentos</span>
             </a>
           </li>
-          <?php
-            }
-          ?>
-          <!-- <li class="menu-item">
+          <li class="menu-item">
             <a href="#">
-              <span class="menu-icon">
-                <i class="ri-book-2-fill"></i>
+            <span class="menu-icon">
+                <?php
+                  if ($activado == "Estadisticas"){
+                ?>
+                  <i class="fa fa-bookmark"></i>
+                <?php
+                  }else{
+                ?>
+                  <i class="ri-book-2-fill"></i>
+                <?php
+                  }
+                ?>
               </span>
               <span class="menu-title">Estadísticas</span>
             </a>
-          </li> -->
+          </li>
+          <?php
+            }
+          ?>
           
           <li class="menu-header" style="padding-top: 20px"><span> ADMINISTRACION </span></li>
           <li class="menu-item">

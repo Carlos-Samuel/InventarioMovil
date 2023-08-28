@@ -91,13 +91,7 @@ function confirmarAccionForzado() {
                 if (data.estado){
                     guardar(3);
                 }else{
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Contraseña incorrecta.',
-                        icon: 'error',
-                        confirmButtonText: 'Entendido'
-                    });
-                    $('#passwordUsuario').val(null);
+                    console.log("Usuario incorrecto");
                 }
             }else{
                 alert ("Error al revisar contacte con el administrador");

@@ -22,19 +22,36 @@
             $id_recibido = urldecode($_GET['id']);
 
             $con = Connection::getInstance()->getConnection();
-            $quer = $con->query("select * from Facturas where vtaid = " . $id_recibido . ";");
+            $quer = $con->query("            
+                SELECT 
+                    F.*, 
+                    U.Nombres, 
+                    U.Apellidos, 
+                    CONCAT(
+                        DATE_FORMAT(F.FinAlistamiento, '%Y-%m-%d'), 
+                        ' ', 
+                        TIME_FORMAT(F.FinAlistamiento, '%h:%i %p')
+                    ) AS fecha_y_hora
+                FROM 
+                    Facturas AS F, Usuarios AS U 
+                WHERE 
+                    F.idAlistador = U.idUsuarios 
+                    AND F.facEstado = 3
+                    AND F.vtaid = " . $id_recibido . ";");
     
             if ($quer->num_rows > 0) {
                 $row = $quer->fetch_assoc();
         
                 $prefijo = $row['PrfId'];
                 $numDoc = $row['VtaNum'];
-                $fecha = $row['vtafec'];
+                $fecha_hora_venta = $row['vtafec'] . " " . $row['vtahor'];
                 $nombre = $row['TerNom'];
                 $razon = $row['TerRaz'];
                 $ciudad = $row['CiuNom'];
                 $vendedor = $row['VenNom'];
-                $hora = $row['vtahor'];
+                $alistador = $row['Nombres'] . " " . $row['Apellidos'];
+                $fecha_hora_alitado = $row['fecha_y_hora'];
+                $observaciones = $row['facObservaciones'];
     
             } else {
                 echo "No se encontro la factura.";
@@ -58,7 +75,7 @@
             }
 
             $horaLocal = date('Y-m-d H:i:s');
-            $sql = "UPDATE Facturas SET MomentoCarga = CONCAT(vtafec, ' ', vtahor), InicioAlistamiento = '$horaLocal' WHERE vtaid = $id_recibido AND InicioAlistamiento IS NULL";
+            $sql = "UPDATE Facturas SET InicioVerificacion = '$horaLocal' WHERE vtaid = $id_recibido AND InicioVerificacion IS NULL";
             $resultado = $con->query($sql);
 
         } catch (Exception $e) {
@@ -81,7 +98,7 @@
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
             <?php
-                $activado = "Alistamiento";
+                $activado = "Verificacion";
                 include('partes/sidebar.php');
             ?>  
             <div id="overlay" class="overlay"></div>
@@ -100,24 +117,35 @@
                                     <tr>
                                         <th>Prefijo</th>
                                         <th># DOC</th>
-                                        <th>Fecha</th>
+                                        <th>Fecha y Hora Venta</th>
                                         <th>Nombre Cliente</th>
                                         <th>Razón Social</th>
                                         <th>Ciudad</th>
                                         <th>Vendedor</th>
-                                        <th>Hora DOC</th>
+                                        <th>Alistador</th>
+                                        <th>Fecha y Hora Alistado</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td data-label="Prefijo"><?php echo $prefijo ?></td>
                                         <td data-label="Doc"><?php echo $numDoc ?></td>
-                                        <td data-label="Fecha"><?php echo $fecha ?></td>
+                                        <td data-label="FechaHoraVenta"><?php echo $fecha_hora_venta ?></td>
                                         <td data-label="NombreCliente"><?php echo $nombre ?></td>
                                         <td data-label="RazonSocial"><?php echo $razon ?></td>
                                         <td data-label="Ciudad"><?php echo $ciudad ?></td>
                                         <td data-label="Vendedor"><?php echo $vendedor ?></td>
-                                        <td data-label="HoraDoc"><?php echo $hora ?></td>
+                                        <td data-label="Alistador"><?php echo $alistador ?></td>
+                                        <td data-label="FechaHoraAlistado"><?php echo $fecha_hora_alitado ?></td>
+                                    </tr>
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="2"><strong>EMBALAJE</strong></td>
+                                        <td>No se que va acá</td>
+                                        <td>O acá</td>
+                                        <td>Ni acá</td>
+                                        <td><strong>OBSERVACIONES</strong></td>
+                                        <td colspan="3"><?php echo $observaciones ?></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -146,7 +174,7 @@
                         </div>
                         <br>
                         <div class="table">
-                            <table id = "tablaAlistamiento">
+                            <table id = "tablaVerificacion">
                                 <thead>
                                     <tr>
                                         <th>Ítem</th>
@@ -220,7 +248,7 @@
                 </div>
             </div>
         </div>
-        <script src="scripts/alistamiento.js"></script>
+        <script src="scripts/verificacion.js"></script>
         <!-- Incluye la biblioteca jQuery -->
         <script src="js/jquery-3.6.0.min.js"></script>
         <?php

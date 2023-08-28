@@ -7,7 +7,7 @@
     }
 
     $permiso1 = "Admin";
-    $permiso2 = "Alistamiento";
+    $permiso2 = "Verificacion";
 
     if (!(strpos($_SESSION['permisos'], $permiso1) || strpos($_SESSION['permisos'], $permiso2))) {
         header("Location: dashboard.php");
@@ -17,7 +17,23 @@
     require_once 'controladores/Connection.php';
 
     $con = Connection::getInstance()->getConnection();
-    $querF = $con->query("SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2");
+    $querF = $con->query("
+            SELECT 
+                F.*, 
+                U.Nombres, 
+                U.Apellidos, 
+                CONCAT(
+                    DATE_FORMAT(F.FinAlistamiento, '%Y-%m-%d'), 
+                    ' ', 
+                    TIME_FORMAT(F.FinAlistamiento, '%h:%i %p')
+                ) AS fecha_y_hora
+            FROM 
+                Facturas AS F, Usuarios AS U 
+            WHERE 
+                F.idAlistador = U.idUsuarios 
+                AND F.facEstado = 3
+            ;
+    ");
 
 ?>
 <!doctype html>
@@ -32,7 +48,7 @@
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
             <?php
-                $activado = "Alistamiento";
+                $activado = "Verificacion";
                 include('partes/sidebar.php')
             ?>  
             <div id="overlay" class="overlay"></div>
@@ -47,33 +63,33 @@
                             <thead>
                                 <tr>
                                     <th>#Factura</th>
-                                    <th>Fecha</th>
+                                    <th>Fecha y Hora Venta</th>
                                     <th>Nombre Cliente</th>
                                     <th>Razón Social</th>
                                     <th>Ciudad</th>
                                     <th>Vendedor</th>
-                                    <th>Hora Doc</th>
-                                    <th>Observacion</th>
+                                    <th>Alistador</th>
+                                    <th>Fecha y Hora Alistado</th>
                                     <th>Procesar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                    while ($alistamiento = $querF->fetch_assoc()) {
-                                    $filaClase = $alistamiento['facEstado'] == '2' ? 'fila-verde' : ''; // Determinar la clase de la fila
+                                    while ($verificacion = $querF->fetch_assoc()) {
+                                    $filaClase = $verificacion['Forzado'] == '1' ? 'fila-amarilla' : ''; // Determinar la clase de la fila
                                 ?>
                                     <tr class="<?php echo $filaClase; ?>">
-                                        <td><?php echo $alistamiento['PrfId'] . " " . $alistamiento['VtaNum'] ?></td>
-                                        <td><?php echo $alistamiento['vtafec'] ?></td>
-                                        <td><?php echo $alistamiento['TerNom'] ?></td>
-                                        <td><?php echo $alistamiento['TerRaz'] ?></td>
-                                        <td><?php echo $alistamiento['CiuNom'] ?></td>
-                                        <td><?php echo $alistamiento['VenNom'] ?></td>
-                                        <td><?php echo $alistamiento['vtahor'] ?></td>
-                                        <td><?php echo $alistamiento['facObservaciones'] ?></td>
+                                        <td><?php echo $verificacion['PrfId'] . " " . $verificacion['VtaNum'] ?></td>
+                                        <td><?php echo $verificacion['vtafec'] . " " . $verificacion['vtahor'] ?></td>
+                                        <td><?php echo $verificacion['TerNom'] ?></td>
+                                        <td><?php echo $verificacion['TerRaz'] ?></td>
+                                        <td><?php echo $verificacion['CiuNom'] ?></td>
+                                        <td><?php echo $verificacion['VenNom'] ?></td>
+                                        <td><?php echo $verificacion['Nombres'] . " " .$verificacion['Apellidos'] ?></td>
+                                        <td><?php echo $verificacion['fecha_y_hora'] ?></td>
                                         <td>
                                             <?php 
-                                                echo "<a href='alistamiento.php?id=" . $alistamiento['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
+                                                echo "<a href='verificacion.php?id=" . $verificacion['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
                                             ?>
                                         </td>
                                     </tr>
@@ -86,17 +102,17 @@
                     <div class="table" id = "contenidoEscritorio" style="display: none;">
                         <br>
                         <br>
-                        <table id="tablaAlistamiento">
-                            <thead>
+                        <table id="tablaVerificacion">
+                        <thead>
                                 <tr>
                                     <th>#Factura</th>
-                                    <th>Fecha</th>
+                                    <th>Fecha y Hora Venta</th>
                                     <th>Nombre Cliente</th>
                                     <th>Razón Social</th>
                                     <th>Ciudad</th>
                                     <th>Vendedor</th>
-                                    <th>Hora Doc</th>
-                                    <th>Observacion</th>
+                                    <th>Alistador</th>
+                                    <th>Fecha y Hora Alistadoo</th>
                                     <th>Procesar</th>
                                 </tr>
                             </thead>
@@ -116,13 +132,13 @@
         <script>
             $(document).ready( function () {
 
-                var miTabla = $('#tablaAlistamiento').DataTable({
+                var miTabla = $('#tablaVerificacion').DataTable({
                     destroy: true,
                     responsive: true,
                     processing: true,
                     pageLength: 10,
                     ajax: {
-                        url: 'core/tabla_index_alistamiento.php',
+                        url: 'core/tabla_index_verificacion.php',
                         type: 'GET',
                     },
                     language: {
@@ -148,19 +164,12 @@
                         {data: 'razon', name:'razon', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'ciudad', name:'ciudad', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'vendedor', name:'vendedor', orderable: true, searchable: true, className: 'dt-body-center'},
-                        {data: 'hora', name:'hora', orderable: true, searchable: true, className: 'dt-body-center'},
-                        {data: 'observacion', observacion:'password', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'alistador', name:'alistador', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'horaAlistado', name:'horaAlistado', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'accion', observacion:'accion', orderable: true, searchable: true, className: 'dt-body-center'}
 
                     ],
 
-                });
-
-
-                $('.btnMostrar').on('click', function() {
-                    var id = $(this).closest('tr').find('td[data-id]').data('id');
-                    console.log('Valor de data-id:', id);
-                    window.location.href = 'detalle_usuario.php';
                 });
 
             });
