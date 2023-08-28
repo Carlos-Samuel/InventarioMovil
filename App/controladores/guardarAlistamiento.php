@@ -18,13 +18,34 @@
             $idEstado = $con->real_escape_string($idEstado);
 
             switch ($idEstado) {
+                case 0:
+
+                    date_default_timezone_set('America/Bogota');
+                    $horaLocal = date('Y-m-d H:i:s');
+
+                    $idAlistador = $_SESSION["idUsuarios"];
+                    
+                    $sql = "UPDATE Facturas SET facEstado = 0, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador WHERE vtaid = $idFactura";
+
+                    break;
+                case 1:
+
+                    date_default_timezone_set('America/Bogota');
+                    $horaLocal = date('Y-m-d H:i:s');
+
+                    $idAlistador = $_SESSION["idUsuarios"];
+                    
+                    $sql = "UPDATE Facturas SET facEstado = 3, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador WHERE vtaid = $idFactura";
+
+                    break;
                 case 2:
 
                     $idAlistador = $_SESSION["idUsuarios"];
                     
-                    $sql = "UPDATE Facturas SET facEstado = $idEstado, idAlistador = $idAlistador WHERE vtaid = $idFactura";
+                    $sql = "UPDATE Facturas SET facEstado = 2, idAlistador = $idAlistador WHERE vtaid = $idFactura";
 
                     break;
+                    
                 case 3:
 
                     date_default_timezone_set('America/Bogota');
@@ -32,11 +53,8 @@
 
                     $idAlistador = $_SESSION["idUsuarios"];
                     
-                    $sql = "UPDATE Facturas SET facEstado = $idEstado, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador WHERE vtaid = $idFactura";
+                    $sql = "UPDATE Facturas SET facEstado = 3, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador, Forzado = 1 WHERE vtaid = $idFactura";
 
-                    break;
-                case 4:
-                    echo "Opción 3 seleccionada";
                     break;
             }
 

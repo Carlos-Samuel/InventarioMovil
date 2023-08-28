@@ -52,7 +52,7 @@ function ocultarDialogo() {
 function confirmarAccionCerrar() {
     ocultarDialogo();
     console.log("llega al accion cerrar");
-    guardar(3);
+    guardar(1);
     //window.location.href = 'lista_alistamiento.php';
 }
 
@@ -64,8 +64,50 @@ function confirmarAccionDevolver() {
 }
 
 function confirmarAccionForzado() {
-    console.log("llega al accion forzado");
     ocultarDialogo();
+    var dataToSend = {
+        cedula: $('#cedulaUsuario').val(),
+        password: $('#passwordUsuario').val()
+    };
+
+    // Configuración de la solicitud
+    var requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+    };
+
+    fetch('controladores/revisarUsuario.php', requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta de la red');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if(data.status == 1){
+                if (data.estado){
+                    guardar(3);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Contraseña incorrecta.',
+                        icon: 'error',
+                        confirmButtonText: 'Entendido'
+                    });
+                    $('#passwordUsuario').val(null);
+                }
+            }else{
+                alert ("Error al revisar contacte con el administrador");
+            }
+        })
+        .catch(error => {
+            alert('Error con la conexión a la base de datos' + error);
+        });
+
+
     //window.location.href = 'lista_alistamiento.php';
 }
 
@@ -115,8 +157,6 @@ window.onclick = function(event) {
     }
 }
 
-// Vaciado del buscador
-
 function vaciarEspacioTexto() {
     document.getElementById('busqueda').value = '';
 }
@@ -127,39 +167,55 @@ btnMenuPendiente.addEventListener('click', function() {
 
 function guardar(estado) {
 
-    var dataToSend = {
-        idFactura: $('#idFactura').val(),
-        idEstado: estado
-    };
+    $controlador = true;
 
-    // Configuración de la solicitud
-    var requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToSend)
-    };
+    if (estado == 1){
+        $controlador = verificarDiferenciasIgualesACero();
+    }
 
-    // Realizar la solicitud utilizando fetch
-    fetch('controladores/guardarAlistamiento.php', requestOptions)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la red');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Respuesta:', data);
-            if(data.status == 1){
-                window.location.href = 'lista_alistamiento.php';
-            }else{
-                alert ("Error al guardar");
-            }
-        })
-        .catch(error => {
-            alert('Error:', error);
+    if ($controlador){
+
+        var dataToSend = {
+            idFactura: $('#idFactura').val(),
+            idEstado: estado
+        };
+
+        // Configuración de la solicitud
+        var requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        };
+
+        // Realizar la solicitud utilizando fetch
+        fetch('controladores/guardarAlistamiento.php', requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta de la red');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Respuesta:', data);
+                if(data.status == 1){
+                    window.location.href = 'lista_alistamiento.php';
+                }else{
+                    alert ("Error al guardar");
+                }
+            })
+            .catch(error => {
+                alert('Error:', error);
+            });
+    }else{
+        Swal.fire({
+            title: 'Error',
+            text: 'Las Cantidades Alistadas no coinciden.',
+            icon: 'error',
+            confirmButtonText: 'Entendido'
         });
+    }
 
 }
 
@@ -235,5 +291,78 @@ function RevisarBarCode(){
 
     }
 
+}
+
+document.getElementById('tablaAlistamiento').addEventListener('change', function(event) {
+    var target = event.target;
+
+    if (target && target.tagName === 'INPUT') {
+        var id = target.closest('tr').getAttribute('data-id');
+        var newValue = target.value;
+
+        // console.log("Input ha cambiado. Id:", id, "Nuevo valor:", newValue);
+
+        var dataToSend = {
+            idProducto: id,
+            cantidadAlistada: newValue
+        };
     
+        // Configuración de la solicitud
+        var requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        };
+
+        fetch('controladores/guardarCantidadAlistada.php', requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta de la red');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Respuesta:', data);
+                if(data.status == 1){
+
+                    if (data.diferencia == 0){
+                        nuevaClase = 'alistamiento-completo';
+                    }else{
+                        nuevaClase = 'alistamiento-incompleto';
+                    }
+
+                    var fila = document.querySelector('tr[data-id="' + id + '"]');
+            
+                    fila.classList.remove('alistamiento-completo', 'alistamiento-incompleto');
+                    fila.classList.add(nuevaClase);
+
+                    var celdaDiferencia = document.querySelector('tr[data-id="' + id + '"] td[data-label="Diferencia"]');
+                    celdaDiferencia.textContent = data.diferencia;
+
+                }else{
+                    alert ("Error al guardar contacte con el administrador");
+                }
+            })
+            .catch(error => {
+                alert('Error con la conexión a la base de datos' + error);
+            });
+
+    }
+});
+
+function verificarDiferenciasIgualesACero() {
+    var filas = document.querySelectorAll('#tablaAlistamiento tbody tr');
+    
+    for (var i = 0; i < filas.length; i++) {
+        var celdaDiferencia = filas[i].querySelector('td[data-label="Diferencia"]');
+        var valorDiferencia = parseInt(celdaDiferencia.textContent);
+        
+        if (valorDiferencia !== 0) {
+            return false;
+        }
+    }
+    
+    return true;
 }

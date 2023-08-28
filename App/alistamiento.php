@@ -45,6 +45,7 @@
             $datosProductos = array();
     
             while ($columna = $quer2->fetch_assoc()) {
+                $row['id'] = $columna['VtaDetId'];
                 $row['item'] = $columna['ProId'];
                 $row['descripcion'] = $columna['ProNom'];
                 $row['ubicacion'] = $columna['ProUbica'];
@@ -77,16 +78,23 @@
         <link rel="stylesheet" href="css_individuales/alistamiento.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css">
         <style>
-            /* Ajusta el tamaño del contenedor de la notificación */
             .noty_body {
-                font-size: 16px;
-                padding: 15px; /* Ajusta el espacio alrededor del contenido de la notificación */
+                font-size: 16px !important;
+                padding: 15px !important; 
             }
 
-            /* Ajusta el tamaño del texto de la notificación */
             .noty_body .noty_text {
-                font-size: 18px;
+                font-size: 18px !important;
             }
+
+            .alistamiento-completo {
+                background-color: lightgreen !important;
+            }
+
+            .alistamiento-incompleto {
+                background-color: lightyellow !important;
+            }
+
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
 
@@ -137,6 +145,7 @@
                         </div>
                         <br>
                         <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
+                        <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>
                         <div class="d-grid gap-2">
                             <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
                         </div>
@@ -173,14 +182,21 @@
                                 <tbody>
                                     <?php
                                         foreach ($datosProductos as $producto) {
+                                            if ($producto['alistado'] == 0 && $producto['cantidad'] != 0){
+                                                $filaClase = '';
+                                            }else{
+                                                $filaClase = ($producto['alistado'] == $producto['cantidad']) ? 'alistamiento-completo' : 'alistamiento-incompleto';
+                                            }
                                     ?>
-                                        <tr>
+                                        <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
                                             <td data-label="Item"><?php echo $producto['item'] ?></td>
                                             <td data-label="Descripcion"><?php echo $producto['descripcion'] ?></td>
                                             <td data-label="Ubicacion"><?php echo $producto['ubicacion'] ?></td>
                                             <td data-label="Presentacion"><?php echo $producto['presentacion'] ?></td>
                                             <td data-label="Cantidad"><?php echo $producto['cantidad'] ?></td>
-                                            <td data-label="Alistado" class="input-container"><input type="number" id="numero" name="numero" value="<?php echo $producto['alistado'] ?>"></td>
+                                            <td data-label="Alistado" class="input-container">
+                                                <input type="number" id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value="<?php echo $producto['alistado'] ?>">
+                                            </td>
                                             <td data-label="Diferencia"><?php echo $producto['diferencia'] ?></td>
                                         </tr>
                                     <?php
@@ -217,8 +233,8 @@
         <div id="modalConfirmarForzado" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <p>¿Estás seguro de que desea forzar el proceso?</p>
-                <input type="password" placeholder="Ingrese la clave de usuario">
+                <p>¿Estás seguro de que desea forzar el cerrado del proceso?</p>
+                <input id ="passwordUsuario" type="password" placeholder="Ingrese la clave de usuario">
                 <div class="boton-container">
                     <button id="confirmarForzado" class="btn btn-success primeButton">Aceptar</button>
                     <button id="cancelarForzado" class="btn btn-danger primeButton">Cancelar</button>

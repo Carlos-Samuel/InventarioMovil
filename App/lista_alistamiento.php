@@ -31,7 +31,7 @@
         <style>
             /* Estilo para las filas con facEstado igual a 2 */
             .fila-verde {
-                background-color: #10B03E !important; /* Cambia esto al color verde que desees */
+                background-color: #FC7D05 !important; /* Cambia esto al color verde que desees */
                 color: white !important; /* Cambia esto al color de texto deseado para las filas verdes */
             }
         </style>
