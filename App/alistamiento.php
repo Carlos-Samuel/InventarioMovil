@@ -124,7 +124,6 @@
                         </div>
                         <br>
                         <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
-                        <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>
                         <div class="d-grid gap-2">
                             <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
                         </div>
@@ -189,6 +188,17 @@
                 </main>
             </div>
         </div>
+        <div id="modalConfirmarPendiente" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>Ingrese la razón para dejar pendiente la factura</p>
+                <input id ="razon" type="text" placeholder="Ingrese la razon">
+                <div class="boton-container">
+                    <button id="confirmarPendiente" class="btn btn-success primeButton">Aceptar</button>
+                    <button id="cancelarPendiente" class="btn btn-danger primeButton">Cancelar</button>
+                </div>
+            </div>
+        </div>
         <div id="modalConfirmarCerrar" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
@@ -212,7 +222,8 @@
         <div id="modalConfirmarForzado" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <p>¿Estás seguro de que desea forzar el cerrado del proceso?</p>
+                <p>Ingrese las credenciales de un usuario con permisos de forzado</p>
+                <input id ="cedulaUsuario" type="text" placeholder="Ingrese la cedula de usuario">
                 <input id ="passwordUsuario" type="password" placeholder="Ingrese la clave de usuario">
                 <div class="boton-container">
                     <button id="confirmarForzado" class="btn btn-success primeButton">Aceptar</button>

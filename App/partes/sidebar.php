@@ -68,6 +68,24 @@
               <span class="menu-title">Verificación</span>
             </a>
           </li>
+          <li class="menu-item">
+            <a href="lista_verificacion.php">
+            <span class="menu-icon">
+                <?php
+                  if ($activado == "ImprimirEtiquetas"){
+                ?>
+                  <i class="fa fa-bookmark"></i>
+                <?php
+                  }else{
+                ?>
+                  <i class="ri-book-2-fill"></i>
+                <?php
+                  }
+                ?>
+              </span>
+              <span class="menu-title">Imprimir etiquetas</span>
+            </a>
+          </li>
           <?php
             }
           ?>
@@ -221,9 +239,27 @@
               </span>
               <span class="menu-title">Bitacora</span>
             </a>
+            <a href="parametros.php">
+            <span class="menu-icon">
+                <?php
+                  if ($activado == "Parametros"){
+                ?>
+                  <i class="fa fa-bookmark"></i>
+                <?php
+                  }else{
+                ?>
+                  <i class="ri-book-2-fill"></i>
+                <?php
+                  }
+                ?>
+              </span>
+              <span class="menu-title">Parametros</span>
+            </a>
             <?php
               }
             ?>
+            
+            
             <a href="controladores/logout.php">
               <span class="menu-icon">
                 <i class="ri-book-2-fill"></i>
@@ -234,31 +270,6 @@
             <div class = "container" style = "text-align: center;">
               <small>Software CS ©, todos los derechos reservados.</small>
             </div>
-          <!-- 
-          </li> -->
-   
-          <!-- <li class="menu-item sub-menu">
-            <a href="#">
-              <span class="menu-icon">
-                <i class="ri-vip-diamond-fill"></i>
-              </span>
-              <span class="menu-title">Components</span>
-            </a>
-            <div class="sub-menu-list">
-              <ul>
-                <li class="menu-item">
-                  <a href="#">
-                    <span class="menu-title">Grid</span>
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a href="#">
-                    <span class="menu-title">Layout</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li> -->
         </ul>
       </nav>
     </div>

@@ -17,7 +17,19 @@
             $cedula = $con->real_escape_string($cedula);
             $password = $con->real_escape_string($password);
 
-            $resultado = $con->query("SELECT * FROM Usuarios WHERE Cedula = $cedula ;");
+            $resultado = $con->query(
+                "SELECT 
+                    * 
+                FROM 
+                    Usuarios AS U,
+                    Usuarios_tienen_permisos AS UTP,
+                    Permisos AS P
+                WHERE 
+                    U.idUsuarios = UTP.idUsuarios
+                    AND UTP.idPermisos = P.idPermisos
+                    AND (P.idPermisos = 6 OR P.idPermisos = 5)
+                    AND Cedula = $cedula ;"
+                );
 
             if ($resultado->num_rows > 0) {
 
@@ -33,7 +45,7 @@
                     );  
                 }else{
                     $response = array(
-                        "message" => "Usuario analizado correctamente",
+                        "message" => "Credenciales incorrectas",
                         "status" => 1,
                         "estado" => false
                     );     
@@ -41,9 +53,10 @@
     
             } else {
                 $response = array(
-                    "error" => "Error " . $sql . " al obtener usuario: " . $con->error,
-                    "status" => 2
-                );
+                    "message" => "Credenciales incorrectas",
+                    "status" => 1,
+                    "estado" => false
+                );    
             }
         } else {
             $response = array(

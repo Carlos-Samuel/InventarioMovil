@@ -5,6 +5,7 @@
     session_start();
 
     try {
+        
         $con = Connection::getInstance()->getConnection();
 
         $data = json_decode(file_get_contents("php://input"), true);
@@ -16,6 +17,16 @@
 
             $idFactura = $con->real_escape_string($idFactura);
             $idEstado = $con->real_escape_string($idEstado);
+
+            if (isset($data['justificacion'])){
+                $justificacion = $data['justificacion'];
+                $justificacion = $con->real_escape_string($justificacion);
+            }
+
+            if (isset($data['usuario'])){
+                $usuario = $data['usuario'];
+                $usuario = $con->real_escape_string($usuario);
+            }
 
             switch ($idEstado) {
                 case 0:
@@ -42,7 +53,7 @@
 
                     $idAlistador = $_SESSION["idUsuarios"];
                     
-                    $sql = "UPDATE Facturas SET facEstado = 2, idAlistador = $idAlistador WHERE vtaid = $idFactura";
+                    $sql = "UPDATE Facturas SET facEstado = 2, idAlistador = $idAlistador, Justificacion = '$justificacion' WHERE vtaid = $idFactura";
 
                     break;
                     
@@ -53,7 +64,7 @@
 
                     $idAlistador = $_SESSION["idUsuarios"];
                     
-                    $sql = "UPDATE Facturas SET facEstado = 3, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador, Forzado = 1 WHERE vtaid = $idFactura";
+                    $sql = "UPDATE Facturas SET facEstado = 3, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador, Forzado = 1, Forzador = $usuario WHERE vtaid = $idFactura";
 
                     break;
             }

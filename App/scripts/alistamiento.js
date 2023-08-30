@@ -2,6 +2,7 @@
 modalCerrar = document.getElementById("modalConfirmarCerrar"); 
 modalDevolver = document.getElementById("modalConfirmarDevolver"); 
 modalForzado = document.getElementById("modalConfirmarForzado"); 
+modalPendiente = document.getElementById("modalConfirmarPendiente"); 
 
 // Botones del menu
 btnMenuPendiente = document.getElementById("botonPendiente");
@@ -26,11 +27,18 @@ btnMenuForzado.addEventListener('click', function() {
     modalForzado.style.display = "block";
 });
 
+btnMenuPendiente.addEventListener('click', function() {
+    modalPendiente.style.display = "block";
+    //guardar(2);
+});
+
 // Botones de submenu    
+const btnAceptarPendiente = document.getElementById('confirmarPendiente');
 const btnAceptarCerrar = document.getElementById('confirmarCerrar');
 const btnAceptarDevolver = document.getElementById('confirmarDevolver');
 const btnAceptarForzado = document.getElementById('confirmarForzado');
 
+const btnCancelarPendiente = document.getElementById('cancelarPendiente');
 const btnCancelarCerrar = document.getElementById('cancelarCerrar');
 const btnCancelarDevolver = document.getElementById('cancelarDevolver');
 const btnCancelarForzado = document.getElementById('cancelarForzado');
@@ -38,15 +46,18 @@ const btnCancelarForzado = document.getElementById('cancelarForzado');
 btnAceptarCerrar.addEventListener('click', confirmarAccionCerrar);
 btnAceptarDevolver.addEventListener('click', confirmarAccionDevolver);
 btnAceptarForzado.addEventListener('click', confirmarAccionForzado);
+btnAceptarPendiente.addEventListener('click', confirmarAccionPendiente);
 
 btnCancelarCerrar.addEventListener('click', ocultarDialogo);
 btnCancelarDevolver.addEventListener('click', ocultarDialogo);
 btnCancelarForzado.addEventListener('click', ocultarDialogo);
+btnCancelarPendiente.addEventListener('click', ocultarDialogo);
 
 function ocultarDialogo() {
     modalCerrar.style.display = 'none';
     modalDevolver.style.display = 'none';
     modalForzado.style.display = "none";
+    modalPendiente.style.display = "none";
 }
 
 function confirmarAccionCerrar() {
@@ -65,9 +76,13 @@ function confirmarAccionDevolver() {
 
 function confirmarAccionForzado() {
     ocultarDialogo();
+
+    let varcedula = $('#cedulaUsuario').val();
+    let varpassword = $('#passwordUsuario').val();
+
     var dataToSend = {
-        cedula: $('#cedulaUsuario').val(),
-        password: $('#passwordUsuario').val()
+        cedula: varcedula,
+        password: varpassword
     };
 
     // Configuración de la solicitud
@@ -89,9 +104,15 @@ function confirmarAccionForzado() {
         .then(data => {
             if(data.status == 1){
                 if (data.estado){
-                    guardar(3);
+                    guardar(3, '', varcedula);
                 }else{
-                    console.log("Usuario incorrecto");
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Credenciales incorrectas',
+                        icon: 'error',
+                        confirmButtonText: 'Entendido'
+                    });
+                    $('#passwordUsuario').val('');
                 }
             }else{
                 alert ("Error al revisar contacte con el administrador");
@@ -100,11 +121,24 @@ function confirmarAccionForzado() {
         .catch(error => {
             alert('Error con la conexión a la base de datos' + error);
         });
-
-
-    //window.location.href = 'lista_alistamiento.php';
 }
 
+function confirmarAccionPendiente() {
+    let razon = $('#razon').val();
+
+    if (razon.trim() === '') {
+        Swal.fire({
+            title: 'Error',
+            text: 'Ingrese una razón',
+            icon: 'error',
+            confirmButtonText: 'Entendido'
+        });
+    }else{
+        // console.log("La razon es");
+        // console.log(razon);
+        guardar(2, razon);
+    }
+}
 // Funcionalidades de la busqueda
 
 document.getElementById('busqueda').addEventListener('keyup', busqueda);
@@ -148,6 +182,7 @@ window.onclick = function(event) {
         modalCerrar.style.display = "none";
         modalDevolver.style.display = "none";
         modalForzado.style.display = "none";
+        modalPendiente.style.display = "none";
     }
 }
 
@@ -155,11 +190,9 @@ function vaciarEspacioTexto() {
     document.getElementById('busqueda').value = '';
 }
 
-btnMenuPendiente.addEventListener('click', function() {
-    guardar(2);
-});
 
-function guardar(estado) {
+
+function guardar(estado, razon, usuario) {
 
     $controlador = true;
 
@@ -171,7 +204,9 @@ function guardar(estado) {
 
         var dataToSend = {
             idFactura: $('#idFactura').val(),
-            idEstado: estado
+            idEstado: estado,
+            justificacion: razon,
+            usuario: usuario
         };
 
         // Configuración de la solicitud
@@ -262,7 +297,7 @@ function RevisarBarCode(){
 
         if(input == selectedItem){
 
-            reproducirSonido('correcto');
+            //reproducirSonido('correcto');
 
             new Noty({
                 type: 'success',
