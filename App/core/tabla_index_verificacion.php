@@ -18,7 +18,7 @@
                 Facturas AS F, Usuarios AS U 
             WHERE 
                 F.idAlistador = U.idUsuarios 
-                AND F.facEstado = 3
+                AND (F.facEstado = 3 OR F.facEstado = 4 )
             ;
         ");
 

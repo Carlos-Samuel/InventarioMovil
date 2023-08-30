@@ -64,14 +64,12 @@ function confirmarAccionCerrar() {
     ocultarDialogo();
     console.log("llega al accion cerrar");
     guardar(1);
-    //window.location.href = 'lista_alistamiento.php';
 }
 
 function confirmarAccionDevolver() {
     ocultarDialogo();
     console.log("llega al accion devolver");
     guardar(0);
-    //window.location.href = 'lista_alistamiento.php';
 }
 
 function confirmarAccionForzado() {

@@ -173,7 +173,7 @@
                                             <td data-label="Presentacion"><?php echo $producto['presentacion'] ?></td>
                                             <td data-label="Cantidad"><?php echo $producto['cantidad'] ?></td>
                                             <td data-label="Alistado" class="input-container">
-                                                <input type="number" id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value="<?php echo $producto['alistado'] ?>">
+                                                <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value="<?php echo $producto['alistado'] ?>">
                                             </td>
                                             <td data-label="Diferencia"><?php echo $producto['diferencia'] ?></td>
                                         </tr>

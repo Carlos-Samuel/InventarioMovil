@@ -36,7 +36,7 @@
                     Facturas AS F, Usuarios AS U 
                 WHERE 
                     F.idAlistador = U.idUsuarios 
-                    AND F.facEstado = 3
+                    AND (F.facEstado = 3 OR F.facEstado = 4)
                     AND F.vtaid = " . $id_recibido . ";");
     
             if ($quer->num_rows > 0) {
@@ -57,7 +57,7 @@
                 echo "No se encontro la factura.";
             }
 
-            $quer2 = $con->query("select * from Productos where vtaid = " . $id_recibido . ";");
+            $quer2 = $con->query("SELECT * FROM Productos WHERE vtaid = " . $id_recibido . ";");
 
             $datosProductos = array();
     
@@ -69,9 +69,20 @@
                 $row['presentacion'] = $columna['ProPresentacion'];
                 $row['cantidad'] = $columna['VtaCant'];
                 $row['alistado'] = $columna['AlisCant'];
-                $row['diferencia'] = $columna['VtaCant'] - $columna['AlisCant'];
+                $row['verificado'] = $columna['VerCant'];
     
                 $datosProductos[] = $row;
+            }
+
+            $quer3 = $con->query("SELECT * FROM Embalajes;");
+
+            $datosEmbalajes = array();
+    
+            while ($columna = $quer3->fetch_assoc()) {
+                $row['idEmbalajes'] = $columna['idEmbalajes'];
+                $row['Descripcion'] = $columna['Descripcion'];
+    
+                $datosEmbalajes[] = $row;
             }
 
             $horaLocal = date('Y-m-d H:i:s');
@@ -93,6 +104,13 @@
             include('partes/head.php')
         ?>
         <link rel="stylesheet" href="css_individuales/alistamiento.css">
+        <style>
+            #modalConfirmarCerrar .modal-content {
+                width: 70%; /* Puedes ajustar el valor según tus necesidades */
+                max-width: 800px; /* Opcional: Puedes establecer un ancho máximo */
+                margin: 0 auto; /* Centrar horizontalmente el modal */
+            }
+        </style>
 
     </head>
     <body>
@@ -138,15 +156,10 @@
                                         <td data-label="Alistador"><?php echo $alistador ?></td>
                                         <td data-label="FechaHoraAlistado"><?php echo $fecha_hora_alitado ?></td>
                                     </tr>
-                                    <tbody>
-                                    <tr>
-                                        <td colspan="2"><strong>EMBALAJE</strong></td>
-                                        <td>No se que va acá</td>
-                                        <td>O acá</td>
-                                        <td>Ni acá</td>
-                                        <td><strong>OBSERVACIONES</strong></td>
-                                        <td colspan="3"><?php echo $observaciones ?></td>
-                                    </tr>
+                                    <!-- <tr>
+                                        <td colspan="2"><strong>OBSERVACIONES</strong></td>
+                                        <td colspan="7"><?php //echo $observaciones ?></td>
+                                    </tr> -->
                                 </tbody>
                             </table>
                         </div>
@@ -159,17 +172,12 @@
                         <div class="d-grid gap-2">
                             <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
                         </div>
-                        <div class="d-grid gap-2">
-                            <button id="botonDevolver" class="btn btn-danger primeButton" type="button">Devolver</button>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button id="botonForzado" class="btn btn-info primeButton" type="button">Cierre forzado</button>
-                        </div>
                         <br>
                         <div class="buscador">
                             <input type="text" id="busqueda" placeholder="" style="max-width: 400px;">
                             <br>
-                            <a class="btn btn-primary primeButton"  onclick="vaciarEspacioTexto(); busqueda();" role = "button">Vaciar</a>
+                            <a class="btn btn-warning primeButton"  onclick="vaciarEspacioTexto(); busqueda();" role = "button">Vaciar</a>
+                            <a class="btn btn-primary primeButton"  onclick="busqueda();" role = "button">Buscar</a>
                             <a class="btn btn-success primeBUtton"  onclick="RevisarBarCode();" role = "button">Revisar</a>
                         </div>
                         <br>
@@ -179,32 +187,26 @@
                                     <tr>
                                         <th>Ítem</th>
                                         <th>Descripción</th>
-                                        <th>Ubicación</th>
                                         <th>Presentación</th>
-                                        <th>Cantidad</th>
-                                        <th class="input-container">Alistado</th>
-                                        <th>Diferencia</th>
+                                        <th class="input-container">Cantidad</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                         foreach ($datosProductos as $producto) {
-                                            if ($producto['alistado'] == 0 && $producto['cantidad'] != 0){
-                                                $filaClase = '';
-                                            }else{
-                                                $filaClase = ($producto['alistado'] == $producto['cantidad']) ? 'alistamiento-completo' : 'alistamiento-incompleto';
-                                            }
+                                            // if ($producto['alistado'] == 0 && $producto['cantidad'] != 0){
+                                            //     $filaClase = '';
+                                            // }else{
+                                                $filaClase = ($producto['alistado'] == $producto['verificado']) ? 'verificacion-completo' : '';
+                                            // }
                                     ?>
                                         <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
                                             <td data-label="Item"><?php echo $producto['item'] ?></td>
                                             <td data-label="Descripcion"><?php echo $producto['descripcion'] ?></td>
-                                            <td data-label="Ubicacion"><?php echo $producto['ubicacion'] ?></td>
                                             <td data-label="Presentacion"><?php echo $producto['presentacion'] ?></td>
-                                            <td data-label="Cantidad"><?php echo $producto['cantidad'] ?></td>
-                                            <td data-label="Alistado" class="input-container">
-                                                <input type="number" id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value="<?php echo $producto['alistado'] ?>">
+                                            <td data-label="Cantidad" class="input-container">
+                                                <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value = "<?php echo ($producto['alistado'] == $producto['verificado']) ? $producto['verificado'] : ''; ?>">
                                             </td>
-                                            <td data-label="Diferencia"><?php echo $producto['diferencia'] ?></td>
                                         </tr>
                                     <?php
                                         }
@@ -221,30 +223,37 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <p>¿Estás seguro de que desea cerrar el proceso?</p>
+                <br>
+                <table id = "tablaEmbalaje">
+                    <thead>
+                        <tr>
+                            <th>Embalaje</th>
+                            <th class="input-container">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                            foreach ($datosEmbalajes as $producto) {
+                        ?>
+                            <tr data-id="<?php echo $producto['id']; ?>">
+                                <td data-label="Descripcion"><?php echo $producto['Descripcion'] ?></td>
+                                <td data-label="Cantidad" class="input-container">
+                                    <input type="number" id="numero_<?php echo $producto['idEmbalajes'] ?>" name="numero_<?php echo $producto['idEmbalajes'] ?>">
+                                </td>
+                            </tr>
+                        <?php
+                            }
+                        ?>
+                    </tbody>
+                </table>
+                <br>
+                <h6>Observaciones</h6>
+                <br>
+                <input tipe = "text" id = "observacionesVer" name = "observacionesVer" >
+                <br>
                 <div class="boton-container">
                     <button id="confirmarCerrar" class="btn btn-success primeButton">Aceptar</button>
                     <button id="cancelarCerrar" class="btn btn-danger primeButton">Cancelar</button>
-                </div>
-            </div>
-        </div>
-        <div id="modalConfirmarDevolver" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>¿Estás seguro de que desea devolver la factura?</p>
-                <div class="boton-container">
-                    <button id="confirmarDevolver" class="btn btn-success primeButton">Aceptar</button>
-                    <button id="cancelarDevolver" class="btn btn-danger primeButton">Cancelar</button>
-                </div>
-            </div>
-        </div>
-        <div id="modalConfirmarForzado" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>¿Estás seguro de que desea forzar el cerrado del proceso?</p>
-                <input id ="passwordUsuario" type="password" placeholder="Ingrese la clave de usuario">
-                <div class="boton-container">
-                    <button id="confirmarForzado" class="btn btn-success primeButton">Aceptar</button>
-                    <button id="cancelarForzado" class="btn btn-danger primeButton">Cancelar</button>
                 </div>
             </div>
         </div>

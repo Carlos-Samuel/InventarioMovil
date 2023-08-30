@@ -59,6 +59,14 @@
         background-color: lightyellow !important;
     }
 
+    .verificacion-completo {
+        background-color: lightgreen !important;
+    }
+
+    .verificacion-incorrecto {
+        background-color: lightgoldenrodyellow !important;
+    }
+
     .fila-amarilla {
         background-color: #FCE605 !important;
     }

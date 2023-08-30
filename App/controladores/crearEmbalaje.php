@@ -12,7 +12,7 @@
 
             $embalaje = $con->real_escape_string($embalaje);
 
-            $query = "INSERT INTO Embalajes(Descripcion) VALUES ($embalaje)";
+            $query = "INSERT INTO Embalajes(Descripcion) VALUES ('$embalaje')";
 
             if ($con->query($query)) {
                 $response = array(
@@ -30,7 +30,7 @@
         }
     } catch (Exception $e) {
         $response = array(
-            "error" => "Error al insertar: "
+            "error" => "Error al insertar: " . $e->getMessage()
         );
     }
 
