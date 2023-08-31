@@ -20,12 +20,35 @@
             $resultado = $con->query(
                 "SELECT 
                     F.*,
-                    U.Nombres,
-                    U.Apellidos,
-                    TIMESTAMPDIFF(MINUTE, InicioAlistamiento, FinAlistamiento) AS duracionAlistamiento
+                    A.Nombres AS NombresAlistador,
+                    A.Apellidos AS ApellidosAlistador,
+                    TIMESTAMPDIFF(MINUTE, InicioAlistamiento, FinAlistamiento) AS duracionAlistamiento,
+                    V.Nombres AS NombresVerificador,
+                    V.Apellidos AS ApellidosVerificador,
+                    TIMESTAMPDIFF(MINUTE, InicioVerificacion, FinVerificacion) AS duracionVerificacion,
+                    E.Nombres AS NombresEntregador,
+                    E.Apellidos AS ApellidosEntregador,
+                    TIMESTAMPDIFF(MINUTE, InicioEntrega, FinEntrega) AS duracionEntrega,
+                    LTRIM(F.Embalaje) AS embalaje,
+                    Est.Descripcion AS estado
                 FROM 
-                    Facturas AS F,
-                    Usuarios AS U
+                    Facturas AS F
+                LEFT JOIN
+                    Usuarios AS A
+                    ON
+                        A.idUsuarios = F.idAlistador
+                LEFT JOIN
+                    Usuarios AS V
+                    ON
+                        V.idUsuarios = F.idVerificador
+                LEFT JOIN
+                    Usuarios AS E
+                    ON
+                        E.idUsuarios = F.idEntregador
+                LEFT JOIN
+                    Estados AS Est
+                    ON
+                        Est.idEstados = F.facEstado
                 WHERE 
                     PrfID = $prefijo 
                     AND VtaNum = $documento;");

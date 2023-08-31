@@ -20,18 +20,26 @@
     $querF = $con->query(
         "SELECT 
             F.*, 
-            U.Nombres, 
-            U.Apellidos, 
+            A.Nombres AS NombresAlistador, 
+            A.Apellidos AS ApellidosAlistador, 
+            V.Nombres AS NombresVerificador, 
+            V.Apellidos AS ApellidosVerificador, 
             CONCAT(
                 DATE_FORMAT(F.FinAlistamiento, '%Y-%m-%d'), 
                 ' ', 
                 TIME_FORMAT(F.FinAlistamiento, '%h:%i %p')
-            ) AS fecha_y_hora
+            ) AS fecha_y_hora_alistado, 
+            CONCAT(
+                DATE_FORMAT(F.FinVerificacion, '%Y-%m-%d'), 
+                ' ', 
+                TIME_FORMAT(F.FinVerificacion, '%h:%i %p')
+            ) AS fecha_y_hora_verificado
         FROM 
-            Facturas AS F, Usuarios AS U 
+            Facturas AS F, Usuarios AS A, Usuarios AS V
         WHERE 
-            F.idAlistador = U.idUsuarios 
-            AND (F.facEstado = 3 OR F.facEstado = 4)
+            F.idAlistador = A.idUsuarios 
+            AND F.idVerificador = V.idUsuarios 
+            AND (F.facEstado = 5 OR F.facEstado = 6)
         ;
     ");
 
@@ -48,7 +56,7 @@
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
             <?php
-                $activado = "Verificacion";
+                $activado = "Entrega";
                 include('partes/sidebar.php')
             ?>  
             <div id="overlay" class="overlay"></div>
@@ -70,6 +78,8 @@
                                     <th>Vendedor</th>
                                     <th>Alistador</th>
                                     <th>Fecha y Hora Alistado</th>
+                                    <th>Verificador</th>
+                                    <th>Fecha y Hora Verificado</th>
                                     <th>Procesar</th>
                                 </tr>
                             </thead>
@@ -85,8 +95,10 @@
                                         <td><?php echo $verificacion['TerRaz'] ?></td>
                                         <td><?php echo $verificacion['CiuNom'] ?></td>
                                         <td><?php echo $verificacion['VenNom'] ?></td>
-                                        <td><?php echo $verificacion['Nombres'] . " " .$verificacion['Apellidos'] ?></td>
-                                        <td><?php echo $verificacion['fecha_y_hora'] ?></td>
+                                        <td><?php echo $verificacion['NombresAlistador'] . " " .$verificacion['ApellidosAlistador'] ?></td>
+                                        <td><?php echo $verificacion['fecha_y_hora_alistado'] ?></td>
+                                        <td><?php echo $verificacion['NombresVerificador'] . " " .$verificacion['ApellidosVerificador'] ?></td>
+                                        <td><?php echo $verificacion['fecha_y_hora_verificado'] ?></td>
                                         <td>
                                             <?php 
                                                 echo "<a href='verificacion.php?id=" . $verificacion['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
@@ -99,10 +111,11 @@
                             </tbody>
                         </table>     
                     </div>
+
                     <div class="table" id = "contenidoEscritorio" style="display: none;">
                         <br>
                         <br>
-                        <table id="tablaVerificacion">
+                        <table id="tablaEntregado">
                         <thead>
                                 <tr>
                                     <th>#Factura</th>
@@ -112,7 +125,9 @@
                                     <th>Ciudad</th>
                                     <th>Vendedor</th>
                                     <th>Alistador</th>
-                                    <th>Fecha y Hora Alistadoo</th>
+                                    <th>Fecha y Hora Alistado</th>
+                                    <th>Verificador</th>
+                                    <th>Fecha y Hora Verificado</th>
                                     <th>Procesar</th>
                                 </tr>
                             </thead>
@@ -132,13 +147,13 @@
         <script>
             $(document).ready( function () {
 
-                var miTabla = $('#tablaVerificacion').DataTable({
+                var miTabla = $('#tablaEntregado').DataTable({
                     destroy: true,
                     responsive: true,
                     processing: true,
                     pageLength: 10,
                     ajax: {
-                        url: 'core/tabla_index_verificacion.php',
+                        url: 'core/tabla_index_entregado.php',
                         type: 'GET',
                     },
                     language: {
@@ -166,9 +181,16 @@
                         {data: 'vendedor', name:'vendedor', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'alistador', name:'alistador', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'horaAlistado', name:'horaAlistado', orderable: true, searchable: true, className: 'dt-body-center'},
-                        {data: 'accion', name:'accion', orderable: true, searchable: true, className: 'dt-body-center'}
+                        {data: 'verificador', name:'verificador', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'horaVerificado', name:'horaVerificado', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'accion', name:'accion', orderable: true, searchable: true, className: 'dt-body-center'},
+
                     ],
 
+                });
+
+                $('#recargarTabla').click(function() {
+                    miTabla.ajax.reload(); // Esto recargará los datos de la tabla
                 });
 
             });

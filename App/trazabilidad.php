@@ -22,21 +22,21 @@
         ?>
         <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
         <style>
-        .invisible-table {
-            border-collapse: collapse;
-            width: 100%;
-        }
+            .invisible-table {
+                border-collapse: collapse;
+                width: 100%;
+            }
 
-        .invisible-table th, .invisible-table td {
-            border: none;
-            padding: 8px;
-            text-align: left;
-        }
+            .invisible-table th, .invisible-table td {
+                border: none;
+                padding: 8px;
+                text-align: left;
+            }
 
-        .invisible-table th:last-child,
-        .invisible-table td:last-child {
-            border-right: none;
-        }
+            .invisible-table th:last-child,
+            .invisible-table td:last-child {
+                border-right: none;
+            }
         </style>
     </head>
     <body>
@@ -148,29 +148,36 @@
                     })
                     .then(data => {
                         if(data.status == 1){
-                            console.log(data.datos);
                             $("#datos-factura").text(data.datos.PrfId + " " + data.datos.VtaNum);
                             $("#datos-nombre").text(data.datos.TerNom);
                             $("#datos-hora").text(data.datos.vtahor);
                             $("#datos-vendedor").text(data.datos.VenNom);
-                            $("#datos-alistador").text(data.datos.Nombres + " " + data.datos.Apellidos + " - " + data.datos.FinAlistamiento);
-                            $("#datos-duracion-alistamiento").text(data.datos.duracionAlistamiento + " minutos");
-                            $("#datos-verificador").text("TBT");
-                            $("#datos-duracion-verificacion").text("TBT");
-                            $("#datos-entregado").text("TBT");
-                            $("#datos-duracion-entrega").text("TBT");
-                            $("#datos-embalaje").text("???");
-                            $("#datos-total-embalajes").text("???");
                             
-                            let estado = "";
-
-                            let casos = {
-                                1: "Cargado",
-                                2: "Pendiente - Alistamiento",
-                                3: "Alistado"
+                            if(data.datos.NombresAlistador != 'null'){
+                                $("#datos-alistador").text(data.datos.NombresAlistador + " " + data.datos.ApellidosAlistador + " - " + data.datos.FinAlistamiento);
                             }
-
-                            estado = casos[data.datos.facEstado];
+                            if(data.datos.duracionAlistamiento != null){
+                                $("#datos-duracion-alistamiento").text(data.datos.duracionAlistamiento + " minutos");
+                            }
+                            if(data.datos.NombresVerificador != null){
+                                $("#datos-verificador").text(data.datos.NombresVerificador + " " + data.datos.ApellidosVerificador + " - " + data.datos.FinVerificacion);
+                            }
+                            if(data.datos.duracionVerificacion != null){
+                                $("#datos-duracion-verificacion").text(data.datos.duracionVerificacion + " minutos");
+                            }
+                            if(data.datos.NombresEntregador != null){
+                                $("#datos-entregado").text(data.datos.NombresEntregador + " " + data.datos.ApellidosEntregador + " - " + data.datos.FinEntrega);
+                            }
+                            if(data.datos.duracionEntrega != null){
+                                $("#datos-duracion-entrega").text(data.datos.duracionEntrega + " minutos");
+                            }
+                            if(data.datos.embalaje != null){
+                                $("#datos-embalaje").text(data.datos.embalaje);
+                            }
+                            if(data.datos.embalaje != null){
+                                $("#datos-total-embalajes").text(sumarNumerosEnLista(data.datos.embalaje));
+                            }
+                            estado = data.datos.estado;
 
                             if (data.datos.Forzado){
                                 estado = estado + " Forzado"
@@ -196,8 +203,18 @@
                         alert('Error con la conexión a la base de datos' + error);
                     });
 
+            }
+            function sumarNumerosEnLista(lista) {
+                let sumaTotal = 0;
+                const partes = lista.split('#');
+                for (const parte of partes) {
+                    if (parte.includes(':')) {
+                        const [, numeroStr] = parte.split(':');
+                        sumaTotal += parseInt(numeroStr.trim(), 10);
+                    }
+                }
                 
-
+                return sumaTotal;
             }
         </script>
     </body>

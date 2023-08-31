@@ -233,8 +233,6 @@ function verificarCompleto(){
         body: JSON.stringify(dataToSend)
     };
 
-    let estadoVerificacion = false;
-
     // Realizar la solicitud utilizando fetch
     fetch('controladores/revisarVerificacion.php', requestOptions)
         .then(response => {
@@ -244,8 +242,6 @@ function verificarCompleto(){
             return response.json();
         })
         .then(data => {
-            console.log("Aquii llega");
-            console.log()
             if(!data.estado){
                 Swal.fire({
                     title: 'Error',
@@ -256,9 +252,6 @@ function verificarCompleto(){
             }else{
                 modalCerrar.style.display = "block";
             }
-
-            console.log("Estado de verificacion");
-            console.log(estadoVerificacion);
         
         })
         .catch(error => {
@@ -324,10 +317,13 @@ function obtenerValoresDeTabla() {
             var cantidad = cantidadInput.value;
 
             if (cantidad != null && cantidad != ""&& cantidad != 0){
-                valores = valores + " " + descripcion + " " + cantidad
+                valores = valores + " " + descripcion + " : " + cantidad + " # ";
             }
         }
     }
+    
+    console.log("valores de la tabla");
+    console.log(valores);
 
     return valores;
 }

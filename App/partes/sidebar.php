@@ -96,7 +96,7 @@
             if (strpos($_SESSION['permisos'], $permiso1) || strpos($_SESSION['permisos'], $permiso2)) {
           ?>
           <li class="menu-item">
-            <a href="#">
+            <a href="lista_entrega.php">
             <span class="menu-icon">
                 <?php
                   if ($activado == "Entrega"){
@@ -142,10 +142,10 @@
             </a>
           </li>
           <li class="menu-item">
-            <a href="#">
+            <a href="estadisticasCarga.php">
             <span class="menu-icon">
                 <?php
-                  if ($activado == "ECarga"){
+                  if ($activado == "EstadisticasCarga"){
                 ?>
                   <i class="fa fa-bookmark"></i>
                 <?php
@@ -160,7 +160,7 @@
             </a>
           </li>
           <li class="menu-item">
-            <a href="#">
+            <a href="documento.php">
             <span class="menu-icon">
                 <?php
                   if ($activado == "Documentos"){
@@ -178,7 +178,7 @@
             </a>
           </li>
           <li class="menu-item">
-            <a href="#">
+            <a href="estadisticas.php">
             <span class="menu-icon">
                 <?php
                   if ($activado == "Estadisticas"){
