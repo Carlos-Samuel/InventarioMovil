@@ -43,6 +43,18 @@
                 text-align: center !important;
                 font-size: 12px !important;
             }
+
+            .column {
+                float: left;
+                width: 50%;
+            }
+
+            /* Clear floats after the columns */
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
         </style>
     </head>
     <body>
@@ -54,11 +66,17 @@
             <div id="overlay" class="overlay"></div>
             <div class="layout">
                 <main class="content">
-                    <h5>Fecha inicio</h5>
-                    <input type="date" id="fechaInicio">
+                    <div class="row">
+                        <div class="column">
+                            <h5>Fecha inicio</h5>
+                            <input type="date" id="fechaInicio">
+                        </div>
+                        <div class="column">
+                            <h5>Fecha fin</h5>
+                            <input type="date" id="fechaFin">
+                        </div>
+                    </div>
                     <br>
-                    <h5>Fecha fin</h5>
-                    <input type="date" id="fechaFin">
                     <button class='btn btn-danger' id = "borrarFechas">Borrar</button>
                     <br>
                     <table id="tablaDocumento">

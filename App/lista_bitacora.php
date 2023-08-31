@@ -12,6 +12,22 @@
         header("Location: dashboard.php");
         exit();
     }
+
+    require_once 'controladores/Connection.php';
+
+    $con = Connection::getInstance()->getConnection();
+    $quer = $con->query("select * from Usuarios;");
+
+    $datosUsuarios = array();
+    
+    while ($columna = $quer->fetch_assoc()) {
+        $row['idUsuarios'] = $columna['idUsuarios'];
+        $row['Cedula'] = $columna['Cedula'];
+        $row['Nombres'] = $columna['Nombres'];
+        $row['Apellidos'] = $columna['Apellidos'];
+
+        $datosUsuarios[] = $row;
+    }
 ?>
 <!doctype html>
 <html lang="es" data-bs-theme="auto">
@@ -19,6 +35,13 @@
         <?php
             include('partes/head.php')
         ?>
+        <style>
+            .select option {
+                background-color: #f2f2f2 !important;
+                color: #333 !important;
+                padding: 5px !important;
+            }
+        </style>
         <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
     </head>
     <body>
@@ -42,159 +65,42 @@
                             <input type="date" id="campo5" name="campo5">
                         </div>
                         <div style="width: 30%;">
-                            <label for="campo4"><strong>Usuario</strong></label>
-                            <select id="campo4" class="select2">
-                                <option value="opcion4">Todos</option>
-                                <option value="opcion4">Richard</option>
-                                <option value="opcion5">Jessica</option>
-                                <option value="opcion6">Sharon</option>
+                            <label for="usuario"><strong>Usuario</strong></label>
+                            <select id="usuario" class="select">
+                            <option value="0">Seleccione una opción</option>
+                                <?php
+                                    foreach ($datosUsuarios as $usuario) {
+                                ?>
+
+                                <option value="<?php echo $usuario['idUsuarios'] ?>"><?php echo $usuario['Cedula'] . " - " . $usuario['Nombres'] . " - " . $usuario['Apellidos'] ?></option>
+                                <?php
+                                    }
+                                ?>
                             </select>
                         </div>
                     </div>
                     <br>
                     <button type="button" class="btn btn-secondary">Vaciar</button>
                     <br>
-                    <table id="miTabla" class="display">
+                    <table id="tablaBitacora" class="display">
                         <thead>
                             <tr>
                                 <th>Fecha</th>
                                 <th>Hora</th>
                                 <th>Usuario</th>
-                                <th>Proceso</th>
-                                <th>Resultado</th>
+                                <th>Accion</th>
                                 <th>Factura</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <!-- <tbody>
                             <tr>
                                 <td>10/08/23</td>
                                 <td>14:37:23</td>
                                 <td>Cindy Lorena</td>
                                 <td>Alistado</td>
                                 <td>Cierre forzado</td>
-                                <td>REF123</td>
                             </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                                <td>REF123</td>
-                            </tr>
-                        </tbody>
+                        </tbody> -->
                     </table>
                 </main>
             </div>
@@ -209,8 +115,45 @@
 
         <script>
             $(document).ready( function () {
-                $('#miTabla').DataTable();
-            } );
+                var tablaBitacora = $('#tablaBitacora').DataTable({
+                    destroy: true,
+                    responsive: true,
+                    processing: true,
+                    pageLength: 10,
+                    ajax: {
+                        url: 'core/tabla_bitacora.php',
+                        type: 'GET',
+                        // data: function(data) {
+                        //     data.inicial = $('#fechaInicio').val(),
+                        //     data.final = $('#fechaFin').val()
+                        // }
+                    },
+                    language: {
+                        lengthMenu: '',
+                        search: 'Buscar',
+                        zeroRecords: 'Ningún Resultado',
+                        emptyTable: "Ningún dato disponible en esta tabla",
+                        info: 'De _START_ A _END_ De Un Total De _TOTAL_',
+                        infoEmpty: 'Ningún Resultado',
+                        infoFiltered: '(Filtrando _MAX_ En Total)',
+                        loadingRecords: 'Cargando',
+                        paginate: {
+                            first: 'Primero',
+                            last: 'Último',
+                            next: 'Siguiente',
+                            previous: 'Anterior'
+                        },
+                    },
+                    columns: [
+                        {data: 'fecha', name:'fecha', orderable: true, searchable: true},
+                        {data: 'hora', name:'hora', orderable: true, searchable: true},
+                        {data: 'usuario', name:'usuario', orderable: true, searchable: true},
+                        {data: 'accion', name:'accion', orderable: true, searchable: true},
+                        {data: 'factura', name:'factura', orderable: true, searchable: true}
+                    ],
+
+                });            
+            });
         </script>
     </body>
 </html>

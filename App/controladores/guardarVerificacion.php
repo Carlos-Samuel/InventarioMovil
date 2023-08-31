@@ -1,6 +1,7 @@
 <?php
 
     require_once 'Connection.php';
+    include 'bitacora.php';
 
     session_start();
 
@@ -44,6 +45,8 @@
                     $horaLocal = date('Y-m-d H:i:s');
                     
                     $sql = "UPDATE Facturas SET facEstado = 5, FinVerificacion = '$horaLocal', idVerificador = $idVerificador, Embalaje = '$embalaje', ObservacionesVer = '$observacion' WHERE vtaid = $idFactura";
+
+                    bitacoraLog('Verificado', $idFactura);
 
                     break;
             }

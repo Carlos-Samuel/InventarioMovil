@@ -1,6 +1,7 @@
 <?php
 
     require_once 'Connection.php';
+    include 'bitacora.php';
 
     session_start();
 
@@ -38,6 +39,8 @@
                     
                     $sql = "UPDATE Facturas SET facEstado = 0, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador WHERE vtaid = $idFactura";
 
+                    bitacoraLog('Devolver Factura', $idFactura);
+
                     break;
                 case 1:
 
@@ -47,6 +50,8 @@
                     $idAlistador = $_SESSION["idUsuarios"];
                     
                     $sql = "UPDATE Facturas SET facEstado = 3, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador WHERE vtaid = $idFactura";
+
+                    $mensaje =  bitacoraLog('Alistado', $idFactura);
 
                     break;
                 case 2:
@@ -65,6 +70,8 @@
                     $idAlistador = $_SESSION["idUsuarios"];
                     
                     $sql = "UPDATE Facturas SET facEstado = 3, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador, Forzado = 1, Forzador = $usuario WHERE vtaid = $idFactura";
+
+                    bitacoraLog('Alistado', $idFactura);
 
                     break;
             }
