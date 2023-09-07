@@ -15,7 +15,9 @@
         <style>
             .primeButton {
                 height: 50px;
+                width: 100%;
                 border-radius: 25px;
+                margin: 0 auto;
             }
 
         </style>
@@ -75,10 +77,31 @@
                         </div>
                     </div>
                 </main>
+                <h1 id="elemento1"></h1>
+                <br>
+                <h1 id="elemento2"></h1>
             </div>
         </div>
         <?php
             include('partes/foot.php')
         ?>  
+        <script>
+            // Obtener el ancho y largo de la pantalla utilizando JavaScript
+            var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            var screenHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+            // Enviar los valores al servidor PHP a través de una solicitud AJAX si es necesario
+            // Aquí solo mostramos los valores en la consola
+            console.log("Ancho de pantalla: " + screenWidth);
+            console.log("Largo de pantalla: " + screenHeight);
+
+            // Selecciona los elementos por sus identificadores
+            var elemento1 = document.getElementById("elemento1");
+            var elemento2 = document.getElementById("elemento2");
+
+            // Asigna valores a los elementos de texto
+            // elemento1.textContent = "Ancho de pantalla: " + screenWidth;
+            // elemento2.textContent = "Largo de pantalla: " + screenHeight;
+        </script>
     </body>
 </html>

@@ -130,7 +130,7 @@
 										<input type="password" class="form-control form-control-sm" name = "password" id="password" required>
 									</div>
 									<div class="col-2">
-										<button id = "botonMostrar"class = "btn btn-primary" type = "button" onclick = "mostrarContrasena()">Mostrar</button>
+										<button id = "botonMostrar"class = "btn btn-primary" type = "button" onclick = "mostrarContrasena()">M</button>
 									</div>
 								</div>
 							</div>
@@ -146,10 +146,10 @@
 				var botonMostrar = document.getElementById("botonMostrar");
 				if (type.type == "password"){
 					type.type = "text";
-					botonMostrar.innerText = "Ocultar";
+					botonMostrar.innerText = "O";
 				}else{
 					type.type = "password";
-					botonMostrar.innerText = "Mostrar";
+					botonMostrar.innerText = "M";
 				}
 			}
 		</script>

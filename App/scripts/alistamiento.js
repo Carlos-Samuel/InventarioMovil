@@ -139,7 +139,7 @@ function confirmarAccionPendiente() {
 }
 // Funcionalidades de la busqueda
 
-document.getElementById('busqueda').addEventListener('keyup', busqueda);
+// document.getElementById('').addEventListener('keyup', busqueda);
 
 function busqueda(){
     let input, filter, table, tr, td, i, j, txtValue;
@@ -186,6 +186,7 @@ window.onclick = function(event) {
 
 function vaciarEspacioTexto() {
     document.getElementById('busqueda').value = '';
+    controladorRevision = 0;
 }
 
 
@@ -259,6 +260,8 @@ let selectedItem = null;
 tablaAlistamiento.addEventListener('click', seleccionarFila);
 tablaAlistamiento.addEventListener('touchstart', seleccionarFila);
 
+let controladorRevision = 0;
+
 function seleccionarFila(event) {
     const filas = tablaAlistamiento.querySelectorAll('tr');
     filas.forEach(fila => fila.classList.remove('selected-row'));
@@ -270,8 +273,80 @@ function seleccionarFila(event) {
         
         selectedItem = filaSeleccionada.querySelector('[data-label="Item"]').textContent;
 
+        controladorRevision = 1;
+        console.log("El valor es: ");
+        console.log(selectedItem);
+        limpiar(selectedItem);
+
     }
 }
+
+var dataId = 0;
+
+function limpiar(item){
+    let input, filter, table, tr, td, i, j, txtValue;
+    table = document.getElementById('tablaAlistamiento');
+    tbody = table.getElementsByTagName('tbody')[0];
+    tr = tbody.getElementsByTagName('tr');
+
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName('td');
+        console.log(td)
+        if (td[0]) {
+            txtValue = td[0].textContent || td[0].innerText;
+            if (txtValue == item) {
+                tr[i].style.display = '';
+                dataId = tr[i].getAttribute('data-id');
+            }else{
+                tr[i].style.display = 'none';
+            }
+        }
+    }
+    var inputElement = document.getElementById("busqueda");
+    inputElement.focus();
+    console.log();
+    
+}
+
+document.getElementById('busqueda').addEventListener('keyup', revisorCode);
+
+function revisorCode(){
+    if (controladorRevision == 1){
+        let input = document.getElementById('busqueda').value;
+
+        if(input == selectedItem){
+
+            //reproducirSonido('correcto');
+
+            new Noty({
+                type: 'success',
+                text: 'Elemento correcto',
+                timeout: 4000,
+            }).show();
+
+            selectedItem = null;
+            controladorRevision = 0;
+
+            var inputElement = document.getElementById("numero_" + dataId);
+            inputElement.focus();
+
+        }else{
+
+            reproducirSonido('incorrecto');
+
+            new Noty({
+                type: 'error',
+                text: 'Elemento erroneo',
+                timeout: 4000,
+            }).show();
+
+        }
+
+        document.getElementById('busqueda').value = '';
+    }
+    
+}
+
 
 function RevisarBarCode(){
 

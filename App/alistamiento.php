@@ -141,7 +141,7 @@
                             <input type="text" id="busqueda" placeholder="" style="max-width: 400px;">
                             <br>
                             <a class="btn btn-primary primeButton"  onclick="vaciarEspacioTexto(); busqueda();" role = "button">Vaciar</a>
-                            <a class="btn btn-success primeBUtton"  onclick="RevisarBarCode();" role = "button">Revisar</a>
+                            <a class="btn btn-success primeBUtton"  onclick="busqueda();" role = "button">Buscar</a>
                         </div>
                         <br>
                         <div class="table">
@@ -234,6 +234,8 @@
         <script src="scripts/alistamiento.js"></script>
         <!-- Incluye la biblioteca jQuery -->
         <script src="js/jquery-3.6.0.min.js"></script>
+        <!-- <script src="path/to/honeywell-sdk.js"></script> -->
+
         <?php
             include('partes/foot.php')
         ?>  

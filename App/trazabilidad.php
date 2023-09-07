@@ -179,7 +179,7 @@
                             }
                             estado = data.datos.estado;
 
-                            if (data.datos.Forzado){
+                            if (data.datos.Forzado == 1){
                                 estado = estado + " Forzado"
                             }
 
