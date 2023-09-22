@@ -26,9 +26,9 @@
             while ($columna = $quer->fetch_assoc()) {
                 $row['id'] = "<p>" . $columna['PrfId'] . " " .$columna['VtaNum'] . "</p>";
                 $row['fecha'] = "<p>" . $columna['vtafec'] . "</p>";
-                $row['hora'] = "<p>" . $columna['vtahor'] . "</p>";
-                $row['cliente'] = "<p>" . $columna['TerNom'] . "</p>";
-                $row['razon'] = "<p>" . $columna['TerRaz'] . "</p>";
+                $row['hora'] = "<p>" . utf8_encode($columna['vtahor']) . "</p>";
+                $row['cliente'] = "<p>" . utf8_encode($columna['TerNom']) . "</p>";
+                $row['razon'] = "<p>" . utf8_encode($columna['TerRaz']) . "</p>";
 
                 $response[] = $row;
             }

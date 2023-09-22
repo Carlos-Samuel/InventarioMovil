@@ -240,7 +240,7 @@
               <span class="menu-title">Bitacora</span>
             </a>
             <a href="parametros.php">
-            <span class="menu-icon">
+              <span class="menu-icon">
                 <?php
                   if ($activado == "Parametros"){
                 ?>
@@ -255,6 +255,18 @@
               </span>
               <span class="menu-title">Parametros</span>
             </a>
+            <a href="controladores/importador.php">
+              <span class="menu-icon">
+                  <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Importador</span>
+            </a>
+            <a href="controladores/borrador.php">
+              <span class="menu-icon">
+                  <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Borrador</span>
+            </a>
             <?php
               }
             ?>
@@ -264,7 +276,7 @@
               <span class="menu-icon">
                 <i class="ri-book-2-fill"></i>
               </span>
-              <span class="menu-title">Logout</span>
+              <span class="menu-title">Salir</span>
             </a>
             <hr>
             <div class = "container" style = "text-align: center;">

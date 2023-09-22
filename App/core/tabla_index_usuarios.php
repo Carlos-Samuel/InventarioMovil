@@ -10,8 +10,8 @@
 
         while ($columna = $quer->fetch_assoc()) {
             $row['id'] = "<p>" . $columna['idUsuarios'] . "</p>";
-            $row['nombres'] = "<p>" . $columna['Cedula'] . "</p>";
-            $row['apellidos'] = "<p>" . $columna['Nombres'] . "</p>";
+            $row['nombres'] = "<p>" . utf8_encode($columna['Cedula']) . "</p>";
+            $row['apellidos'] = "<p>" . utf8_encode($columna['Nombres']) . "</p>";
             $row['cedula'] = "<p>" . $columna['Apellidos'] . "</p>";
             $row['email'] = "<p>" . $columna['Correo'] . "</p>";
 

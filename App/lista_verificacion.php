@@ -81,11 +81,11 @@
                                     <tr class="<?php echo $filaClase; ?>">
                                         <td><?php echo $verificacion['PrfId'] . " " . $verificacion['VtaNum'] ?></td>
                                         <td><?php echo $verificacion['vtafec'] . " " . $verificacion['vtahor'] ?></td>
-                                        <td><?php echo $verificacion['TerNom'] ?></td>
-                                        <td><?php echo $verificacion['TerRaz'] ?></td>
-                                        <td><?php echo $verificacion['CiuNom'] ?></td>
-                                        <td><?php echo $verificacion['VenNom'] ?></td>
-                                        <td><?php echo $verificacion['Nombres'] . " " .$verificacion['Apellidos'] ?></td>
+                                        <td><?php echo utf8_encode($verificacion['TerNom']) ?></td>
+                                        <td><?php echo utf8_encode($verificacion['TerRaz']) ?></td>
+                                        <td><?php echo utf8_encode($verificacion['CiuNom']) ?></td>
+                                        <td><?php echo utf8_encode($verificacion['VenNom']) ?></td>
+                                        <td><?php echo utf8_encode($verificacion['Nombres']) . " " . utf8_encode($verificacion['Apellidos']) ?></td>
                                         <td><?php echo $verificacion['fecha_y_hora'] ?></td>
                                         <td>
                                             <?php 

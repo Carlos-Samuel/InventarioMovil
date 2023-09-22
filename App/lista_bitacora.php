@@ -57,15 +57,15 @@
                     <h2>Bitacora</h2>
                     <div style="display: flex; justify-content: space-between; margin-top: 20px;">
                         <div style="width: 30%;">
-                            <label for="campo5"><strong>Fecha inicio</strong></label>
-                            <input type="date" id="campo5" name="campo5">
+                            <label><strong>Fecha inicio</strong></label>
+                            <input type="date" id="fechaInicio" name="fechaInicio">
                         </div>
                         <div style="width: 30%;">
-                            <label for="campo5"><strong>Fecha fin</strong></label>
-                            <input type="date" id="campo5" name="campo5">
+                            <label><strong>Fecha fin</strong></label>
+                            <input type="date" id="fechaFin" name="fechaFin">
                         </div>
                         <div style="width: 30%;">
-                            <label for="usuario"><strong>Usuario</strong></label>
+                            <label><strong>Usuario</strong></label>
                             <select id="usuario" class="select">
                             <option value="0">Seleccione una opción</option>
                                 <?php
@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     <br>
-                    <button type="button" class="btn btn-secondary">Vaciar</button>
+                    <button type="button" class="btn btn-secondary" id = "botonVaciar">Vaciar</button>
                     <br>
                     <table id="tablaBitacora" class="display">
                         <thead>
@@ -92,15 +92,6 @@
                                 <th>Factura</th>
                             </tr>
                         </thead>
-                        <!-- <tbody>
-                            <tr>
-                                <td>10/08/23</td>
-                                <td>14:37:23</td>
-                                <td>Cindy Lorena</td>
-                                <td>Alistado</td>
-                                <td>Cierre forzado</td>
-                            </tr>
-                        </tbody> -->
                     </table>
                 </main>
             </div>
@@ -114,7 +105,35 @@
         <script type="text/javascript" charset="utf8" src="js/jquery.dataTables.js"></script>
 
         <script>
+
             $(document).ready( function () {
+
+                var botonV = document.getElementById('botonVaciar');
+
+                const fechaInicioInput = document.getElementById('fechaInicio');
+                const fechaFinInput = document.getElementById('fechaFin');
+                const usuario = document.getElementById('usuario');
+
+                fechaInicioInput.addEventListener('change', function() {
+                    tablaBitacora.ajax.reload();
+                });
+
+                fechaFinInput.addEventListener('change', function() {
+                    tablaBitacora.ajax.reload();
+                });
+
+                usuario.addEventListener('change', function() {
+                    console.log(usuario.value);
+                    tablaBitacora.ajax.reload();
+                });
+
+                botonV.addEventListener('click', function() {
+                    fechaInicioInput.value = null;
+                    fechaFinInput.value = null;
+                    usuario.value = 0;
+                    tablaBitacora.ajax.reload();
+                });
+
                 var tablaBitacora = $('#tablaBitacora').DataTable({
                     destroy: true,
                     responsive: true,
@@ -123,10 +142,11 @@
                     ajax: {
                         url: 'core/tabla_bitacora.php',
                         type: 'GET',
-                        // data: function(data) {
-                        //     data.inicial = $('#fechaInicio').val(),
-                        //     data.final = $('#fechaFin').val()
-                        // }
+                        data: function(data) {
+                            data.inicial = $('#fechaInicio').val(),
+                            data.final = $('#fechaFin').val(),
+                            data.usuario = $('#usuario').val()
+                        }
                     },
                     language: {
                         lengthMenu: '',

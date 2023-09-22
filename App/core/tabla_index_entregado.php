@@ -35,10 +35,10 @@
         while ($columna = $quer->fetch_assoc()) {
             $row['id'] = "<p>" . $columna['PrfId'] . " " .$columna['VtaNum'] . "</p>";
             $row['fecha'] = "<p>" . $columna['vtafec'] . " " . $columna['vtahor'] . "</p>";
-            $row['nombre'] = "<p>" . $columna['TerNom'] . "</p>";
-            $row['razon'] = "<p>" . $columna['TerRaz'] . "</p>";
-            $row['ciudad'] = "<p>" . $columna['CiuNom'] . "</p>";
-            $row['vendedor'] = "<p>" . $columna['VenNom'] . "</p>";
+            $row['nombre'] = "<p>" . utf8_encode($columna['TerNom']) . "</p>";
+            $row['razon'] = "<p>" . utf8_encode($columna['TerRaz']) . "</p>";
+            $row['ciudad'] = "<p>" . utf8_encode($columna['CiuNom']) . "</p>";
+            $row['vendedor'] = "<p>" . utf8_encode($columna['VenNom']) . "</p>";
             $row['alistador'] = "<p>" . $columna['NombresAlistador'] . " " .$columna['ApellidosAlistador'] ."</p>";
             $row['horaAlistado'] = "<p>" . $columna['fecha_y_hora_alistado'] . "</p>";
             $row['verificador'] = "<p>" . $columna['NombresVerificador'] . " " .$columna['ApellidosVerificador'] ."</p>";

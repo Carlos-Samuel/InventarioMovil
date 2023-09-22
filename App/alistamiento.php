@@ -123,24 +123,10 @@
                             </table>
                         </div>
                         <br>
-                        <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
-                        <div class="d-grid gap-2">
-                            <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button id="botonDevolver" class="btn btn-danger primeButton" type="button">Devolver</button>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button id="botonForzado" class="btn btn-info primeButton" type="button">Cierre forzado</button>
-                        </div>
-                        <br>
                         <div class="buscador">
                             <input type="text" id="busqueda" placeholder="" style="max-width: 400px;">
                             <br>
-                            <a class="btn btn-primary primeButton"  onclick="vaciarEspacioTexto(); busqueda();" role = "button">Vaciar</a>
+                            <a class="btn btn-primary primeButton"  onclick="vaciarEspacioTexto();" role = "button">Vaciar</a>
                             <a class="btn btn-success primeBUtton"  onclick="busqueda();" role = "button">Buscar</a>
                         </div>
                         <br>
@@ -155,6 +141,7 @@
                                         <th>Cantidad</th>
                                         <th class="input-container">Alistado</th>
                                         <th>Diferencia</th>
+                                        <th>Procesar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -168,15 +155,18 @@
                                     ?>
                                         <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
                                             <td data-label="Item"><?php echo $producto['item'] ?></td>
-                                            <td data-label="Descripcion"><?php echo $producto['descripcion'] ?></td>
-                                            <td data-label="Ubicacion"><?php echo $producto['ubicacion'] ?></td>
-                                            <td data-label="Presentacion"><?php echo $producto['presentacion'] ?></td>
+                                            <td data-label="Descripcion"><?php echo utf8_encode($producto['descripcion']) ?></td>
+                                            <td data-label="Ubicacion"><?php echo utf8_encode($producto['ubicacion']) ?></td>
+                                            <td data-label="Presentacion"><?php echo utf8_encode($producto['presentacion']) ?></td>
                                             <td data-label="Cantidad"><?php echo $producto['cantidad'] ?></td>
                                             <td data-label="Alistado" class="input-container">
                                                 <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value="<?php echo $producto['alistado'] ?>">
                                             </td>
                                             <td data-label="Diferencia"><?php echo $producto['diferencia'] ?></td>
-                                        </tr>
+                                            <td data-label="Procesar">
+                                                <button class="btn btn-primary primeButton procesar-btn" data-item="<?php echo $producto['item'] ?>">Procesar</button>
+                                            </td>                     
+                                       </tr>
                                     <?php
                                         }
                                     ?>
@@ -185,6 +175,21 @@
                             <br>
                         </div>
                     </div>
+                    <br>
+                    <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
+                    <div class="d-grid gap-2">
+                        <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button id="botonDevolver" class="btn btn-danger primeButton" type="button">Devolver</button>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button id="botonForzado" class="btn btn-info primeButton" type="button">Cierre forzado</button>
+                    </div>
+                    <br>
                 </main>
             </div>
         </div>

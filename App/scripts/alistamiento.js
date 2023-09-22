@@ -187,6 +187,7 @@ window.onclick = function(event) {
 function vaciarEspacioTexto() {
     document.getElementById('busqueda').value = '';
     controladorRevision = 0;
+    busqueda();
 }
 
 
@@ -257,29 +258,27 @@ const tablaAlistamiento = document.getElementById('tablaAlistamiento');
 
 let selectedItem = null;
 
-tablaAlistamiento.addEventListener('click', seleccionarFila);
-tablaAlistamiento.addEventListener('touchstart', seleccionarFila);
+// tablaAlistamiento.addEventListener('click', seleccionarFila);
+// tablaAlistamiento.addEventListener('touchstart', seleccionarFila);
 
 let controladorRevision = 0;
 
-function seleccionarFila(event) {
-    const filas = tablaAlistamiento.querySelectorAll('tr');
-    filas.forEach(fila => fila.classList.remove('selected-row'));
+// function seleccionarFila(event) {
+//     const filas = tablaAlistamiento.querySelectorAll('tr');
+//     filas.forEach(fila => fila.classList.remove('selected-row'));
 
-    const filaSeleccionada = event.target.closest('tr');
+//     const filaSeleccionada = event.target.closest('tr');
 
-    if (filaSeleccionada) {
-        filaSeleccionada.classList.add('selected-row');
+//     if (filaSeleccionada) {
+//         filaSeleccionada.classList.add('selected-row');
         
-        selectedItem = filaSeleccionada.querySelector('[data-label="Item"]').textContent;
+//         selectedItem = filaSeleccionada.querySelector('[data-label="Item"]').textContent;
 
-        controladorRevision = 1;
-        console.log("El valor es: ");
-        console.log(selectedItem);
-        limpiar(selectedItem);
+//         controladorRevision = 1;
+//         limpiar(selectedItem);
 
-    }
-}
+//     }
+// }
 
 var dataId = 0;
 
@@ -291,7 +290,6 @@ function limpiar(item){
 
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName('td');
-        console.log(td)
         if (td[0]) {
             txtValue = td[0].textContent || td[0].innerText;
             if (txtValue == item) {
@@ -308,7 +306,16 @@ function limpiar(item){
     
 }
 
-document.getElementById('busqueda').addEventListener('keyup', revisorCode);
+//document.getElementById('busqueda').addEventListener('keyup', revisorCode);
+
+document.getElementById('busqueda').addEventListener('input', esperarTeclado);
+
+let timerId;
+
+function esperarTeclado(){
+    clearTimeout(timerId);
+    timerId = setTimeout(revisorCode, 1000);
+}
 
 function revisorCode(){
     if (controladorRevision == 1){
@@ -402,8 +409,6 @@ document.getElementById('tablaAlistamiento').addEventListener('change', function
         var id = target.closest('tr').getAttribute('data-id');
         var newValue = target.value;
 
-        // console.log("Input ha cambiado. Id:", id, "Nuevo valor:", newValue);
-
         var dataToSend = {
             idProducto: id,
             cantidadAlistada: newValue
@@ -431,6 +436,7 @@ document.getElementById('tablaAlistamiento').addEventListener('change', function
 
                     if (data.diferencia == 0){
                         nuevaClase = 'alistamiento-completo';
+                        vaciarEspacioTexto();
                     }else{
                         nuevaClase = 'alistamiento-incompleto';
                     }
@@ -468,3 +474,15 @@ function verificarDiferenciasIgualesACero() {
     
     return true;
 }
+
+const botonesProcesar = document.querySelectorAll('.procesar-btn');
+
+botonesProcesar.forEach(boton => {
+    boton.addEventListener('click', function() {
+        const item = this.getAttribute('data-item');
+        console.log(item);
+        controladorRevision = 1;
+        selectedItem = item;
+        limpiar(item);
+    });
+});

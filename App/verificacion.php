@@ -176,9 +176,8 @@
                         <div class="buscador">
                             <input type="text" id="busqueda" placeholder="" style="max-width: 400px;">
                             <br>
-                            <a class="btn btn-warning primeButton"  onclick="vaciarEspacioTexto(); busqueda();" role = "button">Vaciar</a>
-                            <a class="btn btn-primary primeButton"  onclick="busqueda();" role = "button">Buscar</a>
-                            <a class="btn btn-success primeBUtton"  onclick="RevisarBarCode();" role = "button">Revisar</a>
+                            <a class="btn btn-warning primeButton"  onclick="vaciarEspacioTexto();" role = "button">Vaciar</a>
+                            <a class="btn btn-success primeBUtton"  onclick="busqueda();" role = "button">Buscar</a>
                         </div>
                         <br>
                         <div class="table">
@@ -189,6 +188,7 @@
                                         <th>Descripción</th>
                                         <th>Presentación</th>
                                         <th class="input-container">Cantidad</th>
+                                        <th>Procesar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -207,6 +207,9 @@
                                             <td data-label="Cantidad" class="input-container">
                                                 <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value = "<?php echo ($producto['alistado'] == $producto['verificado']) ? $producto['verificado'] : ''; ?>">
                                             </td>
+                                            <td data-label="Procesar">
+                                                <button class="btn btn-primary primeButton procesar-btn" data-item="<?php echo $producto['item'] ?>">Procesar</button>
+                                            </td>    
                                         </tr>
                                     <?php
                                         }

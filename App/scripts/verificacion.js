@@ -28,6 +28,8 @@ btnCancelarCerrar.addEventListener('click', ocultarDialogo);
 
 const diccionarioVerificacion = {};
 
+let controladorRevision = 0;
+
 obtenerValoresDeFilas();
 
 function obtenerValoresDeFilas() {
@@ -41,8 +43,6 @@ function obtenerValoresDeFilas() {
     });
 
 }
-
-
 
 function ocultarDialogo() {
     modalCerrar.style.display = 'none';
@@ -149,6 +149,8 @@ function RevisarBarCode(){
 
 function vaciarEspacioTexto() {
     document.getElementById('busqueda').value = '';
+    controladorRevision = 0;
+    busqueda();
 }
 
 
@@ -186,6 +188,7 @@ document.getElementById('tablaVerificacion').addEventListener('change', function
                     if (data.estado){
                         nuevaClase = 'verificacion-completo';
                         diccionarioVerificacion[id] = true;
+                        vaciarEspacioTexto();
                     }else{
                         nuevaClase = 'verificacion-incorrecto';
                         diccionarioVerificacion[id] = false;
@@ -326,4 +329,85 @@ function obtenerValoresDeTabla() {
     console.log(valores);
 
     return valores;
+}
+
+function limpiar(item){
+    let input, filter, table, tr, td, i, j, txtValue;
+    table = document.getElementById('tablaVerificacion');
+    tbody = table.getElementsByTagName('tbody')[0];
+    tr = tbody.getElementsByTagName('tr');
+
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName('td');
+        if (td[0]) {
+            txtValue = td[0].textContent || td[0].innerText;
+            if (txtValue == item) {
+                tr[i].style.display = '';
+                dataId = tr[i].getAttribute('data-id');
+            }else{
+                tr[i].style.display = 'none';
+            }
+        }
+    }
+    var inputElement = document.getElementById("busqueda");
+    inputElement.focus();
+    
+}
+
+const botonesProcesar = document.querySelectorAll('.procesar-btn');
+
+botonesProcesar.forEach(boton => {
+    boton.addEventListener('click', function() {
+        const item = this.getAttribute('data-item');
+        console.log(item);
+        controladorRevision = 1;
+        selectedItem = item;
+        limpiar(item);
+    });
+});
+
+document.getElementById('busqueda').addEventListener('input', esperarTeclado);
+
+let timerId;
+
+function esperarTeclado(){
+    clearTimeout(timerId);
+    timerId = setTimeout(revisorCode, 1000);
+}
+
+function revisorCode(){
+    if (controladorRevision == 1){
+        let input = document.getElementById('busqueda').value;
+
+        if(input == selectedItem){
+
+            //reproducirSonido('correcto');
+
+            new Noty({
+                type: 'success',
+                text: 'Elemento correcto',
+                timeout: 4000,
+            }).show();
+
+            selectedItem = null;
+            controladorRevision = 0;
+
+            var inputElement = document.getElementById("numero_" + dataId);
+            inputElement.focus();
+
+        }else{
+
+            reproducirSonido('incorrecto');
+
+            new Noty({
+                type: 'error',
+                text: 'Elemento erroneo',
+                timeout: 4000,
+            }).show();
+
+        }
+
+        document.getElementById('busqueda').value = '';
+    }
+    
 }

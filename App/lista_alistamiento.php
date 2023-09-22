@@ -65,10 +65,10 @@
                                     <tr class="<?php echo $filaClase; ?>">
                                         <td><?php echo $alistamiento['PrfId'] . " " . $alistamiento['VtaNum'] ?></td>
                                         <td><?php echo $alistamiento['vtafec'] ?></td>
-                                        <td><?php echo $alistamiento['TerNom'] ?></td>
-                                        <td><?php echo $alistamiento['TerRaz'] ?></td>
-                                        <td><?php echo $alistamiento['CiuNom'] ?></td>
-                                        <td><?php echo $alistamiento['VenNom'] ?></td>
+                                        <td><?php echo utf8_encode($alistamiento['TerNom']) ?></td>
+                                        <td><?php echo utf8_encode($alistamiento['TerRaz']) ?></td>
+                                        <td><?php echo utf8_encode($alistamiento['CiuNom']) ?></td>
+                                        <td><?php echo utf8_encode($alistamiento['VenNom']) ?></td>
                                         <td><?php echo $alistamiento['vtahor'] ?></td>
                                         <td><?php echo $alistamiento['facObservaciones'] ?></td>
                                         <td>
@@ -100,7 +100,9 @@
                                     <th>Procesar</th>
                                 </tr>
                             </thead>
-                        </table>     
+                        </table>    
+                        <!-- <button id="recargarBtn">Recargar DataTable</button> -->
+ 
                     </div>  
                 </main>
             </div>
@@ -162,6 +164,10 @@
                     console.log('Valor de data-id:', id);
                     window.location.href = 'detalle_usuario.php';
                 });
+
+                // $('#recargarBtn').click(function() {
+                //     miTabla.ajax.reload();
+                // });
 
             });
         </script> 

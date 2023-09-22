@@ -10,7 +10,7 @@ services:
     volumes:
       - ./App:/var/www/html
 
-  # Contenedor de MySQL
+  # Contenedor de la primera base de datos MySQL
   db:
     image: mysql:5.7
     environment:
@@ -23,7 +23,20 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
-  # Contenedor de PHPMyAdmin
+  # Contenedor de la segunda base de datos MySQL
+  db2:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: PruebaBD
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: 12345
+    ports:
+      - "3307:3306"
+    volumes:
+      - db2_data:/var/lib/mysql
+
+  # Contenedor de PHPMyAdmin para la primera base de datos
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     links:
@@ -34,5 +47,17 @@ services:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: secret
 
+  # Contenedor de PHPMyAdmin para la segunda base de datos
+  phpmyadmin2:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db2
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db2
+      MYSQL_ROOT_PASSWORD: secret
+
 volumes:
   db_data:
+  db2_data:

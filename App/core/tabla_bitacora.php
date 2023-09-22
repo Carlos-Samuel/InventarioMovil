@@ -25,18 +25,24 @@
                     B.idUsuario = U.idUsuarios
             ";
 
-        // if ($_GET['inicial'] != "" || $_GET['final'] != ""){
-        //     $sql = $sql . " WHERE ";
-        //     if ($_GET['inicial'] != ""){
-        //         $sql = $sql . " F.vtafec >= '" . $_GET['inicial'] . "' ";
-        //     }
-        //     if ($_GET['inicial'] != "" && $_GET['final'] != ""){
-        //         $sql = $sql . " AND " ;
-        //     }
-        //     if ($_GET['final'] != ""){
-        //         $sql = $sql . " F.vtafec <= '" . $_GET['final'] . "' ";
-        //     }
-        // }
+        if ($_GET['inicial'] != "" || $_GET['final'] != "" || $_GET['usuario'] != 0){
+            $sql = $sql . " WHERE ";
+            if ($_GET['inicial'] != ""){
+                $sql = $sql . " B.FechaHora >= '" . $_GET['inicial'] . "' ";
+            }
+            if ($_GET['inicial'] != "" && $_GET['final'] != ""){
+                $sql = $sql . " AND " ;
+            }
+            if ($_GET['final'] != ""){
+                $sql = $sql . " B.FechaHora <= '" . $_GET['final'] . "' ";
+            }
+            if ($_GET['final'] != "" && $_GET['usuario'] != 0){
+                $sql = $sql . " AND " ;
+            }
+            if ( $_GET['usuario'] != 0){
+                $sql = $sql . " B.idUsuario = '" . $_GET['usuario'] . "' ";
+            }
+        }
 
         $quer = $con->query($sql);
 
@@ -45,7 +51,7 @@
         while ($columna = $quer->fetch_assoc()) {
             $row['fecha'] = "<p>" . $columna['fechaBitacora'] . "</p>";
             $row['hora'] = "<p>" . $columna['horaBitacora'] . "</p>";
-            $row['usuario'] = "<p>" . $columna['Nombres'] . " " . $columna['Apellidos'] . "</p>";
+            $row['usuario'] = "<p>" . utf8_encode($columna['Nombres']) . " " . utf8_encode($columna['Apellidos']) . "</p>";
             $row['accion'] = "<p>" . $columna['Accion'] . "</p>";
             $row['factura'] = "<p>" .  $columna['PrfId'] . " " .$columna['VtaNum'] ."</p>";
 
