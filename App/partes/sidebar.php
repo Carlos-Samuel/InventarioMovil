@@ -178,6 +178,24 @@
             </a>
           </li>
           <li class="menu-item">
+            <a href="cierresForzados.php">
+            <span class="menu-icon">
+                <?php
+                  if ($activado == "CForzado"){
+                ?>
+                  <i class="fa fa-bookmark"></i>
+                <?php
+                  }else{
+                ?>
+                  <i class="ri-book-2-fill"></i>
+                <?php
+                  }
+                ?>
+              </span>
+              <span class="menu-title">Cierres forzados</span>
+            </a>
+          </li>
+          <li class="menu-item">
             <a href="estadisticas.php">
             <span class="menu-icon">
                 <?php

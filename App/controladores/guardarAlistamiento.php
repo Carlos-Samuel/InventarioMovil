@@ -21,7 +21,7 @@
 
             if (isset($data['justificacion'])){
                 $justificacion = $data['justificacion'];
-                $justificacion = $con->real_escape_string($justificacion);
+                $justificacion = utf8_encode($con->real_escape_string($justificacion));
             }
 
             if (isset($data['usuario'])){
@@ -69,7 +69,7 @@
 
                     $idAlistador = $_SESSION["idUsuarios"];
                     
-                    $sql = "UPDATE Facturas SET facEstado = 3, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador, Forzado = 1, Forzador = $usuario WHERE vtaid = $idFactura";
+                    $sql = "UPDATE Facturas SET facEstado = 3, FinAlistamiento = '$horaLocal', idAlistador = $idAlistador, Forzado = 1, Forzador = $usuario, ObservacionesFor = '$justificacion' WHERE vtaid = $idFactura";
 
                     bitacoraLog('Alistado', $idFactura);
 

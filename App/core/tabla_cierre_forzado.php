@@ -10,11 +10,9 @@
                 A.Nombres AS NombresAlistador,
                 A.Apellidos AS ApellidosAlistador,
                 TIMESTAMPDIFF(MINUTE, InicioAlistamiento, FinAlistamiento) AS duracionAlistamiento,
-                V.Nombres AS NombresVerificador,
-                V.Apellidos AS ApellidosVerificador,
+                Forz.Nombres AS NombresForzador,
+                Forz.Apellidos AS ApellidosForzador,
                 TIMESTAMPDIFF(MINUTE, InicioVerificacion, FinVerificacion) AS duracionVerificacion,
-                E.Nombres AS NombresEntregador,
-                E.Apellidos AS ApellidosEntregador,
                 TIMESTAMPDIFF(MINUTE, InicioEntrega, FinEntrega) AS duracionEntrega,
                 LTRIM(F.Embalaje) AS embalaje,
                 Est.Descripcion AS estado,
@@ -22,17 +20,7 @@
                     DATE_FORMAT(F.FinAlistamiento, '%Y-%m-%d'), 
                     ' ', 
                     TIME_FORMAT(F.FinAlistamiento, '%h:%i %p')
-                ) AS fecha_y_hora_alistado, 
-                CONCAT(
-                    DATE_FORMAT(F.FinVerificacion, '%Y-%m-%d'), 
-                    ' ', 
-                    TIME_FORMAT(F.FinVerificacion, '%h:%i %p')
-                ) AS fecha_y_hora_verificado,
-                CONCAT(
-                    DATE_FORMAT(F.FinEntrega, '%Y-%m-%d'), 
-                    ' ', 
-                    TIME_FORMAT(F.FinEntrega, '%h:%i %p')
-                ) AS fecha_y_hora_entregado
+                ) AS fecha_y_hora_alistado
             FROM 
                 Facturas AS F
             LEFT JOIN
@@ -40,17 +28,15 @@
                 ON
                     A.idUsuarios = F.idAlistador
             LEFT JOIN
-                Usuarios AS V
+                Usuarios AS Forz
                 ON
-                    V.idUsuarios = F.idVerificador
-            LEFT JOIN
-                Usuarios AS E
-                ON
-                    E.idUsuarios = F.idEntregador
+                    Forz.idUsuarios = F.Forzador
             LEFT JOIN
                 Estados AS Est
                 ON
                     Est.idEstados = F.facEstado
+            WHERE
+                F.Forzador = 1
             ";
             
         
@@ -68,6 +54,7 @@
             }
         }
 
+
         $quer = $con->query($sql);
 
 
@@ -75,19 +62,10 @@
 
         while ($columna = $quer->fetch_assoc()) {
             $row['id'] = "<p>" . $columna['PrfId'] . " " .$columna['VtaNum'] . "</p>";
-            $row['nombre'] = "<p>" . ($columna['TerNom']) . " " . ($columna['TerRaz']) . "</p>";
-            $row['fecha'] = "<p>" . $columna['vtafec'] . " " . $columna['vtahor'] . "</p>";
-            $row['vendedor'] = "<p>" . ($columna['VenNom']) . "</p>";
-            $row['alistador'] = "<p>" . ($columna['NombresAlistador']) . " " .($columna['ApellidosAlistador']) . " " . $columna['fecha_y_hora_alistado'] ."</p>";
-            $row['horaAlistado'] = "<p>" . $columna['duracionAlistamiento'] . "</p>";
-            $row['verificador'] = "<p>" . ($columna['NombresVerificador']) . " " .($columna['ApellidosVerificador']) . " " . $columna['fecha_y_hora_verificado'] ."</p>";
-            $row['horaVerificado'] = "<p>" . $columna['duracionVerificacion'] . "</p>";
-            $row['entregador'] = "<p>" . ($columna['NombresEntregador']) . " " .($columna['ApellidosEntregador']) . " " . $columna['fecha_y_hora_entregado'] ."</p>";
-            $row['horaEntrega'] = "<p>" . $columna['duracionEntrega'] . "</p>";
-            $row['estado'] = "<p>" . $columna['estado'] . "</p>";
-
-            // $rowClass = $columna['Forzado'] == '1' ? 'fila-amarilla' : '';
-            // $row['DT_RowClass'] = $rowClass;
+            $row['fecha_alistado'] = "<p>" . $columna['fecha_y_hora_alistado'] . "</p>";
+            $row['forzador'] = "<p>" . ($columna['NombresForzador']) . " " .($columna['ApellidosForzador']) ."</p>";
+            $row['alistador'] = "<p>" . ($columna['NombresAlistador']) . " " .($columna['ApellidosAlistador']) ."</p>";
+            $row['ObservacionesFor'] = "<p>" . $columna['ObservacionesFor'] . "</p>";
 
             utf8_encode_array($row);
 

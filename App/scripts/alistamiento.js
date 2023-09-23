@@ -77,48 +77,61 @@ function confirmarAccionForzado() {
 
     let varcedula = $('#cedulaUsuario').val();
     let varpassword = $('#passwordUsuario').val();
+    let varjustificacion = $('#justificacion').val();
 
-    var dataToSend = {
-        cedula: varcedula,
-        password: varpassword
-    };
 
-    // Configuración de la solicitud
-    var requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(dataToSend)
-    };
-
-    fetch('controladores/revisarUsuario.php', requestOptions)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la red');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if(data.status == 1){
-                if (data.estado){
-                    guardar(3, '', varcedula);
-                }else{
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Credenciales incorrectas',
-                        icon: 'error',
-                        confirmButtonText: 'Entendido'
-                    });
-                    $('#passwordUsuario').val('');
-                }
-            }else{
-                alert ("Error al revisar contacte con el administrador");
-            }
-        })
-        .catch(error => {
-            alert('Error con la conexión a la base de datos' + error);
+    if (varjustificacion === null || varjustificacion.trim() === '') {
+        Swal.fire({
+            title: 'Error',
+            text: 'Ingrese una justificacion',
+            confirmButtonText: 'Entendido'
         });
+
+
+    }else{
+
+        var dataToSend = {
+            cedula: varcedula,
+            password: varpassword
+        };
+
+        // Configuración de la solicitud
+        var requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        };
+
+        fetch('controladores/revisarUsuario.php', requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta de la red');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if(data.status == 1){
+                    if (data.estado){
+                        guardar(3, varjustificacion, data.idUsuario);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Credenciales incorrectas',
+                            icon: 'error',
+                            confirmButtonText: 'Entendido'
+                        });
+                        $('#passwordUsuario').val('');
+                    }
+                }else{
+                    alert ("Error al revisar contacte con el administrador");
+                }
+            })
+            .catch(error => {
+                alert('Error con la conexión a la base de datos' + error);
+            });
+    }
 }
 
 function confirmarAccionPendiente() {

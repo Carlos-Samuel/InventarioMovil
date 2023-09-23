@@ -179,8 +179,10 @@
                             }
                             estado = data.datos.estado;
 
+                            ObservacionesFor = data.datos.ObservacionesFor;
+
                             if (data.datos.Forzado == 1){
-                                estado = estado + " Forzado"
+                                estado = estado + ", Forzado por: " + (ObservacionesFor);
                             }
 
                             $("#datos-estado-documento").text(estado);

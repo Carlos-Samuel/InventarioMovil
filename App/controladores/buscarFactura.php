@@ -55,7 +55,8 @@
 
             if ($resultado->num_rows > 0) {
                 $row = $resultado->fetch_assoc();
-
+                utf8_encode_array($row);
+                
                 $response = array(
                     "message" => "Factura actualizada correctamente",
                     "status" => 1,
@@ -83,4 +84,13 @@
 
     header("Content-Type: application/json");
     echo json_encode($response);
+
+    function utf8_encode_array(&$array) {
+        foreach ($array as &$value) {
+            if (is_string($value) && $value !== "NULL" && !empty($value)) {
+                $value = utf8_encode($value);
+            }
+        }
+    }
+    
 ?>

@@ -22,7 +22,7 @@
             $id_recibido = urldecode($_GET['id']);
 
             $con = Connection::getInstance()->getConnection();
-            $quer = $con->query("select * from Facturas where vtaid = " . $id_recibido . ";");
+            $quer = $con->query("SELECT * FROM Facturas WHERE vtaid = " . $id_recibido . ";");
     
             if ($quer->num_rows > 0) {
                 $row = $quer->fetch_assoc();
@@ -40,13 +40,23 @@
                 echo "No se encontro la factura.";
             }
 
-            $quer2 = $con->query("select * from Productos where vtaid = " . $id_recibido . ";");
+            $quer2 = $con->query(
+                "SELECT * 
+                FROM Productos 
+                WHERE vtaid =  $id_recibido 
+                ORDER BY
+                CASE
+                  WHEN ProUbica = 'DATO NO DISPONIBLE' THEN 1
+                  ELSE 0
+                END,
+                ProUbica ASC;");
 
             $datosProductos = array();
     
             while ($columna = $quer2->fetch_assoc()) {
                 $row['id'] = $columna['VtaDetId'];
                 $row['item'] = $columna['ProId'];
+                $row['ProCodBar'] = $columna['ProCodBar'];
                 $row['descripcion'] = $columna['ProNom'];
                 $row['ubicacion'] = $columna['ProUbica'];
                 $row['presentacion'] = $columna['ProPresentacion'];
@@ -113,10 +123,10 @@
                                         <td data-label="Prefijo"><?php echo $prefijo ?></td>
                                         <td data-label="Doc"><?php echo $numDoc ?></td>
                                         <td data-label="Fecha"><?php echo $fecha ?></td>
-                                        <td data-label="NombreCliente"><?php echo $nombre ?></td>
-                                        <td data-label="RazonSocial"><?php echo $razon ?></td>
-                                        <td data-label="Ciudad"><?php echo $ciudad ?></td>
-                                        <td data-label="Vendedor"><?php echo $vendedor ?></td>
+                                        <td data-label="NombreCliente"><?php echo utf8_encode($nombre) ?></td>
+                                        <td data-label="RazonSocial"><?php echo utf8_encode($razon) ?></td>
+                                        <td data-label="Ciudad"><?php echo utf8_encode($ciudad) ?></td>
+                                        <td data-label="Vendedor"><?php echo utf8_encode($vendedor) ?></td>
                                         <td data-label="HoraDoc"><?php echo $hora ?></td>
                                     </tr>
                                 </tbody>
@@ -134,7 +144,8 @@
                             <table id = "tablaAlistamiento">
                                 <thead>
                                     <tr>
-                                        <th>Ítem</th>
+                                        <th>Codigo</th>
+                                        <th>Codigo de Barras</th>
                                         <th>Descripción</th>
                                         <th>Ubicación</th>
                                         <th>Presentación</th>
@@ -155,6 +166,7 @@
                                     ?>
                                         <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
                                             <td data-label="Item"><?php echo $producto['item'] ?></td>
+                                            <td data-label="Item"><?php echo $producto['ProCodBar'] ?></td>
                                             <td data-label="Descripcion"><?php echo utf8_encode($producto['descripcion']) ?></td>
                                             <td data-label="Ubicacion"><?php echo utf8_encode($producto['ubicacion']) ?></td>
                                             <td data-label="Presentacion"><?php echo utf8_encode($producto['presentacion']) ?></td>
@@ -175,7 +187,6 @@
                             <br>
                         </div>
                     </div>
-                    <br>
                     <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
                     <div class="d-grid gap-2">
                         <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
@@ -230,6 +241,8 @@
                 <p>Ingrese las credenciales de un usuario con permisos de forzado</p>
                 <input id ="cedulaUsuario" type="text" placeholder="Ingrese la cedula de usuario">
                 <input id ="passwordUsuario" type="password" placeholder="Ingrese la clave de usuario">
+                <p>E ingrese una justificación</p>
+                <input id ="justificacion" type="text" placeholder="Justificacion">
                 <div class="boton-container">
                     <button id="confirmarForzado" class="btn btn-success primeButton">Aceptar</button>
                     <button id="cancelarForzado" class="btn btn-danger primeButton">Cancelar</button>

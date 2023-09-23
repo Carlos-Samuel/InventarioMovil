@@ -36,12 +36,14 @@
                 $row = $resultado->fetch_assoc();
 
                 $hashedPassword = $row["Password"];
+                $idUsuario = $row["idUsuarios"];
                 
                 if (password_verify($password, $hashedPassword)) {
                     $response = array(
                         "message" => "Usuario analizado correctamente",
                         "status" => 1,
-                        "estado" => true
+                        "estado" => true,
+                        "idUsuario" => $idUsuario
                     );  
                 }else{
                     $response = array(

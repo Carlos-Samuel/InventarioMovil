@@ -117,9 +117,9 @@
         <link rel="stylesheet" href="css_individuales/alistamiento.css">
         <style>
             #modalConfirmarCerrar .modal-content {
-                width: 70%; /* Puedes ajustar el valor según tus necesidades */
-                max-width: 800px; /* Opcional: Puedes establecer un ancho máximo */
-                margin: 0 auto; /* Centrar horizontalmente el modal */
+                width: 70%;
+                max-width: 800px;
+                margin: 0 auto;
             }
         </style>
 
@@ -127,7 +127,7 @@
     <body>
         <div class="layout has-sidebar fixed-sidebar fixed-header">
             <?php
-                $activado = "Verificacion";
+                $activado = "Entrega";
                 include('partes/sidebar.php');
             ?>  
             <div id="overlay" class="overlay"></div>
@@ -181,55 +181,13 @@
                         <br>
                         <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
                         <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>
-                        <div class="d-grid gap-2">
+                        <!-- <div class="d-grid gap-2">
                             <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
-                        </div>
+                        </div> -->
                         <div class="d-grid gap-2">
                             <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
                         </div>
                         <br>
-                        <div class="buscador">
-                            <input type="text" id="busqueda" placeholder="" style="max-width: 400px;">
-                            <br>
-                            <a class="btn btn-warning primeButton"  onclick="vaciarEspacioTexto(); busqueda();" role = "button">Vaciar</a>
-                            <a class="btn btn-primary primeButton"  onclick="busqueda();" role = "button">Buscar</a>
-                            <a class="btn btn-success primeBUtton"  onclick="RevisarBarCode();" role = "button">Revisar</a>
-                        </div>
-                        <br>
-                        <div class="table">
-                            <table id = "tablaVerificacion">
-                                <thead>
-                                    <tr>
-                                        <th>Ítem</th>
-                                        <th>Descripción</th>
-                                        <th>Presentación</th>
-                                        <th class="input-container">Cantidad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                        foreach ($datosProductos as $producto) {
-                                            // if ($producto['alistado'] == 0 && $producto['cantidad'] != 0){
-                                            //     $filaClase = '';
-                                            // }else{
-                                                // $filaClase = ($producto['alistado'] == $producto['verificado']) ? 'verificacion-completo' : '';
-                                            // }
-                                    ?>
-                                        <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
-                                            <td data-label="Item"><?php echo $producto['item'] ?></td>
-                                            <td data-label="Descripcion"><?php echo $producto['descripcion'] ?></td>
-                                            <td data-label="Presentacion"><?php echo $producto['presentacion'] ?></td>
-                                            <td data-label="Cantidad" class="input-container">
-                                                <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value = "<?php echo ($producto['alistado'] == $producto['verificado']) ? $producto['verificado'] : ''; ?>">
-                                            </td>
-                                        </tr>
-                                    <?php
-                                        }
-                                    ?>
-                                </tbody>
-                            </table>
-                            <br>
-                        </div>
                     </div>
                 </main>
             </div>
@@ -272,7 +230,7 @@
                 </div>
             </div>
         </div>
-        <script src="scripts/verificacion.js"></script>
+        <script src="scripts/entrega.js"></script>
         <!-- Incluye la biblioteca jQuery -->
         <script src="js/jquery-3.6.0.min.js"></script>
         <?php

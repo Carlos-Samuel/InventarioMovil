@@ -57,13 +57,23 @@
                 echo "No se encontro la factura.";
             }
 
-            $quer2 = $con->query("SELECT * FROM Productos WHERE vtaid = " . $id_recibido . ";");
-
+            $quer2 = $con->query(
+                "SELECT * 
+                FROM Productos 
+                WHERE vtaid =  $id_recibido 
+                ORDER BY
+                CASE
+                  WHEN ProUbica = 'DATO NO DISPONIBLE' THEN 1
+                  ELSE 0
+                END,
+                ProUbica ASC;");
+                
             $datosProductos = array();
     
             while ($columna = $quer2->fetch_assoc()) {
                 $row['id'] = $columna['VtaDetId'];
                 $row['item'] = $columna['ProId'];
+                $row['ProCodBar'] = $columna['ProCodBar'];
                 $row['descripcion'] = $columna['ProNom'];
                 $row['ubicacion'] = $columna['ProUbica'];
                 $row['presentacion'] = $columna['ProPresentacion'];
@@ -164,15 +174,6 @@
                             </table>
                         </div>
                         <br>
-                        <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
-                        <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>
-                        <div class="d-grid gap-2">
-                            <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
-                        </div>
-                        <br>
                         <div class="buscador">
                             <input type="text" id="busqueda" placeholder="" style="max-width: 400px;">
                             <br>
@@ -184,7 +185,8 @@
                             <table id = "tablaVerificacion">
                                 <thead>
                                     <tr>
-                                        <th>Ítem</th>
+                                        <th>Codigo</th>
+                                        <th>Codigo de Barras</th>
                                         <th>Descripción</th>
                                         <th>Presentación</th>
                                         <th class="input-container">Cantidad</th>
@@ -202,6 +204,7 @@
                                     ?>
                                         <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
                                             <td data-label="Item"><?php echo $producto['item'] ?></td>
+                                            <td data-label="Item"><?php echo $producto['ProCodBar'] ?></td>
                                             <td data-label="Descripcion"><?php echo $producto['descripcion'] ?></td>
                                             <td data-label="Presentacion"><?php echo $producto['presentacion'] ?></td>
                                             <td data-label="Cantidad" class="input-container">
@@ -219,6 +222,15 @@
                             <br>
                         </div>
                     </div>
+                    <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
+                    <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>
+                    <div class="d-grid gap-2">
+                        <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
+                    </div>
+                    <br>
                 </main>
             </div>
         </div>

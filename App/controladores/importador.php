@@ -28,14 +28,14 @@
                 COALESCE(TRIM(ve.TerTel), 'DATO NO DISPONIBLE') AS TerTel, 
                 COALESCE(TRIM(ter.terrzn), 'DATO NO DISPONIBLE') AS terrzn, 
                 COALESCE(TRIM(ve.VenId), '') AS VenId, 
-                COALESCE(TRIM(us.UsuNom), 'DATO NO DISPONIBLE') AS UsuNom, 
+                COALESCE(TRIM(ven.vennom), 'DATO NO DISPONIBLE') AS UsuNom, 
                 COALESCE(TRIM(ve.CiuId), 0) AS CiuId, 
                 COALESCE(TRIM(ci.ciunom), 'DATO NO DISPONIBLE') AS ciunom, 
                 COALESCE(TRIM(ve.vtaobs), 'SIN OBSERVACIONES') AS vtaobs
             FROM
                 ventas AS ve
             LEFT JOIN terceros AS ter ON ter.terid = ve.TerId
-            LEFT JOIN usuarios AS us ON us.UsuID = ve.VenId
+            LEFT JOIN vendedor AS ven ON ven.venid = ve.VenId
             LEFT JOIN ciudad AS ci ON ci.ciuid = ve.CiuId
             WHERE 
                 vtaid > $maxVtaid
@@ -72,6 +72,7 @@
                     COALESCE(TRIM(ved.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
                     COALESCE(TRIM(NULLIF(pro.ProUbica, '')), 'DATO NO DISPONIBLE') AS proubica, 
                     COALESCE(TRIM(NULLIF(pro.ProUnd, '')), 'DATO NO DISPONIBLE') AS pround, 
+                    TRIM(NULLIF(pro.ProCodBar, '')) AS probarcode, 
                     COALESCE(TRIM(ved.VtaCant), 0) AS vtacant 
                 FROM
                     ventasdet AS ved
@@ -95,9 +96,9 @@
 
                 $consulta2 = 
                     "INSERT INTO Productos
-                        (VtaId, VtaDetId, ProId, ProNom, ProUbica, ProPresentacion, VtaCant) 
+                        (VtaId, VtaDetId, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
                     VALUES 
-                        ('{$resultado['vtaid']}','{$resultado['vtadetid']}','{$resultado['proid']}','{$resultado['pronom']}','{$resultado['proubica']}','{$resultado['pround']}','{$resultado['vtacant']}')
+                        ('{$resultado['vtaid']}','{$resultado['vtadetid']}','{$resultado['proid']}','{$resultado['pronom']}','{$resultado['proubica']}','{$resultado['pround']}','{$resultado['probarcode']}','{$resultado['vtacant']}')
                     ;";
 
                 $finalConsulta = $con->query($consulta2);
