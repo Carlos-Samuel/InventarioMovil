@@ -1,6 +1,8 @@
 <?php
     require_once '../controladores/Connection.php';
 
+    include 'funciones.php';
+
     try {
 
         $con = Connection::getInstance()->getConnection();
@@ -82,13 +84,5 @@
     }
 
     $con->close();
-
-    function utf8_encode_array(&$array) {
-        foreach ($array as &$value) {
-            if (is_string($value) && $value !== "NULL" && !empty($value)) {
-                $value = utf8_encode($value);
-            }
-        }
-    }
 
 ?>

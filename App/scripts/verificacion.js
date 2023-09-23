@@ -26,23 +26,9 @@ btnAceptarCerrar.addEventListener('click', confirmarAccionCerrar);
 
 btnCancelarCerrar.addEventListener('click', ocultarDialogo);
 
-const diccionarioVerificacion = {};
-
 let controladorRevision = 0;
 
-obtenerValoresDeFilas();
-
-function obtenerValoresDeFilas() {
-    var filas = document.querySelectorAll('#tablaVerificacion tr');
-    
-    filas.forEach(function(fila) {
-        var dataId = fila.getAttribute('data-id');
-        if (dataId != null){
-            diccionarioVerificacion[dataId] = false;
-        }
-    });
-
-}
+quitarDatos();
 
 function ocultarDialogo() {
     modalCerrar.style.display = 'none';
@@ -63,22 +49,50 @@ function busqueda(){
     tbody = table.getElementsByTagName('tbody')[0];
     tr = tbody.getElementsByTagName('tr');
 
+    
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName('td');
         var cont = 0;
-        for (j = 0; j < 2; j++) {
-            if (td[j]) {
-                txtValue = td[j].textContent || td[j].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        if (filter!=""){
+            if (td[1]) {
+                txtValue = td[1].textContent || td[1].innerText;
+                if (txtValue == filter) {
                     tr[i].style.display = '';
                     cont++;
                 } 
             }
+            if (td[2]) {
+
+                txtValue = td[2].textContent || td[2].innerText;
+
+                var palabras = filter.split(" ");
+
+                var controladorCompleto = true;
+
+                for (j = 0; j < palabras.length; j++) {
+                    var palabra = palabras[j].toUpperCase();
+                    console.log("La palabra es: ");
+                    console.log(palabra);
+                    console.log("Buscada en");
+                    console.log(txtValue);
+                    if (txtValue.toUpperCase().indexOf(palabra) === -1) {
+                        controladorCompleto = false;
+                        break;
+                    }
+                }
+                
+                if (controladorCompleto) {
+                    tr[i].style.display = '';
+                    cont++;
+                } 
+            }
+ 
         }
         if (cont == 0){
             tr[i].style.display = 'none';
         }
     }
+    document.getElementById('busqueda').value = '';
 };
 
 
@@ -187,11 +201,9 @@ document.getElementById('tablaVerificacion').addEventListener('change', function
 
                     if (data.estado){
                         nuevaClase = 'verificacion-completo';
-                        diccionarioVerificacion[id] = true;
                         vaciarEspacioTexto();
                     }else{
                         nuevaClase = 'verificacion-incorrecto';
-                        diccionarioVerificacion[id] = false;
                         Swal.fire({
                             title: 'Error',
                             text: 'Cantidad incorrecta',
@@ -217,11 +229,6 @@ document.getElementById('tablaVerificacion').addEventListener('change', function
 });
 
 function verificarCompleto(){
-    // var controlador = true;
-    // for (var clave in diccionarioVerificacion) {
-    //     controlador = diccionarioVerificacion[clave] && controlador;
-    // }
-    // return controlador;
 
     var dataToSend = {
         idFactura: $('#idFactura').val(),
@@ -331,22 +338,18 @@ function obtenerValoresDeTabla() {
     return valores;
 }
 
-function limpiar(item){
+function quitarDatos(){
     let input, filter, table, tr, td, i, j, txtValue;
     table = document.getElementById('tablaVerificacion');
     tbody = table.getElementsByTagName('tbody')[0];
     tr = tbody.getElementsByTagName('tr');
 
     for (i = 0; i < tr.length; i++) {
+        
         td = tr[i].getElementsByTagName('td');
+        console.log(td);
         if (td[0]) {
-            txtValue = td[0].textContent || td[0].innerText;
-            if (txtValue == item) {
-                tr[i].style.display = '';
-                dataId = tr[i].getAttribute('data-id');
-            }else{
-                tr[i].style.display = 'none';
-            }
+            tr[i].style.display = 'none';
         }
     }
     var inputElement = document.getElementById("busqueda");
@@ -354,60 +357,28 @@ function limpiar(item){
     
 }
 
-const botonesProcesar = document.querySelectorAll('.procesar-btn');
-
-botonesProcesar.forEach(boton => {
-    boton.addEventListener('click', function() {
-        const item = this.getAttribute('data-item');
-        console.log(item);
-        controladorRevision = 1;
-        selectedItem = item;
-        limpiar(item);
-    });
-});
-
 document.getElementById('busqueda').addEventListener('input', esperarTeclado);
 
 let timerId;
 
 function esperarTeclado(){
+    
     clearTimeout(timerId);
     timerId = setTimeout(revisorCode, 1000);
 }
 
 function revisorCode(){
+
     if (controladorRevision == 1){
-        let input = document.getElementById('busqueda').value;
-
-        if(input == selectedItem){
-
-            //reproducirSonido('correcto');
-
-            new Noty({
-                type: 'success',
-                text: 'Elemento correcto',
-                timeout: 4000,
-            }).show();
-
-            selectedItem = null;
-            controladorRevision = 0;
-
-            var inputElement = document.getElementById("numero_" + dataId);
-            inputElement.focus();
-
-        }else{
-
-            reproducirSonido('incorrecto');
-
-            new Noty({
-                type: 'error',
-                text: 'Elemento erroneo',
-                timeout: 4000,
-            }).show();
-
-        }
-
-        document.getElementById('busqueda').value = '';
+        controladorRevision = 0;
+        busqueda()
     }
     
+}
+
+function leerCodigo(){
+    var inputElement = document.getElementById("busqueda");
+    inputElement.value = "";
+    inputElement.focus();
+    controladorRevision = 1;
 }

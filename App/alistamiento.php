@@ -152,7 +152,7 @@
                                         <th>Cantidad</th>
                                         <th class="input-container">Alistado</th>
                                         <th>Diferencia</th>
-                                        <th>Procesar</th>
+                                        <th>Comprobar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -176,7 +176,7 @@
                                             </td>
                                             <td data-label="Diferencia"><?php echo $producto['diferencia'] ?></td>
                                             <td data-label="Procesar">
-                                                <button class="btn btn-primary primeButton procesar-btn" data-item="<?php echo $producto['item'] ?>">Procesar</button>
+                                                <button class="btn btn-primary primeButton procesar-btn" data-item="<?php echo $producto['item'] ?>">Comprobar</button>
                                             </td>                     
                                        </tr>
                                     <?php

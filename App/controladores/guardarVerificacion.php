@@ -1,7 +1,7 @@
 <?php
 
     require_once 'Connection.php';
-    include 'bitacora.php';
+    include 'funciones.php';
 
     session_start();
 

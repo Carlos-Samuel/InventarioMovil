@@ -2,6 +2,8 @@
     session_start(); 	
     date_default_timezone_set('America/Bogota');
 
+    include 'controladores/funciones.php';
+
     if (!isset($_SESSION["cedula"]) || !isset($_SESSION["nombres"])) {
         header("Location: index.php");
         exit();
@@ -41,6 +43,8 @@
     
             if ($quer->num_rows > 0) {
                 $row = $quer->fetch_assoc();
+
+                utf8_encode_array($row);
         
                 $prefijo = $row['PrfId'];
                 $numDoc = $row['VtaNum'];
@@ -80,6 +84,8 @@
                 $row['cantidad'] = $columna['VtaCant'];
                 $row['alistado'] = $columna['AlisCant'];
                 $row['verificado'] = $columna['VerCant'];
+
+                utf8_encode_array($row);
     
                 $datosProductos[] = $row;
             }
@@ -178,7 +184,8 @@
                             <input type="text" id="busqueda" placeholder="" style="max-width: 400px;">
                             <br>
                             <a class="btn btn-warning primeButton"  onclick="vaciarEspacioTexto();" role = "button">Vaciar</a>
-                            <a class="btn btn-success primeBUtton"  onclick="busqueda();" role = "button">Buscar</a>
+                            <a class="btn btn-success primeButton"  onclick="busqueda();" role = "button">Buscar</a>
+                            <a class="btn btn-primary primeButton"  onclick="leerCodigo();" role = "button">Leer Codigo</a>
                         </div>
                         <br>
                         <div class="table">
@@ -190,7 +197,7 @@
                                         <th>Descripción</th>
                                         <th>Presentación</th>
                                         <th class="input-container">Cantidad</th>
-                                        <th>Procesar</th>
+                                        <!-- <th>Procesar</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -201,6 +208,7 @@
                                             // }else{
                                                 $filaClase = ($producto['alistado'] == $producto['verificado']) ? 'verificacion-completo' : '';
                                             // }
+                                            //echo $producto['ProCodBar'];
                                     ?>
                                         <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
                                             <td data-label="Item"><?php echo $producto['item'] ?></td>
@@ -210,9 +218,9 @@
                                             <td data-label="Cantidad" class="input-container">
                                                 <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value = "<?php echo ($producto['alistado'] == $producto['verificado']) ? $producto['verificado'] : ''; ?>">
                                             </td>
-                                            <td data-label="Procesar">
+                                            <!-- <td data-label="Procesar">
                                                 <button class="btn btn-primary primeButton procesar-btn" data-item="<?php echo $producto['item'] ?>">Procesar</button>
-                                            </td>    
+                                            </td>     -->
                                         </tr>
                                     <?php
                                         }

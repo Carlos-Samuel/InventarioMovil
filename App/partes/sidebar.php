@@ -285,6 +285,12 @@
               </span>
               <span class="menu-title">Borrador</span>
             </a>
+            <a href="controladores/imprimir.php">
+              <span class="menu-icon">
+                  <i class="ri-book-2-fill"></i>
+              </span>
+              <span class="menu-title">Imprimir</span>
+            </a>
             <?php
               }
             ?>
