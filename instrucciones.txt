@@ -1,3 +1,12 @@
 Utilice y disfrute
 
 composer require phpoffice/phpword mpdf/mpdf
+
+
+docker-php-ext-install mysqli
+
+docker-php-ext-install zip
+
+composer require phpoffice/phpword tcpdf/tcpdf
+
+apachectl restart

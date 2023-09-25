@@ -1,0 +1,10 @@
+{
+    "require": {
+        "ext-mysqli": "*",
+        "phpoffice/phpword": "*",
+        "mpdf/mpdf": "^8.2",
+        "ext-pdo_mysql": "*",
+        "aspose-cloud/aspose-words-cloud": "^23.9",
+        "tecnickcom/tcpdf": "^6.2.13"
+    }
+}
