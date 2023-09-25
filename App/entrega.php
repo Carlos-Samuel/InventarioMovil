@@ -1,4 +1,8 @@
 <?php
+
+
+    include_once 'controladores/funciones.php';
+
     session_start(); 	
     date_default_timezone_set('America/Bogota');
 
@@ -50,6 +54,8 @@
     
             if ($quer->num_rows > 0) {
                 $row = $quer->fetch_assoc();
+
+                utf8_encode_array($row);
         
                 $prefijo = $row['PrfId'];
                 $numDoc = $row['VtaNum'];
@@ -62,42 +68,15 @@
                 $fecha_hora_alistado = $row['fecha_y_hora_alistado'];
                 $verificador = $row['NombresVerificador'] . " " . $row['ApellidosVerificador'];
                 $fecha_hora_verificado = $row['fecha_y_hora_verificado'];
-                $observaciones = $row['facObservaciones'];
+                $observaciones = $row['ObservacionesVer'];
+                $embalaje = $row['Embalaje'];
     
             } else {
                 echo "No se encontro la factura.";
             }
 
-            $quer2 = $con->query("SELECT * FROM Productos WHERE vtaid = " . $id_recibido . ";");
-
-            $datosProductos = array();
-    
-            while ($columna = $quer2->fetch_assoc()) {
-                $row['id'] = $columna['VtaDetId'];
-                $row['item'] = $columna['ProId'];
-                $row['descripcion'] = $columna['ProNom'];
-                $row['ubicacion'] = $columna['ProUbica'];
-                $row['presentacion'] = $columna['ProPresentacion'];
-                $row['cantidad'] = $columna['VtaCant'];
-                $row['alistado'] = $columna['AlisCant'];
-                $row['verificado'] = $columna['VerCant'];
-    
-                $datosProductos[] = $row;
-            }
-
-            $quer3 = $con->query("SELECT * FROM Embalajes;");
-
-            $datosEmbalajes = array();
-    
-            while ($columna = $quer3->fetch_assoc()) {
-                $row['idEmbalajes'] = $columna['idEmbalajes'];
-                $row['Descripcion'] = $columna['Descripcion'];
-    
-                $datosEmbalajes[] = $row;
-            }
-
             $horaLocal = date('Y-m-d H:i:s');
-            $sql = "UPDATE Facturas SET InicioVerificacion = '$horaLocal' WHERE vtaid = $id_recibido AND InicioVerificacion IS NULL";
+            $sql = "UPDATE Facturas SET InicioEntrega = '$horaLocal' WHERE vtaid = $id_recibido AND InicioEntrega IS NULL";
             $resultado = $con->query($sql);
 
         } catch (Exception $e) {
@@ -171,63 +150,26 @@
                                         <td data-label="Verificador"><?php echo $verificador ?></td>
                                         <td data-label="FechaHoraVerificado"><?php echo $fecha_hora_verificado ?></td>
                                     </tr>
-                                    <!-- <tr>
+                                    <tr>
                                         <td colspan="2"><strong>OBSERVACIONES</strong></td>
-                                        <td colspan="7"><?php //echo $observaciones ?></td>
-                                    </tr> -->
+                                        <td colspan="9"><?php echo $observaciones ?></td>
+                                    </tr> 
+                                    <tr>
+                                        <td colspan="2"><strong>EMBALAJE</strong></td>
+                                        <td colspan="9"><?php echo $embalaje ?></td>
+                                    </tr> 
                                 </tbody>
                             </table>
                         </div>
                         <br>
                         <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
                         <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>
-                        <!-- <div class="d-grid gap-2">
-                            <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
-                        </div> -->
                         <div class="d-grid gap-2">
                             <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
                         </div>
                         <br>
                     </div>
                 </main>
-            </div>
-        </div>
-        <div id="modalConfirmarCerrar" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>¿Estás seguro de que desea cerrar el proceso?</p>
-                <br>
-                <table id = "tablaEmbalaje">
-                    <thead>
-                        <tr>
-                            <th>Embalaje</th>
-                            <th class="input-container">Cantidad</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                            foreach ($datosEmbalajes as $producto) {
-                        ?>
-                            <tr data-id="<?php echo $producto['id']; ?>">
-                                <td data-label="Descripcion"><?php echo $producto['Descripcion'] ?></td>
-                                <td data-label="Cantidad" class="input-container">
-                                    <input type="number" id="numero_<?php echo $producto['idEmbalajes'] ?>" name="numero_<?php echo $producto['idEmbalajes'] ?>">
-                                </td>
-                            </tr>
-                        <?php
-                            }
-                        ?>
-                    </tbody>
-                </table>
-                <br>
-                <h6>Observaciones</h6>
-                <br>
-                <input tipe = "text" id = "observacionesVer" name = "observacionesVer" >
-                <br>
-                <div class="boton-container">
-                    <button id="confirmarCerrar" class="btn btn-success primeButton">Aceptar</button>
-                    <button id="cancelarCerrar" class="btn btn-danger primeButton">Cancelar</button>
-                </div>
             </div>
         </div>
         <script src="scripts/entrega.js"></script>

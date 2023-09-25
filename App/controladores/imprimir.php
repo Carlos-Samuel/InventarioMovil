@@ -3,76 +3,74 @@
 
     require '../vendor/autoload.php';
 
+    include 'funciones.php';
+
     use PhpOffice\PhpWord\TemplateProcessor;
 
-    $con = Connection::getInstance()->getConnection();
+    function imprimir($id){
 
+        $con = Connection::getInstance()->getConnection();
 
-    $template = new TemplateProcessor('../plantillas/etiqueta.docx');
-
-    $template->setValue('nombre', 'Juan Pérez');
-    $template->setValue('correo', 'juan@example.com');
-
-    $template->saveAs('../documentos/documento_generado.docx');
-
-    $inputFile = '../documentos/documento_generado.docx'; // Ruta al archivo de Word
-    $outputFile = '../documentos/documento_generado.pdf'; // Ruta al archivo PDF de salida
-
-
-    $command = "libreoffice --convert-to pdf $inputFile  --outdir " . dirname($outputFile);
-
-    $output = [];
-    $returnCode = 0;
+        $quer = $con->query("SELECT * FROM Facturas WHERE vtaid = " . $id . ";");
     
-    exec($command, $output, $returnCode);
+        $row = $quer->fetch_assoc();
 
-    $tempFilePath = 'documentos/documento_generado.docx';
-    $printerName = 'HP_Ink_Tank_Wireless_410_series';
-    $command = "lp -d $printerName $tempFilePath";
-    $command = "lp -n 1 $tempFilePath";
-    $comando = "lp $outputFile";
-    var_dump($comando);
-    //exec($comando);
-    $output = [];
-    $returnCode = 0;
+        utf8_encode_array($row);
 
-    exec($comando, $output, $returnCode);
+        $elementos = explode("#", $row['Embalaje']);    
+
+        $i = 1;
     
-    if ($returnCode === 0) {
-        echo "La conversión se realizó con éxito. Salida del comando:\n";
-        foreach ($output as $line) {
-            echo $line . "\n";
+        foreach ($elementos as $elemento) {
+
+            if (trim($elemento)){
+                $partes = explode(":", $elemento);
+        
+                $clave = trim($partes[0]);
+                $valor = trim($partes[1]);
+        
+                if (is_numeric($valor)) {
+                    $valor = intval($valor);        
+                    
+                    $j = 1;
+
+                    while ($j <= $valor){
+                        $template = new TemplateProcessor('../plantillas/etiqueta.docx');
+
+                        $template->setValue('cliente_nombre', $row['TerNom']);
+                        $template->setValue('cliente_telefono', $row['TerTel']);
+                        $template->setValue('cliente_direccion', $row['TerDir']);
+                        $template->setValue('observaciones', $row['ObservacionesVer']);
+                        $template->setValue('e', $clave);
+                        $template->setValue('n', $j);
+                        $template->setValue('t', $valor);
+    
+                        $inputFile = '../documentos/documento_generado'.$i.'.docx';
+                        $outputFile = '../documentos/documento_generado'.$i.'.pdf';
+                
+                        $template->saveAs($inputFile);
+    
+                        $command = "libreoffice --convert-to pdf $inputFile  --outdir " . dirname($outputFile);
+
+                        $output = [];
+                        $returnCode = 0;
+                        
+                        exec($command, $output, $returnCode);
+
+                        if (!(unlink($inputFile))) {
+                            echo "No se puedo borrar: " . $inputFile;
+                        }
+                        $j++;
+                        $i++;
+                    }
+                }
+            }
         }
-    } else {
-        echo "La conversión falló. Código de retorno: $returnCode\n";
-        echo "Salida del comando:\n";
-        foreach ($output as $line) {
-            echo $line . "\n";
-        }
-        // Puedes agregar más manejo de errores según tus necesidades.
+
     }
 
+    // imprimir(230705);
 
 
-    // try{
-
-    //     $consulta = "DELETE FROM Bitacora;";
-
-    //     $finalConsulta = $con->query($consulta);
-
-    //     $consulta1 = "DELETE FROM Productos;";
-
-    //     $finalConsulta1 = $con->query($consulta1);
-
-    //     $consulta2 = "DELETE FROM Facturas;";
-
-    //     $finalConsulta2 = $con->query($consulta2);
-        
-
-    // } catch (Exception $e) {
-    //     echo "Error: " . $e->getMessage();
-    // }
-
-    // $con->close();
 
 ?>

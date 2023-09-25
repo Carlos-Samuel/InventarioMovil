@@ -176,7 +176,7 @@
                                             </td>
                                             <td data-label="Diferencia"><?php echo $producto['diferencia'] ?></td>
                                             <td data-label="Procesar">
-                                                <button class="btn btn-primary primeButton procesar-btn" data-item="<?php echo $producto['item'] ?>">Comprobar</button>
+                                                <button class="btn btn-primary primeButton procesar-btn" data-item="<?php echo $producto['item'] ?>" data-codBar="<?php echo $producto['ProCodBar'] ?>">Comprobar</button>
                                             </td>                     
                                        </tr>
                                     <?php

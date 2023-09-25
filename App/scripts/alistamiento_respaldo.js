@@ -275,17 +275,32 @@ function reproducirSonido(nombreSonido) {
 const tablaAlistamiento = document.getElementById('tablaAlistamiento');
 
 let selectedItem = null;
-let selectedCodBar = null;
-
 
 // tablaAlistamiento.addEventListener('click', seleccionarFila);
 // tablaAlistamiento.addEventListener('touchstart', seleccionarFila);
 
 let controladorRevision = 0;
 
+// function seleccionarFila(event) {
+//     const filas = tablaAlistamiento.querySelectorAll('tr');
+//     filas.forEach(fila => fila.classList.remove('selected-row'));
+
+//     const filaSeleccionada = event.target.closest('tr');
+
+//     if (filaSeleccionada) {
+//         filaSeleccionada.classList.add('selected-row');
+        
+//         selectedItem = filaSeleccionada.querySelector('[data-label="Item"]').textContent;
+
+//         controladorRevision = 1;
+//         limpiar(selectedItem);
+
+//     }
+// }
+
 var dataId = 0;
 
-function limpiar(item, codBar){
+function limpiar(item){
     let input, filter, table, tr, td, i, j, txtValue;
     table = document.getElementById('tablaAlistamiento');
     tbody = table.getElementsByTagName('tbody')[0];
@@ -305,8 +320,11 @@ function limpiar(item, codBar){
     }
     var inputElement = document.getElementById("busqueda");
     inputElement.focus();
+    console.log();
     
 }
+
+//document.getElementById('busqueda').addEventListener('keyup', revisorCode);
 
 document.getElementById('busqueda').addEventListener('input', esperarTeclado);
 
@@ -321,7 +339,7 @@ function revisorCode(){
     if (controladorRevision == 1){
         let input = document.getElementById('busqueda').value;
 
-        if(input == selectedCodBar){
+        if(input == selectedItem){
 
             //reproducirSonido('correcto');
 
@@ -354,6 +372,53 @@ function revisorCode(){
     
 }
 
+
+function RevisarBarCode(){
+
+    if (selectedItem == null){
+
+        reproducirSonido('error');
+
+        new Noty({
+            type: 'warning',
+            text: 'No has seleccionado ningún elemento.',
+            timeout: 4000, 
+        }).show();
+
+    }else{
+
+        let input = document.getElementById('busqueda').value;
+
+        console.log("Este es el input : " + input);
+
+        console.log("Este es el elemento seleccionado : " + selectedItem);
+
+        if(input == selectedItem){
+
+            //reproducirSonido('correcto');
+
+            new Noty({
+                type: 'success',
+                text: 'Elemento correcto',
+                timeout: 4000,
+            }).show();
+
+            selectedItem = null;
+        }else{
+
+            reproducirSonido('incorrecto');
+
+            new Noty({
+                type: 'error',
+                text: 'Elemento erroneo',
+                timeout: 4000,
+            }).show();
+
+        }
+
+    }
+
+}
 
 document.getElementById('tablaAlistamiento').addEventListener('change', function(event) {
     var target = event.target;
@@ -432,12 +497,10 @@ const botonesProcesar = document.querySelectorAll('.procesar-btn');
 
 botonesProcesar.forEach(boton => {
     boton.addEventListener('click', function() {
-        let item = this.getAttribute('data-item');
-        let codBar = this.getAttribute('data-codBar');
+        const item = this.getAttribute('data-item');
         console.log(item);
         controladorRevision = 1;
         selectedItem = item;
-        selectedCodBar = codBar;
-        limpiar(item, codBar);
+        limpiar(item);
     });
 });

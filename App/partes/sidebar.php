@@ -68,7 +68,7 @@
               <span class="menu-title">Verificación</span>
             </a>
           </li>
-          <li class="menu-item">
+          <!-- <li class="menu-item">
             <a href="lista_verificacion.php">
             <span class="menu-icon">
                 <?php
@@ -85,7 +85,7 @@
               </span>
               <span class="menu-title">Imprimir etiquetas</span>
             </a>
-          </li>
+          </li> -->
           <?php
             }
           ?>

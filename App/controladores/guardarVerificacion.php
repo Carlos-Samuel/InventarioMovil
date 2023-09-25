@@ -1,11 +1,15 @@
 <?php
 
     require_once 'Connection.php';
-    include 'funciones.php';
+    include 'imprimir.php';
+    include_once 'funciones.php';
+   
 
     session_start();
 
     try {
+
+        
         
         $con = Connection::getInstance()->getConnection();
 
@@ -45,6 +49,8 @@
                     $horaLocal = date('Y-m-d H:i:s');
                     
                     $sql = "UPDATE Facturas SET facEstado = 5, FinVerificacion = '$horaLocal', idVerificador = $idVerificador, Embalaje = '$embalaje', ObservacionesVer = '$observacion' WHERE vtaid = $idFactura";
+
+                    imprimir($idFactura);
 
                     bitacoraLog('Verificado', $idFactura);
 
