@@ -273,6 +273,23 @@
               </span>
               <span class="menu-title">Parametros</span>
             </a>
+            <a href="lista_devolver.php">
+              <span class="menu-icon">
+                <?php
+                  if ($activado == "Devolver"){
+                ?>
+                  <i class="fa fa-bookmark"></i>
+                <?php
+                  }else{
+                ?>
+                  <i class="ri-book-2-fill"></i>
+                <?php
+                  }
+                ?>
+              </span>
+              <span class="menu-title">Devolver Facturas</span>
+            </a>
+            <!--
             <a href="controladores/importador.php">
               <span class="menu-icon">
                   <i class="ri-book-2-fill"></i>
@@ -291,6 +308,8 @@
               </span>
               <span class="menu-title">Imprimir</span>
             </a>
+                -->
+
             <?php
               }
             ?>

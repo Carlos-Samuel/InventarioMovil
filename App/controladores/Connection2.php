@@ -4,9 +4,9 @@
         private $connection;
 
         private function __construct() {
-            $host = "db2";
-            $username = "usuario";
-            $password = "12345";
+            $host = "localhost";
+            $username = "root";
+            $password = "";
             $database = "PruebasAppCS";
 
             $this->connection = new mysqli($host, $username, $password, $database);
