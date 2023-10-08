@@ -50,14 +50,17 @@
                     
                     $sql = "UPDATE Facturas SET facEstado = 5, FinVerificacion = '$horaLocal', idVerificador = $idVerificador, Embalaje = '$embalaje', ObservacionesVer = '$observacion' WHERE vtaid = $idFactura";
 
-                    imprimir($idFactura);
-
                     bitacoraLog('Verificado', $idFactura);
 
                     break;
             }
 
             $resultado = $con->query($sql);
+
+            if ($idEstado == 2){
+                imprimir($idFactura);
+            };
+            
 
             if ($resultado) {
                 $response = array(

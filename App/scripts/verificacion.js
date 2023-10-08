@@ -273,6 +273,8 @@ function verificarCompleto(){
 
 function guardar(estado, observacion, embalaje) {
 
+    iniciarCarga();
+
     var dataToSend = {
         idFactura: $('#idFactura').val(),
         idEstado: estado,
@@ -300,10 +302,14 @@ function guardar(estado, observacion, embalaje) {
         .then(data => {
             console.log('Respuesta:', data);
             if(data.status == 1){
+                if (estado == 2){
+                    window.open('documentos/etiquetas' + $('#idFactura').val() + '.pdf', '_blank');
+                }
                 window.location.href = 'lista_verificacion.php';
             }else{
                 alert ("Error al guardar");
             }
+            
         })
         .catch(error => {
             alert('Error:', error);
@@ -381,4 +387,25 @@ function leerCodigo(){
     inputElement.value = "";
     inputElement.focus();
     controladorRevision = 1;
+}
+
+
+// Para la vista de carga 
+
+var loader = document.getElementById("loader");
+var stopButton = document.getElementById("stopButton");
+var loading = false;
+
+function detenerCarga() {
+    if (loading) {
+        loader.style.display = "none";
+        loading = false;
+    }
+}
+
+function iniciarCarga() {
+    if (!loading) {
+        loader.style.display = "block";
+        loading = true;
+    }
 }

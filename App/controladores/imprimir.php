@@ -6,7 +6,9 @@
     include 'funciones.php';
 
     use PhpOffice\PhpWord\TemplateProcessor;
+    use PhpOffice\PhpWord\PhpWord;
 
+    imprimir(230701);
     function imprimir($id){
 
         try {
@@ -35,7 +37,9 @@
         }
 
         $i = 1;
-    
+
+        $rutas = array();
+
         foreach ($elementos as $elemento) {
 
             if (trim($elemento)){
@@ -63,11 +67,15 @@
                     
                             $inputFile = '../documentos/documento_generado'.$i.'.docx';
                             $outputFile = '../documentos/documento_generado'.$i.'.pdf';
+
+                            $rutas[] = $outputFile;
                     
                             $template->saveAs($inputFile);
                     
-                            $command = "libreoffice --convert-to pdf $inputFile  --outdir " . dirname($outputFile);
-                    
+                            //$command = "libreoffice --convert-to pdf $inputFile  --outdir " . dirname($outputFile);
+
+                            $command = '"C:\Program Files\libreOffice\program\soffice.bin" --convert-to pdf ' . $inputFile . '  --outdir ' . dirname($outputFile);
+                            
                             $output = [];
                             $returnCode = 0;
                     
@@ -81,11 +89,44 @@
                             $i++;
                         }
                     } catch (Exception $e) {
-                        echo 'Error en el bucle while: ' . $e->getMessage();
+                        return 'Error en el bucle while: ' . $e->getMessage();
                     }
                 }
             }
         }
+
+        try{
+
+            $ruta_gs = "C:\Program Files\gs\gs10.02.0\bin\gswin64c.exe";
+
+            $outputFinal = '../documentos/etiquetas'.$id.'.pdf';
+
+            $comando_final = '"' . $ruta_gs . '" -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=' . $outputFinal;
+
+            foreach ($rutas as $ruta) {
+
+                $comando_final = $comando_final . " " . $ruta;
+
+            }
+
+            $output = [];
+            $returnCode = 0;
+    
+            exec($comando_final, $output, $returnCode);
+
+            foreach ($rutas as $ruta) {
+
+                if (!(unlink($ruta))) {
+                    echo "No se pudo borrar: " . $inputFile;
+                }
+
+            }
+
+        } catch (Exception $e) {
+            return 'Error en el bucle while: ' . $e->getMessage();
+        }
+
+        return "Termino";
 
     }
 

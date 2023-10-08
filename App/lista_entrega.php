@@ -80,6 +80,7 @@
                                     <th>Fecha y Hora Alistado</th>
                                     <th>Verificador</th>
                                     <th>Fecha y Hora Verificado</th>
+                                    <th>Documento</th>
                                     <th>Procesar</th>
                                 </tr>
                             </thead>
@@ -99,6 +100,13 @@
                                         <td><?php echo $verificacion['fecha_y_hora_alistado'] ?></td>
                                         <td><?php echo utf8_encode($verificacion['NombresVerificador']) . " " . utf8_encode($verificacion['ApellidosVerificador']) ?></td>
                                         <td><?php echo $verificacion['fecha_y_hora_verificado'] ?></td>
+                                        <td>
+                                            <?php 
+                                                echo "<a href='documentos/etiquetas" . $verificacion['vtaid'] . ".pdf' target='_blank'>";
+                                            ?>
+                                                <i class = "fa fa-print"></i>
+                                            </a>
+                                        </td>
                                         <td>
                                             <?php 
                                                 echo "<a href='verificacion.php?id=" . $verificacion['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
@@ -128,6 +136,7 @@
                                     <th>Fecha y Hora Alistado</th>
                                     <th>Verificador</th>
                                     <th>Fecha y Hora Verificado</th>
+                                    <th>Documento</th>
                                     <th>Procesar</th>
                                 </tr>
                             </thead>
@@ -183,7 +192,8 @@
                         {data: 'horaAlistado', name:'horaAlistado', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'verificador', name:'verificador', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'horaVerificado', name:'horaVerificado', orderable: true, searchable: true, className: 'dt-body-center'},
-                        {data: 'accion', name:'accion', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'documento', name:'documento', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'accion', name:'accion', orderable: true, searchable: true, className: 'dt-body-center'}
 
                     ],
 
