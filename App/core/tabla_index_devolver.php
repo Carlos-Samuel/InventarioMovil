@@ -5,14 +5,11 @@
     try {
 
         $con = Connection::getInstance()->getConnection();
-        $quer = $con->query("SELECT * FROM Facturas, estados WHERE facturas.facEstado = estados.idEstados AND facEstado != 7");
+        $quer = $con->query("SELECT * FROM Facturas as fac, Estados as es WHERE fac.facEstado = es.idEstados AND fac.facEstado != 7");
 
         $response = array();
 
-
-
         while ($columna = $quer->fetch_assoc()) {
-
 
             $row['id'] = "<p>" . $columna['PrfId'] . " " .$columna['VtaNum'] . "</p>";
             $row['fecha'] = "<p>" . $columna['vtafec'] . "</p>";

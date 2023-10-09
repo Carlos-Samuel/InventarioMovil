@@ -8,7 +8,6 @@
     use PhpOffice\PhpWord\TemplateProcessor;
     use PhpOffice\PhpWord\PhpWord;
 
-    imprimir(230701);
     function imprimir($id){
 
         try {
