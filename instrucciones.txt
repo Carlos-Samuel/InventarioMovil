@@ -10,3 +10,11 @@ docker-php-ext-install zip
 composer require phpoffice/phpword tcpdf/tcpdf
 
 apachectl restart
+
+instale ghostscript 
+
+instale openoffice
+
+Habilite la libreria en php.ini
+
+extension=zip
