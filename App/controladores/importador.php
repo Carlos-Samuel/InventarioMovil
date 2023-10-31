@@ -2,6 +2,14 @@
     require_once 'Connection.php';
     require_once 'Connection2.php';
 
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    if (isset($data['fecha']) && !empty($data['fecha'])) {
+        $fecha_minima = $data['fecha'];
+    } else {
+        $fecha_minima = '2023-08-12';
+    }
+
     $con = Connection::getInstance()->getConnection();
     $quer = $con->query("SELECT COALESCE(MAX(vtaid), 0) AS max_vtaid FROM Facturas");
 
@@ -39,7 +47,7 @@
             LEFT JOIN ciudad AS ci ON ci.ciuid = ve.CiuId
             WHERE 
                 vtaid > $maxVtaid
-                AND vtaid > 230695
+                and vtafec >= '".$fecha_minima."'
             ;";
 
         $quer = $con2->query($consultaBusqueda1);
@@ -69,6 +77,7 @@
                     COALESCE(TRIM(ved.VtaId), '') AS vtaid, 
                     COALESCE(TRIM(ved.VtaDetId), '') AS vtadetid, 
                     COALESCE(TRIM(ved.ProId), '') AS proid, 
+                    COALESCE(TRIM(pro.ProCod), '') AS procod, 
                     COALESCE(TRIM(ved.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
                     COALESCE(TRIM(NULLIF(pro.ProUbica, '')), 'DATO NO DISPONIBLE') AS proubica, 
                     COALESCE(TRIM(NULLIF(pro.ProUnd, '')), 'DATO NO DISPONIBLE') AS pround, 
@@ -96,9 +105,9 @@
 
                 $consulta2 = 
                     "INSERT INTO Productos
-                        (VtaId, VtaDetId, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
+                        (VtaId, VtaDetId, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
                     VALUES 
-                        ('{$resultado['vtaid']}','{$resultado['vtadetid']}','{$resultado['proid']}','{$resultado['pronom']}','{$resultado['proubica']}','{$resultado['pround']}','{$resultado['probarcode']}','{$resultado['vtacant']}')
+                        ('{$resultado['vtaid']}','{$resultado['vtadetid']}','{$resultado['proid']}','{$resultado['procod']}','{$resultado['pronom']}','{$resultado['proubica']}','{$resultado['pround']}','{$resultado['probarcode']}','{$resultado['vtacant']}')
                     ;";
 
                 $finalConsulta = $con->query($consulta2);
@@ -109,22 +118,28 @@
         
 
     } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
+        $respuesta = array(
+            "mensaje" => "Error al importar los datos ". $e->getMessage()
+        );
+    
+        header('Content-Type: application/json');
+        echo json_encode($respuesta);
+    
+        exit();
+        
     }
 
     $con->close();
 
+    $respuesta = array(
+        "mensaje" => "Los datos fueron importados correctamente"
+    );
+
+    header('Content-Type: application/json');
+    echo json_encode($respuesta);
+
+    exit();
+    
+
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ejemplo de PHP</title>
-    </head>
-    <body>
-        <h1>Recorriendo en <?php echo $maxVtaid ?></h1>
-        <a href="/dashboard.php">Volver</a>
-    </body>
-</html>

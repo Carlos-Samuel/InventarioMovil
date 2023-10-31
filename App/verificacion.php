@@ -77,6 +77,7 @@
             while ($columna = $quer2->fetch_assoc()) {
                 $row['id'] = $columna['VtaDetId'];
                 $row['item'] = $columna['ProId'];
+                $row['ProCod'] = $columna['ProCod'];
                 $row['ProCodBar'] = $columna['ProCodBar'];
                 $row['descripcion'] = $columna['ProNom'];
                 $row['ubicacion'] = $columna['ProUbica'];
@@ -212,7 +213,7 @@
                             <table id = "tablaVerificacion">
                                 <thead>
                                     <tr>
-                                        <th>Codigo</th>
+                                        <th>Codigo de Producto</th>
                                         <th>Codigo de Barras</th>
                                         <th>Descripción</th>
                                         <th>Presentación</th>
@@ -231,8 +232,8 @@
                                             //echo $producto['ProCodBar'];
                                     ?>
                                         <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
-                                            <td data-label="Item"><?php echo $producto['item'] ?></td>
-                                            <td data-label="Item"><?php echo $producto['ProCodBar'] ?></td>
+                                        <td data-label="ProCod"><?php echo $producto['ProCod'] ?></td>
+                                            <td data-label="ProCodBar"><?php echo $producto['ProCodBar'] ?></td> 
                                             <td data-label="Descripcion"><?php echo $producto['descripcion'] ?></td>
                                             <td data-label="Presentacion"><?php echo $producto['presentacion'] ?></td>
                                             <td data-label="Cantidad" class="input-container">

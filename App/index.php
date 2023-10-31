@@ -91,6 +91,10 @@
 				background-color: #219ebc !important;
 			}
 
+			.form-control-sm {
+				border: 1px solid black !important;
+			}
+
 			@media screen and (max-width: 600px) {
 				.card.login-form {
 					height: 100%;

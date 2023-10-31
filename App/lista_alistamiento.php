@@ -55,6 +55,7 @@
                                     <th>Hora Doc</th>
                                     <th>Observacion</th>
                                     <th>Procesar</th>
+                                    <th>No Procesar</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -74,6 +75,11 @@
                                         <td>
                                             <?php 
                                                 echo "<a href='alistamiento.php?id=" . $alistamiento['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php 
+                                                echo "<a href='noPRocesar.php?id=" . $alistamiento['vtaid'] . "' class='btn btn-danger'>X</a>";
                                             ?>
                                         </td>
                                     </tr>
@@ -98,6 +104,7 @@
                                     <th>Hora Doc</th>
                                     <th>Observacion</th>
                                     <th>Procesar</th>
+                                    <th>No Procesar</th>
                                 </tr>
                             </thead>
                         </table>    
@@ -152,8 +159,9 @@
                         {data: 'vendedor', name:'vendedor', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'hora', name:'hora', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'observacion', observacion:'password', orderable: true, searchable: true, className: 'dt-body-center'},
-                        {data: 'accion', observacion:'accion', orderable: true, searchable: true, className: 'dt-body-center'}
-
+                        {data: 'accion', observacion:'accion', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'segundaAccion', observacion:'segundaAccion', orderable: true, searchable: true, className: 'dt-body-center'}
+                        
                     ],
 
                 });

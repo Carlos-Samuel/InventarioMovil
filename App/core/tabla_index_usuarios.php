@@ -18,7 +18,7 @@
             $boton = "<a href='../controladores/receptor_crear_usuarios.php?id=" . $columna['idUsuarios'] . "' class='btn btn-primary'>Ver detalles</a>";
             $row['editar'] = $boton;
 
-            $boton = "<a href='../controladores/receptor_crear_usuarios.php?id=" . $columna['idUsuarios'] . "' class='btn btn-warning'>Cambiar</a>";
+            $boton = "<a href='../cambiar_contrasena.php?id=" . $columna['idUsuarios'] . "' class='btn btn-warning'>Cambiar</a>";
             $row['password'] = $boton;
 
             $response[] = $row;

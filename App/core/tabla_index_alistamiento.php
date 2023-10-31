@@ -26,6 +26,9 @@
             $boton = "<a href='alistamiento.php?id=" . $columna['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
             $row['accion'] = $boton;
 
+            $boton = "<a href='noProcesar.php?id=" . $columna['vtaid'] . "' class='btn btn-danger'>X</a>";
+            $row['segundaAccion'] = $boton;
+
             $rowClass = $columna['facEstado'] == '2' ? 'fila-verde' : '';
             $row['DT_RowClass'] = $rowClass;
 

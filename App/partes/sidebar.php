@@ -273,6 +273,22 @@
               </span>
               <span class="menu-title">Parametros</span>
             </a>
+            <a href="manejoDatos.php">
+              <span class="menu-icon">
+                <?php
+                  if ($activado == "ManejoDatos"){
+                ?>
+                  <i class="fa fa-bookmark"></i>
+                <?php
+                  }else{
+                ?>
+                  <i class="ri-book-2-fill"></i>
+                <?php
+                  }
+                ?>
+              </span>
+              <span class="menu-title">Manejo de Datos</span>
+            </a>
             <a href="lista_devolver.php">
               <span class="menu-icon">
                 <?php
