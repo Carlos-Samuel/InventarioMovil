@@ -8,75 +8,74 @@
     }
 
     $permiso1 = "Admin";
-    $permiso2 = "Alistamiento";
+    //$permiso2 = "Alistamiento";
 
-    if (!(strpos($_SESSION['permisos'], $permiso1) || strpos($_SESSION['permisos'], $permiso2))) {
+    if (!(strpos($_SESSION['permisos'], $permiso1))) {
         header("Location: dashboard.php");
         exit();
     }
 
+    $id_recibido = $_GET['id'];
+
     require_once 'controladores/Connection.php';
+    require_once 'controladores/Connection2.php';
 
-    if(isset($_GET['id'])) {
-        try{
-            $id_recibido = urldecode($_GET['id']);
+    $con = Connection::getInstance()->getConnection();
+    $con2 = Connection2::getInstance2()->getConnection2();
 
-            $con = Connection::getInstance()->getConnection();
-            $quer = $con->query("SELECT * FROM Facturas WHERE vtaid = " . $id_recibido . ";");
-    
-            if ($quer->num_rows > 0) {
-                $row = $quer->fetch_assoc();
-        
-                $prefijo = $row['PrfId'];
-                $numDoc = $row['VtaNum'];
-                $fecha = $row['vtafec'];
-                $nombre = $row['TerNom'];
-                $razon = $row['TerRaz'];
-                $ciudad = $row['CiuNom'];
-                $vendedor = $row['VenNom'];
-                $hora = $row['vtahor'];
-    
-            } else {
-                echo "No se encontro la factura.";
-            }
+    $mensaje = [];
 
-            $quer2 = $con->query(
-                "SELECT * 
-                FROM Productos 
-                WHERE vtaid =  $id_recibido 
-                ORDER BY
-                CASE
-                  WHEN ProUbica = 'DATO NO DISPONIBLE' THEN 1
-                  ELSE 0
-                END,
-                ProUbica ASC;");
+    $valoresColumnasFacturas = [
+        ['VtaNum', 'VtaNum'],
+        ['PrfId', 'PrfId'],
+        ['vtafec', 'vtafec'],
+        ['vtahor', 'vtahor'],
+        ['TerId', 'TerId'],
+        ['TerNom', 'TerNom'],
+        ['TerDir', 'TerDir'],
+        ['TerTel', 'TerTel'],
+        ['terrzn', 'TerRaz'],
+        ['VenId', 'VenId'],
+        ['UsuNom', 'VenNom'],
+        ['CiuId', 'CiuId'],
+        ['ciunom', 'CiuNom'],
+        ['vtaobs', 'facObservaciones']
+    ];
 
-            $datosProductos = array();
-    
-            while ($columna = $quer2->fetch_assoc()) {
-                $row['id'] = $columna['VtaDetId'];
-                $row['item'] = $columna['ProId'];
-                $row['ProCodBar'] = $columna['ProCodBar'];
-                $row['descripcion'] = $columna['ProNom'];
-                $row['ubicacion'] = $columna['ProUbica'];
-                $row['presentacion'] = $columna['ProPresentacion'];
-                $row['cantidad'] = $columna['VtaCant'];
-                $row['alistado'] = $columna['AlisCant'];
-                $row['diferencia'] = $columna['VtaCant'] - $columna['AlisCant'];
-    
-                $datosProductos[] = $row;
-            }
+    $valoresColumnasProductos = [
+        ['proid', 'ProId'],
+        ['pronom', 'ProNom'],
+        ['proubica', 'ProUbica'],
+        ['pround', 'ProPresentacion'],
+        ['probarcode', 'ProCodBar'],
+        ['vtacant', 'VtaCant']
+    ];
 
-            $horaLocal = date('Y-m-d H:i:s');
-            $sql = "UPDATE Facturas SET MomentoCarga = CONCAT(vtafec, ' ', vtahor), InicioAlistamiento = '$horaLocal' WHERE vtaid = $id_recibido AND InicioAlistamiento IS NULL";
-            $resultado = $con->query($sql);
+    $cambios = [];
+    $cambiosProductos = [];
 
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
-        }
-    } else {
-        echo "No se recibió ningún valor.";
-    }
+    $consultas_actualizacion = [];
+
+    $sql_general = 
+        "UPDATE 
+            `Facturas` 
+        SET 
+            `facEstado`=1,`idAlistador`=NULL,
+            `idVerificador`=NULL,
+            `idEntregador`=NULL,`MomentoCarga`=NOW(),
+            `InicioAlistamiento`=NULL,`FinAlistamiento`=NULL,
+            `InicioVerificacion`=NULL,`FinVerificacion`=NULL,
+            `InicioEntrega`=NULL,`FinEntrega`=NULL,`Forzado`=0,
+            `Forzador`='0',`ObservacionesFor`='0',`Justificacion`=NULL,
+            `Embalaje`='0',`ObservacionesVer`='0'
+        WHERE 
+            vtaid = $id_recibido";
+
+    $consultas_actualizacion[] = $sql_general;
+
+
+
+
 
 ?>
 <!doctype html>
@@ -97,159 +96,219 @@
             <div id="overlay" class="overlay"></div>
             <div class="layout">
                 <main class="content">
-                    <div id = "contenidoMovil" style="display: none;">
-                        <br>
-                        <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
-                        <br>
-                        <br>
-                    </div>
-                    <div class="col-sm-12">
-                        <div class="table">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Prefijo</th>
-                                        <th># DOC</th>
-                                        <th>Fecha</th>
-                                        <th>Nombre Cliente</th>
-                                        <th>Razón Social</th>
-                                        <th>Ciudad</th>
-                                        <th>Vendedor</th>
-                                        <th>Hora DOC</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td data-label="Prefijo"><?php echo $prefijo ?></td>
-                                        <td data-label="Doc"><?php echo $numDoc ?></td>
-                                        <td data-label="Fecha"><?php echo $fecha ?></td>
-                                        <td data-label="NombreCliente"><?php echo utf8_encode($nombre) ?></td>
-                                        <td data-label="RazonSocial"><?php echo utf8_encode($razon) ?></td>
-                                        <td data-label="Ciudad"><?php echo utf8_encode($ciudad) ?></td>
-                                        <td data-label="Vendedor"><?php echo utf8_encode($vendedor) ?></td>
-                                        <td data-label="HoraDoc"><?php echo $hora ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <br>
-                        <div class="buscador">
-                            <input type="text" id="busqueda" placeholder="" style="max-width: 400px;">
-                            <br>
-                            <a class="btn btn-primary primeButton"  onclick="vaciarEspacioTexto();" role = "button">Vaciar</a>
-                            <a class="btn btn-success primeBUtton"  onclick="busqueda();" role = "button">Buscar</a>
-                        </div>
-                        <br>
-                        <div class="table">
-                            <table id = "tablaAlistamiento">
-                                <thead>
-                                    <tr>
-                                        <th>Codigo</th>
-                                        <th>Codigo de Barras</th>
-                                        <th>Descripción</th>
-                                        <th>Ubicación</th>
-                                        <th>Presentación</th>
-                                        <th>Cantidad</th>
-                                        <th class="input-container">Alistado</th>
-                                        <th>Diferencia</th>
-                                        <th>Comprobar</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                        foreach ($datosProductos as $producto) {
-                                            if ($producto['alistado'] == 0 && $producto['cantidad'] != 0){
-                                                $filaClase = '';
-                                            }else{
-                                                $filaClase = ($producto['alistado'] == $producto['cantidad']) ? 'alistamiento-completo' : 'alistamiento-incompleto';
-                                            }
-                                    ?>
-                                        <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
-                                            <td data-label="Item"><?php echo $producto['item'] ?></td>
-                                            <td data-label="Item"><?php echo $producto['ProCodBar'] ?></td>
-                                            <td data-label="Descripcion"><?php echo utf8_encode($producto['descripcion']) ?></td>
-                                            <td data-label="Ubicacion"><?php echo utf8_encode($producto['ubicacion']) ?></td>
-                                            <td data-label="Presentacion"><?php echo utf8_encode($producto['presentacion']) ?></td>
-                                            <td data-label="Cantidad"><?php echo $producto['cantidad'] ?></td>
-                                            <td data-label="Alistado" class="input-container">
-                                                <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value="<?php echo $producto['alistado'] ?>">
-                                            </td>
-                                            <td data-label="Diferencia"><?php echo $producto['diferencia'] ?></td>
-                                            <td data-label="Procesar">
-                                                <button class="btn btn-primary primeButton procesar-btn" data-item="<?php echo $producto['item'] ?>" data-codBar="<?php echo $producto['ProCodBar'] ?>">Comprobar</button>
-                                            </td>                     
-                                       </tr>
-                                    <?php
-                                        }
-                                    ?>
-                                </tbody>
-                            </table>
-                            <br>
-                        </div>
-                    </div>
-                    <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
-                    <div class="d-grid gap-2">
-                        <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button id="botonDevolver" class="btn btn-danger primeButton" type="button">Devolver</button>
-                    </div>
-                    <div class="d-grid gap-2">
-                        <button id="botonForzado" class="btn btn-info primeButton" type="button">Cierre forzado</button>
-                    </div>
                     <br>
+                    <h3>Factura <?php echo $id_recibido; ?></h3>
+                    <?php
+                        $consultaFactura1 = 
+                            "SELECT 
+                                COALESCE(TRIM(ve.vtaid), '') AS vtaid, 
+                                COALESCE(TRIM(ve.VtaNum), '') AS VtaNum, 
+                                COALESCE(TRIM(ve.PrfId), 'DATO NO DISPONIBLE') AS PrfId, 
+                                COALESCE(TRIM(ve.vtafec), '') AS vtafec, 
+                                COALESCE(TRIM(ve.vtahor), '') AS vtahor, 
+                                COALESCE(TRIM(ve.TerId), '') AS TerId, 
+                                COALESCE(TRIM(ve.TerNom), 'DATO NO DISPONIBLE') AS TerNom, 
+                                COALESCE(TRIM(ve.TerDir), 'DATO NO DISPONIBLE') AS TerDir, 
+                                COALESCE(TRIM(ve.TerTel), 'DATO NO DISPONIBLE') AS TerTel, 
+                                COALESCE(TRIM(ter.terrzn), 'DATO NO DISPONIBLE') AS terrzn, 
+                                COALESCE(TRIM(ve.VenId), '') AS VenId, 
+                                COALESCE(TRIM(ven.vennom), 'DATO NO DISPONIBLE') AS UsuNom, 
+                                COALESCE(TRIM(ve.CiuId), 0) AS CiuId, 
+                                COALESCE(TRIM(ci.ciunom), 'DATO NO DISPONIBLE') AS ciunom, 
+                                COALESCE(TRIM(ve.vtaobs), 'SIN OBSERVACIONES') AS vtaobs
+                            FROM
+                                ventas AS ve
+                            LEFT JOIN terceros AS ter ON ter.terid = ve.TerId
+                            LEFT JOIN vendedor AS ven ON ven.venid = ve.VenId
+                            LEFT JOIN ciudad AS ci ON ci.ciuid = ve.CiuId
+                            WHERE 
+                                vtaid = $id_recibido
+                            ;";
+
+                        $quer = $con2->query($consultaFactura1);
+
+                        $resultados1 = array();
+
+                        if ($quer->num_rows > 0) {
+                            while ($fila = $quer->fetch_assoc()) {
+                                $resultados1[] = $fila;
+                            }
+                        } else {
+                            $mensaje[] = "Factura borrada en Sistema original";
+                        }
+
+                        $consultaFactura2 = 
+                            "SELECT 
+                                *
+                            FROM
+                                Facturas
+                            WHERE 
+                                vtaid = $id_recibido
+                            ;";
+
+                        $quer = $con->query($consultaFactura2);
+
+                        $resultados2 = array();
+
+                        if ($quer->num_rows > 0) {
+                            while ($fila = $quer->fetch_assoc()) {
+                                $resultados2[] = $fila;
+                            }
+                        } else {
+                            $mensaje[] = "Factura borrada en Sistema actual";
+                        }
+
+                        foreach($valoresColumnasFacturas as $vcf){
+                            
+                            if ($resultados1[0][$vcf[0]] != $resultados2[0][$vcf[1]]){
+                                $cambio = "El valor: " . $vcf[1] . " cambio de: " . trim($resultados2[0][$vcf[1]]) . " a: " . trim($resultados1[0][$vcf[0]]);
+                                $cambios[] = $cambio;
+                                $sql = "UPDATE Facturas SET " . $vcf[1] . " = RTRIM('".$resultados1[0][$vcf[0]]."') WHERE vtaid = $id_recibido ;";
+                                $consultas_actualizacion[] = $sql;
+                            }
+
+                        }
+                        
+                        echo "<br>";
+                        echo "<h5>Cambios en la Factura</h5>";
+
+                        foreach($cambios as $cambio){
+                            echo $cambio;
+                            echo "<br>";
+                        }
+
+                        $consultaElementos1 = 
+                            "SELECT 
+                                COALESCE(TRIM(ved.VtaId), '') AS vtaid, 
+                                COALESCE(TRIM(ved.VtaDetId), '') AS vtadetid, 
+                                COALESCE(TRIM(ved.ProId), '') AS proid, 
+                                COALESCE(TRIM(ved.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
+                                COALESCE(TRIM(NULLIF(pro.ProUbica, '')), 'DATO NO DISPONIBLE') AS proubica, 
+                                COALESCE(TRIM(NULLIF(pro.ProUnd, '')), 'DATO NO DISPONIBLE') AS pround, 
+                                TRIM(NULLIF(pro.ProCodBar, '')) AS probarcode, 
+                                COALESCE(TRIM(ved.VtaCant), 0) AS vtacant 
+                            FROM
+                                ventasdet AS ved
+                            LEFT JOIN productos AS pro ON pro.ProId = ved.ProId
+                            WHERE 
+                                VtaId = $id_recibido";
+
+                        $quer = $con2->query($consultaElementos1);
+
+                        $resultadosElementos1 = array();
+
+                        if ($quer->num_rows > 0) {
+                            while ($fila = $quer->fetch_assoc()) {
+                                $resultadosElementos1[] = $fila;
+                            }
+                        } else {
+                            $mensaje[] = "Elementos no encontrados 1";
+                        }
+
+                        $consultaElementos2 = 
+                            "SELECT 
+                                *
+                            FROM
+                                Productos AS pro
+                            WHERE 
+                                pro.VtaId = $id_recibido";
+
+                        $quer = $con->query($consultaElementos2);
+
+                        $resultadosElementos2 = array();
+
+                        if ($quer->num_rows > 0) {
+                            while ($fila = $quer->fetch_assoc()) {
+                                $resultadosElementos2[] = $fila;
+                            }
+                        } else {
+                            $mensaje[] = "Elementos no encontrados 2";
+                        }
+
+                        foreach($resultadosElementos1 as $rE1){
+
+                            foreach ($resultadosElementos2 as $rE2) {
+
+                                if ($rE1['proid'] == $rE2['ProId']){
+                                    foreach($valoresColumnasProductos as $vcp){
+                                        if ($rE1[$vcp[0]] != $rE2[$vcp[1]]){
+                                            $cambio = "El valor: " . $vcp[1] . " cambio de: " . trim($rE2[$vcp[1]]) . " a: " . trim($rE1[$vcp[0]]);
+                                            $cambiosProductos[] = $cambio;
+
+                                            $sql = "UPDATE Productos SET " . $vcp[1] . " = RTRIM('".$rE1[$vcp[0]]."') WHERE VtaId = " . $rE2['VtaId'] . " ;";
+                                            $consultas_actualizacion[] = $sql;
+                                        }
+                                    }
+                                    // Eliminar elementos de los arreglos originales
+                                    unset($resultadosElementos1[array_search($rE1, $resultadosElementos1)]);
+                                    unset($resultadosElementos2[array_search($rE2, $resultadosElementos2)]);
+                                    break;
+                                }
+
+                            }
+
+                        }
+                        
+                        echo "<br>";
+                        echo "<h5>Cambios en los Productos</h5>";
+
+                        foreach($cambiosProductos as $cambio){
+                            echo $cambio;
+                            echo "<br>";
+                        }
+
+                        echo "<br>";
+                        echo "<h5>Productos agregados</h5>";
+
+                        foreach($resultadosElementos1 as $resEle1){
+                            echo "Se agrego el elemento " . $resEle1['pronom'] ;
+                            echo "<br>";
+                            $elementosAgregar = 
+                                "INSERT INTO Productos
+                                    (VtaId, VtaDetId, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
+                                VALUES 
+                                    ('{$resEle1['vtaid']}','{$resEle1['vtadetid']}','{$resEle1['proid']}','{$resEle1['pronom']}','{$resEle1['proubica']}','{$resEle1['pround']}','{$resEle1['probarcode']}','{$resEle1['vtacant']}')
+                                ;";
+                                
+                            $consultas_actualizacion[] = $elementosAgregar;
+                        }
+
+                        echo "<br>";
+                        echo "<h5>Prouctos eliminados</h5>";
+
+                        foreach($resultadosElementos2 as $resEle2){
+                            echo "Se elimino el elemento " . $resEle2['ProNom'] ;
+                            echo "<br>";
+                            $elementosBorrar = "DELETE FROM Productos WHERE VtaDetId = " . $resEle2['VtaDetId'] . ";";
+                            $consultas_actualizacion[] = $elementosBorrar;
+                        }
+
+                        if(isset($_GET['controlador'])){
+
+                            try{
+
+                                foreach($consultas_actualizacion as $consulta_ejecutar){
+                                    $con->query($consulta_ejecutar);
+                                }
+
+                            }catch (Exception $e) {
+                                echo 'Error en la consulta SQL: ' . $e->getMessage();
+                            }
+
+                        }
+                    ?>
+                    <br>
+                    <br>
+                    <div class="d-grid gap-2">
+                        <?php
+                            echo '<a href= "devolver.php?id=' . $id_recibido . '&controlador=1" class="btn btn-success primeButton">Actualizar Factura</a>';
+                        ?>
+                    </div>
                 </main>
             </div>
         </div>
-        <div id="modalConfirmarPendiente" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>Ingrese la razón para dejar pendiente la factura</p>
-                <input id ="razon" type="text" placeholder="Ingrese la razon">
-                <div class="boton-container">
-                    <button id="confirmarPendiente" class="btn btn-success primeButton">Aceptar</button>
-                    <button id="cancelarPendiente" class="btn btn-danger primeButton">Cancelar</button>
-                </div>
-            </div>
-        </div>
-        <div id="modalConfirmarCerrar" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>¿Estás seguro de que desea cerrar el proceso?</p>
-                <div class="boton-container">
-                    <button id="confirmarCerrar" class="btn btn-success primeButton">Aceptar</button>
-                    <button id="cancelarCerrar" class="btn btn-danger primeButton">Cancelar</button>
-                </div>
-            </div>
-        </div>
-        <div id="modalConfirmarDevolver" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>¿Estás seguro de que desea devolver la factura?</p>
-                <div class="boton-container">
-                    <button id="confirmarDevolver" class="btn btn-success primeButton">Aceptar</button>
-                    <button id="cancelarDevolver" class="btn btn-danger primeButton">Cancelar</button>
-                </div>
-            </div>
-        </div>
-        <div id="modalConfirmarForzado" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>Ingrese las credenciales de un usuario con permisos de forzado</p>
-                <input id ="cedulaUsuario" type="text" placeholder="Ingrese la cedula de usuario">
-                <input id ="passwordUsuario" type="password" placeholder="Ingrese la clave de usuario">
-                <p>E ingrese una justificación</p>
-                <input id ="justificacion" type="text" placeholder="Justificacion">
-                <div class="boton-container">
-                    <button id="confirmarForzado" class="btn btn-success primeButton">Aceptar</button>
-                    <button id="cancelarForzado" class="btn btn-danger primeButton">Cancelar</button>
-                </div>
-            </div>
-        </div>
-        <script src="scripts/alistamiento.js"></script>
+        
+        <script src="scripts/devolver.js"></script>
         <!-- Incluye la biblioteca jQuery -->
         <script src="js/jquery-3.6.0.min.js"></script>
         <!-- <script src="path/to/honeywell-sdk.js"></script> -->
