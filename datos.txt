@@ -1,0 +1,12 @@
+C:\Program Files\gs\gs10.02.0
+
+            $host = "localhost";
+            $username = "Agil";
+            $password = "Agil";
+            $database = "admincs";
+
+
+            $host = "localhost";
+            $username = "Agil";
+            $password = "Agil";
+            $database = "sumilogistica";

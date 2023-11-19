@@ -4,10 +4,10 @@
         private $connection;
 
         private function __construct() {
-            $host = "db";
-            $username = "usuario";
-            $password = "12345";
-            $database = "AdminCS";
+            $host = "localhost";
+            $username = "Agil";
+            $password = "Agil";
+            $database = "admincs";
 
             $this->connection = new mysqli($host, $username, $password, $database);
 

@@ -59,7 +59,14 @@
                 $resultados[] = $fila;
             }
         } else {
-            echo "No se encontraron resultados.";
+            $respuesta = array(
+                "mensaje" => "Ninguna factura encontrada"
+            );
+
+            header('Content-Type: application/json');
+            echo json_encode($respuesta);
+        
+            exit();
         }
 
         foreach ($resultados as $resultado) {
@@ -97,19 +104,26 @@
                 while ($fila = $quer->fetch_assoc()) {
                     $resultados2[] = $fila;
                 }
-            } else {
-                echo "No se encontraron resultados.";
-            }
+            } 
 
             foreach ($resultados2 as $resultado) {
 
-                $consulta2 = 
-                    "INSERT INTO Productos
-                        (VtaId, VtaDetId, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
-                    VALUES 
-                        ('{$resultado['vtaid']}','{$resultado['vtadetid']}','{$resultado['proid']}','{$resultado['procod']}','{$resultado['pronom']}','{$resultado['proubica']}','{$resultado['pround']}','{$resultado['probarcode']}','{$resultado['vtacant']}')
-                    ;";
+                $VtaId = mysqli_real_escape_string($con, $resultado['vtaid']);
+                $VtaDetId = mysqli_real_escape_string($con, $resultado['vtadetid']);
+                $ProId = mysqli_real_escape_string($con, $resultado['proid']);
+                $ProCod = mysqli_real_escape_string($con, $resultado['procod']);
+                $ProNom = mysqli_real_escape_string($con, $resultado['pronom']);
+                $ProUbica = mysqli_real_escape_string($con, $resultado['proubica']);
+                $ProPresentacion = mysqli_real_escape_string($con, $resultado['pround']);
+                $ProCodBar = mysqli_real_escape_string($con, $resultado['probarcode']);
+                $VtaCant = mysqli_real_escape_string($con, $resultado['vtacant']);
 
+                $consulta2 = "INSERT INTO Productos
+                    (VtaId, VtaDetId, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
+                    VALUES 
+                    ('$VtaId', '$VtaDetId', '$ProId', '$ProCod', '$ProNom', '$ProUbica', '$ProPresentacion', '$ProCodBar', '$VtaCant');";
+            
+                //var_dump($consulta2);
                 $finalConsulta = $con->query($consulta2);
             }
 
