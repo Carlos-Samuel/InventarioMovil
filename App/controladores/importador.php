@@ -1,6 +1,7 @@
 <?php
     require_once 'Connection.php';
     require_once 'Connection2.php';
+    require_once 'filtroEmpresas.php';
 
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -47,7 +48,8 @@
             LEFT JOIN ciudad AS ci ON ci.ciuid = ve.CiuId
             WHERE 
                 vtaid > $maxVtaid
-                and vtafec >= '".$fecha_minima."'
+                AND vtafec >= '".$fecha_minima."'  
+                ".$filtroEmpresa."
             ;";
 
         $quer = $con2->query($consultaBusqueda1);
