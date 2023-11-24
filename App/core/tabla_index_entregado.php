@@ -27,6 +27,7 @@
                 F.idAlistador = A.idUsuarios 
                 AND F.idVerificador = V.idUsuarios 
                 AND (F.facEstado = 5 OR F.facEstado = 6)
+            ORDER BY vtafec ASC, vtahor ASC;
             ;
         ");
 

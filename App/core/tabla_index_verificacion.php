@@ -19,6 +19,7 @@
             WHERE 
                 F.idAlistador = U.idUsuarios 
                 AND (F.facEstado = 3 OR F.facEstado = 4 )
+            ORDER BY vtafec ASC, vtahor ASC;
             ;
         ");
 

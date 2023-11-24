@@ -5,7 +5,7 @@
     try {
 
         $con = Connection::getInstance()->getConnection();
-        $quer = $con->query("SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2");
+        $quer = $con->query("SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2 ORDER BY vtafec ASC, vtahor ASC;");
 
         $response = array();
 

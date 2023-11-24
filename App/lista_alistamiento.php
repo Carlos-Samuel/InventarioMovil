@@ -17,7 +17,7 @@
     require_once 'controladores/Connection.php';
 
     $con = Connection::getInstance()->getConnection();
-    $querF = $con->query("SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2");
+    $querF = $con->query("SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2 ORDER BY vtafec ASC, vtahor ASC;");
 
 ?>
 <!doctype html>
