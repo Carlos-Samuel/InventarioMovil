@@ -12,12 +12,18 @@
     $permiso1 = "Admin";
     $permiso2 = "Alistamiento";
 
+    $controladorAbsoluto = true;
+    $controladorAlistador = false;
+
     if (!(strpos($_SESSION['permisos'], $permiso1) || strpos($_SESSION['permisos'], $permiso2))) {
         header("Location: dashboard.php");
         exit();
     }
 
     require_once 'controladores/Connection.php';
+    require_once 'controladores/limpiadores.php';
+
+    $idVerificador = $_SESSION["idUsuarios"];
 
     if(isset($_GET['id'])) {
         try{
@@ -46,7 +52,7 @@
 
                 utf8_encode_array($row);
         
-                $prefijo = $row['PrfId'];
+                $prefijo = $row['PrfCod'];
                 $numDoc = $row['VtaNum'];
                 $fecha_hora_venta = $row['vtafec'] . " " . $row['vtahor'];
                 $nombre = $row['TerNom'];
@@ -56,9 +62,21 @@
                 $alistador = $row['Nombres'] . " " . $row['Apellidos'];
                 $fecha_hora_alitado = $row['fecha_y_hora'];
                 $observaciones = $row['facObservaciones'];
+
+                if ($idVerificador != $row['idVerificador']){
+                    $controladorAlistador = true; 
+                }
     
             } else {
+                $controladorAbsoluto = false;
                 echo "No se encontro la factura.";
+            }
+
+            if ($controladorAlistador){
+                limpiarVerificacion($con, $id_recibido);
+                $horaLocal = date('Y-m-d H:i:s');
+                $sql = "UPDATE Facturas SET InicioVerificacion = '$horaLocal', idVerificador = $idVerificador WHERE vtaid = $id_recibido";
+                $resultado = $con->query($sql);    
             }
 
             $quer2 = $con->query(
@@ -91,6 +109,10 @@
                 $datosProductos[] = $row;
             }
 
+            require_once 'controladores/ordenarProductos.php';
+
+            usort($datosProductos, 'compararUbicaciones');
+
             $quer3 = $con->query("SELECT * FROM Embalajes;");
 
             $datosEmbalajes = array();
@@ -102,17 +124,14 @@
                 $datosEmbalajes[] = $row;
             }
 
-            $horaLocal = date('Y-m-d H:i:s');
-            $sql = "UPDATE Facturas SET InicioVerificacion = '$horaLocal' WHERE vtaid = $id_recibido AND InicioVerificacion IS NULL";
-            $resultado = $con->query($sql);
-
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
     } else {
-        echo "No se recibió ningún valor.";
+        $controladorAbsoluto = false;
+        echo "No se encontro ningún valor";
     }
-
+    if ($controladorAbsoluto){
 ?>
 <!doctype html>
 <html lang="es" data-bs-theme="auto">
@@ -161,7 +180,9 @@
                     <div id="loader"></div>
                     <div id = "contenidoMovil" style="display: none;">
                         <br>
-                        <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
+                        <!--
+                            <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
+                        -->
                         <br>
                         <br>
                     </div>
@@ -309,3 +330,9 @@
         ?>  
     </body>
 </html>
+<?php 
+    }else{
+        header("Location: lista_alistamiento.php");
+        exit;
+    }
+?>

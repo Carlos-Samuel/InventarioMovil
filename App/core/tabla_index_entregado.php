@@ -34,7 +34,7 @@
         $response = array();
 
         while ($columna = $quer->fetch_assoc()) {
-            $row['id'] = "<p>" . $columna['PrfId'] . " " .$columna['VtaNum'] . "</p>";
+            $row['id'] = "<p>" . $columna['PrfCod'] . " " .$columna['VtaNum'] . "</p>";
             $row['fecha'] = "<p>" . $columna['vtafec'] . " " . $columna['vtahor'] . "</p>";
             $row['nombre'] = "<p>" . utf8_encode($columna['TerNom']) . "</p>";
             $row['razon'] = "<p>" . utf8_encode($columna['TerRaz']) . "</p>";

@@ -57,8 +57,12 @@
                             $template = new TemplateProcessor('../plantillas/etiqueta.docx');
                     
                             $template->setValue('cliente_nombre', $row['TerNom']);
+                            $template->setValue('razon_social', $row['TerRaz']);
                             $template->setValue('cliente_telefono', $row['TerTel']);
                             $template->setValue('cliente_direccion', $row['TerDir']);
+                            $template->setValue('prefijo', $row['PrfCod']);
+                            $template->setValue('n_factura', $row['VtaNum']);
+                            $template->setValue('ciudad', $row['CiuNom']);
                             $template->setValue('observaciones', $row['ObservacionesVer']);
                             $template->setValue('e', $clave);
                             $template->setValue('n', $j);

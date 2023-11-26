@@ -293,9 +293,13 @@ function limpiar(item, codBar){
 
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName('td');
-        if (td[0]) {
-            txtValue = td[0].textContent || td[0].innerText;
-            if (txtValue == item) {
+        if (td[1]) {
+            txtValue = td[1].textContent || td[1].innerText;
+            console.log("Datos de verificacion");
+            console.log(item);
+            console.log(codBar);
+            console.log(txtValue);
+            if (txtValue == codBar) {
                 tr[i].style.display = '';
                 dataId = tr[i].getAttribute('data-id');
             }else{
@@ -434,7 +438,6 @@ botonesProcesar.forEach(boton => {
     boton.addEventListener('click', function() {
         let item = this.getAttribute('data-item');
         let codBar = this.getAttribute('data-codBar');
-        console.log(item);
         controladorRevision = 1;
         selectedItem = item;
         selectedCodBar = codBar;

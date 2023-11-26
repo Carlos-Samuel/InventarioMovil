@@ -32,6 +32,7 @@
         WHERE 
             F.idAlistador = U.idUsuarios 
             AND (F.facEstado = 3 OR F.facEstado = 4)
+        ORDER BY vtafec ASC, vtahor ASC
         ;
     ");
 
@@ -79,7 +80,7 @@
                                     $filaClase = $verificacion['Forzado'] == '1' ? 'fila-amarilla' : ''; // Determinar la clase de la fila
                                 ?>
                                     <tr class="<?php echo $filaClase; ?>">
-                                        <td><?php echo $verificacion['PrfId'] . " " . $verificacion['VtaNum'] ?></td>
+                                        <td><?php echo $verificacion['PrfCod'] . " " . $verificacion['VtaNum'] ?></td>
                                         <td><?php echo $verificacion['vtafec'] . " " . $verificacion['vtahor'] ?></td>
                                         <td><?php echo utf8_encode($verificacion['TerNom']) ?></td>
                                         <td><?php echo utf8_encode($verificacion['TerRaz']) ?></td>
@@ -137,6 +138,7 @@
                     responsive: true,
                     processing: true,
                     pageLength: 10,
+                    ordering: false,
                     ajax: {
                         url: 'core/tabla_index_verificacion.php',
                         type: 'GET',

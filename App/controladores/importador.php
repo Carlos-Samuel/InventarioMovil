@@ -40,12 +40,14 @@
                 COALESCE(TRIM(ven.vennom), 'DATO NO DISPONIBLE') AS UsuNom, 
                 COALESCE(TRIM(ve.CiuId), 0) AS CiuId, 
                 COALESCE(TRIM(ci.ciunom), 'DATO NO DISPONIBLE') AS ciunom, 
-                COALESCE(TRIM(ve.vtaobs), 'SIN OBSERVACIONES') AS vtaobs
+                COALESCE(TRIM(ve.vtaobs), 'SIN OBSERVACIONES') AS vtaobs,
+                pr.PrfCod AS PrfCod
             FROM
                 ventas AS ve
             LEFT JOIN terceros AS ter ON ter.terid = ve.TerId
             LEFT JOIN vendedor AS ven ON ven.venid = ve.VenId
             LEFT JOIN ciudad AS ci ON ci.ciuid = ve.CiuId
+            LEFT JOIN Prefijo AS pr ON pr.PrfId = ve.PrfId
             WHERE 
                 vtaid > $maxVtaid
                 AND vtafec >= '".$fecha_minima."'  
@@ -74,9 +76,9 @@
         foreach ($resultados as $resultado) {
 
             $consulta = 
-            "INSERT INTO Facturas(vtaid, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga)
+            "INSERT INTO Facturas(vtaid, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod)
             VALUES (
-                '{$resultado['vtaid']}', '{$resultado['VtaNum']}', '{$resultado['PrfId']}', '{$resultado['vtafec']}', '{$resultado['vtahor']}', '{$resultado['TerId']}', '{$resultado['TerNom']}', '{$resultado['TerDir']}', '{$resultado['TerTel']}', '{$resultado['terrzn']}', '{$resultado['VenId']}', '{$resultado['UsuNom']}', {$resultado['CiuId']}, '{$resultado['ciunom']}', '{$resultado['vtaobs']}', 1, TIME(NOW())
+                '{$resultado['vtaid']}', '{$resultado['VtaNum']}', '{$resultado['PrfId']}', '{$resultado['vtafec']}', '{$resultado['vtahor']}', '{$resultado['TerId']}', '{$resultado['TerNom']}', '{$resultado['TerDir']}', '{$resultado['TerTel']}', '{$resultado['terrzn']}', '{$resultado['VenId']}', '{$resultado['UsuNom']}', {$resultado['CiuId']}, '{$resultado['ciunom']}', '{$resultado['vtaobs']}', 1, TIME(NOW()), '{$resultado['PrfCod']}'
             );";
 
             $finalConsulta = $con->query($consulta);
@@ -125,7 +127,6 @@
                     VALUES 
                     ('$VtaId', '$VtaDetId', '$ProId', '$ProCod', '$ProNom', '$ProUbica', '$ProPresentacion', '$ProCodBar', '$VtaCant');";
             
-                //var_dump($consulta2);
                 $finalConsulta = $con->query($consulta2);
             }
 

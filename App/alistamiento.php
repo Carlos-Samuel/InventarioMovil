@@ -2,6 +2,8 @@
     session_start(); 	
     date_default_timezone_set('America/Bogota');
 
+    include 'controladores/funciones.php';
+
     if (!isset($_SESSION["cedula"]) || !isset($_SESSION["nombres"])) {
         header("Location: index.php");
         exit();
@@ -10,12 +12,18 @@
     $permiso1 = "Admin";
     $permiso2 = "Alistamiento";
 
+    $controladorAbsoluto = true;
+    $controladorAlistador = false;
+
     if (!(strpos($_SESSION['permisos'], $permiso1) || strpos($_SESSION['permisos'], $permiso2))) {
         header("Location: dashboard.php");
         exit();
     }
 
     require_once 'controladores/Connection.php';
+    require_once 'controladores/limpiadores.php';
+
+    $idAlistador = $_SESSION["idUsuarios"];
 
     if(isset($_GET['id'])) {
         try{
@@ -26,8 +34,10 @@
     
             if ($quer->num_rows > 0) {
                 $row = $quer->fetch_assoc();
+
+                utf8_encode_array($row);
         
-                $prefijo = $row['PrfId'];
+                $prefijo = $row['PrfCod'];
                 $numDoc = $row['VtaNum'];
                 $fecha = $row['vtafec'];
                 $nombre = $row['TerNom'];
@@ -35,9 +45,21 @@
                 $ciudad = $row['CiuNom'];
                 $vendedor = $row['VenNom'];
                 $hora = $row['vtahor'];
+
+                if ($idAlistador != $row['idAlistador']){
+                    $controladorAlistador = true; 
+                }
     
             } else {
+                $controladorAbsoluto = false;
                 echo "No se encontro la factura.";
+            }
+
+            if ($controladorAlistador){
+                limpiarAlistamiento($con, $id_recibido);
+                $horaLocal = date('Y-m-d H:i:s');
+                $sql = "UPDATE Facturas SET MomentoCarga = CONCAT(vtafec, ' ', vtahor), InicioAlistamiento = '$horaLocal', idAlistador = $idAlistador WHERE vtaid = $id_recibido AND InicioAlistamiento IS NULL";
+                $resultado = $con->query($sql);
             }
 
             $quer2 = $con->query(
@@ -64,21 +86,24 @@
                 $row['cantidad'] = $columna['VtaCant'];
                 $row['alistado'] = $columna['AlisCant'];
                 $row['diferencia'] = $columna['VtaCant'] - $columna['AlisCant'];
+
+                utf8_encode_array($row);
     
                 $datosProductos[] = $row;
             }
 
-            $horaLocal = date('Y-m-d H:i:s');
-            $sql = "UPDATE Facturas SET MomentoCarga = CONCAT(vtafec, ' ', vtahor), InicioAlistamiento = '$horaLocal' WHERE vtaid = $id_recibido AND InicioAlistamiento IS NULL";
-            $resultado = $con->query($sql);
+            require_once 'controladores/ordenarProductos.php';
+
+            usort($datosProductos, 'compararUbicaciones');
 
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
     } else {
+        $controladorAbsoluto = false;
         echo "No se recibió ningún valor.";
     }
-
+    if ($controladorAbsoluto){
 ?>
 <!doctype html>
 <html lang="es" data-bs-theme="auto">
@@ -100,7 +125,9 @@
                 <main class="content">
                     <div id = "contenidoMovil" style="display: none;">
                         <br>
-                        <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
+                        <!--
+                            <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
+                        -->
                         <br>
                         <br>
                     </div>
@@ -124,10 +151,10 @@
                                         <td data-label="Prefijo"><?php echo $prefijo ?></td>
                                         <td data-label="Doc"><?php echo $numDoc ?></td>
                                         <td data-label="Fecha"><?php echo $fecha ?></td>
-                                        <td data-label="NombreCliente"><?php echo utf8_encode($nombre) ?></td>
-                                        <td data-label="RazonSocial"><?php echo utf8_encode($razon) ?></td>
-                                        <td data-label="Ciudad"><?php echo utf8_encode($ciudad) ?></td>
-                                        <td data-label="Vendedor"><?php echo utf8_encode($vendedor) ?></td>
+                                        <td data-label="NombreCliente"><?php echo $nombre ?></td>
+                                        <td data-label="RazonSocial"><?php echo $razon ?></td>
+                                        <td data-label="Ciudad"><?php echo $ciudad ?></td>
+                                        <td data-label="Vendedor"><?php echo $vendedor ?></td>
                                         <td data-label="HoraDoc"><?php echo $hora ?></td>
                                     </tr>
                                 </tbody>
@@ -168,9 +195,9 @@
                                         <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
                                             <td data-label="ProCod"><?php echo $producto['ProCod'] ?></td>
                                             <td data-label="ProCodBar"><?php echo $producto['ProCodBar'] ?></td>
-                                            <td data-label="Descripcion"><?php echo utf8_encode($producto['descripcion']) ?></td>
-                                            <td data-label="Ubicacion"><?php echo utf8_encode($producto['ubicacion']) ?></td>
-                                            <td data-label="Presentacion"><?php echo utf8_encode($producto['presentacion']) ?></td>
+                                            <td data-label="Descripcion"><?php echo ($producto['descripcion']) ?></td>
+                                            <td data-label="Ubicacion"><?php echo ($producto['ubicacion']) ?></td>
+                                            <td data-label="Presentacion"><?php echo ($producto['presentacion']) ?></td>
                                             <td data-label="Cantidad"><?php echo $producto['cantidad'] ?></td>
                                             <td data-label="Alistado" class="input-container">
                                                 <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value="<?php echo $producto['alistado'] ?>">
@@ -260,3 +287,9 @@
         ?>  
     </body>
 </html>
+<?php 
+    }else{
+        header("Location: lista_alistamiento.php");
+        exit;
+    }
+?>

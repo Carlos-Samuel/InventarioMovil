@@ -57,7 +57,7 @@
 
                 utf8_encode_array($row);
         
-                $prefijo = $row['PrfId'];
+                $prefijo = $row['PrfCod'];
                 $numDoc = $row['VtaNum'];
                 $fecha_hora_venta = $row['vtafec'] . " " . $row['vtahor'];
                 $nombre = $row['TerNom'];

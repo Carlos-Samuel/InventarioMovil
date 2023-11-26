@@ -16867,6 +16867,10 @@ ul.dashboard-box-list > li:hover {
 		font-size: 24px;
 	}
 
+	.fa-print {
+		font-size: 36px !important;
+	}
+
 	/* Estilos para la alineación de los botones en una fila  
 	@media screen and (max-width: 600px) {
 		#sidebar {

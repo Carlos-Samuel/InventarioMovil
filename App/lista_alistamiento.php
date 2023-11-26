@@ -64,7 +64,7 @@
                                     $filaClase = $alistamiento['facEstado'] == '2' ? 'fila-verde' : ''; // Determinar la clase de la fila
                                 ?>
                                     <tr class="<?php echo $filaClase; ?>">
-                                        <td><?php echo $alistamiento['PrfId'] . " " . $alistamiento['VtaNum'] ?></td>
+                                        <td><?php echo $alistamiento['PrfCod'] . " " . $alistamiento['VtaNum'] ?></td>
                                         <td><?php echo $alistamiento['vtafec'] ?></td>
                                         <td><?php echo utf8_encode($alistamiento['TerNom']) ?></td>
                                         <td><?php echo utf8_encode($alistamiento['TerRaz']) ?></td>
@@ -130,6 +130,7 @@
                     responsive: true,
                     processing: true,
                     pageLength: 10,
+                    ordering: false,
                     ajax: {
                         url: 'core/tabla_index_alistamiento.php',
                         type: 'GET',

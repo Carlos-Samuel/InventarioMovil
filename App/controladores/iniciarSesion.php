@@ -27,8 +27,8 @@
                 $hashedPassword = $row["Password"];
                 
                 // Verificar la contraseña
-                //if (password_verify($password, $hashedPassword)) {
-                if (true) {
+                if (password_verify($password, $hashedPassword)) {
+                //if (false) {
                     $_SESSION["idUsuarios"] = $row["idUsuarios"];
                     $_SESSION["cedula"] = $row["Cedula"];
                     $_SESSION["nombres"] = $row["Nombres"];
@@ -66,10 +66,6 @@
                     header("Location: ../dashboard.php");
                     exit();
                 } else {
-
-
-                    var_dump("Samuel 777");
-                    die();
 
                     $error = "Cédula o contraseña incorrecta";
                     header("Location: ../index.php?mensaje=" . $error);
