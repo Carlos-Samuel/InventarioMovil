@@ -3,6 +3,8 @@
     require_once 'Connection2.php';
     require_once 'filtroEmpresas.php';
 
+    set_time_limit(900); 
+
     $data = json_decode(file_get_contents("php://input"), true);
 
     if (isset($data['fecha']) && !empty($data['fecha'])) {
@@ -75,13 +77,56 @@
 
         foreach ($resultados as $resultado) {
 
-            $consulta = 
-            "INSERT INTO Facturas(vtaid, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod)
-            VALUES (
-                '{$resultado['vtaid']}', '{$resultado['VtaNum']}', '{$resultado['PrfId']}', '{$resultado['vtafec']}', '{$resultado['vtahor']}', '{$resultado['TerId']}', '{$resultado['TerNom']}', '{$resultado['TerDir']}', '{$resultado['TerTel']}', '{$resultado['terrzn']}', '{$resultado['VenId']}', '{$resultado['UsuNom']}', {$resultado['CiuId']}, '{$resultado['ciunom']}', '{$resultado['vtaobs']}', 1, TIME(NOW()), '{$resultado['PrfCod']}'
-            );";
+            //$consulta = 
+           // "INSERT INTO Facturas(vtaid, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod)
+            //VALUES (
+            //    '{$resultado['vtaid']}', '{$resultado['VtaNum']}', '{$resultado['PrfId']}', '{$resultado['vtafec']}', '{$resultado['vtahor']}', '{$resultado['TerId']}', '{$resultado['TerNom']}', '{$resultado['TerDir']}', '{$resultado['TerTel']}', '{$resultado['terrzn']}', '{$resultado['VenId']}', '{$resultado['UsuNom']}', {$resultado['CiuId']}, '{$resultado['ciunom']}', '{$resultado['vtaobs']}', 1, TIME(NOW()), '{$resultado['PrfCod']}'
+            //);";
 
-            $finalConsulta = $con->query($consulta);
+            //$finalConsulta = $con->query($consulta);
+
+            $vtaid = (int)$resultado['vtaid'];
+            $VtaNum = (int)$resultado['VtaNum'];
+            $PrfId = (int)$resultado['PrfId'];
+            $vtafec = $resultado['vtafec'];
+            $vtahor = $resultado['vtahor'];
+            $TerId = (int)$resultado['TerId'];
+            $TerNom = $resultado['TerNom'];
+            $TerDir = $resultado['TerDir'];
+            $TerTel = $resultado['TerTel'];
+            $terrzn = $resultado['terrzn'];
+            $VenId = (int)$resultado['VenId'];
+            $UsuNom = $resultado['UsuNom'];
+            $CiuId = (int)$resultado['CiuId'];
+            $ciunom = $resultado['ciunom'];
+            $vtaobs = $resultado['vtaobs'];
+            $PrfCod = $resultado['PrfCod'];
+
+            // Crear una conexión a la base de datos (supongo que ya tienes esto configurado)
+
+            // Definir la consulta preparada
+            $consulta = "INSERT INTO Facturas (vtaid, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, TIME(NOW()), ?)";
+
+            // Preparar la consulta
+            if ($stmt = $con->prepare($consulta)) {
+                // Vincular parámetros y tipos de datos
+                $stmt->bind_param("iissssssssssssss", $vtaid, $VtaNum, $PrfId, $vtafec, $vtahor, $TerId, $TerNom, $TerDir, $TerTel, $terrzn, $VenId, $UsuNom, $CiuId, $ciunom, $vtaobs, $PrfCod);
+
+                // Ejecutar la consulta preparada
+                if ($stmt->execute()) {
+                    $respuesta = array(
+                        "mensaje" => "Todo bien"
+                    );
+                } else {
+                    $respuesta = array(
+                        "mensaje" => "Error general: " . $stmt->error
+                    );
+                }
+
+                $stmt->close();
+            } else {
+                echo "Error al preparar la consulta: " . $con->error;
+            }
 
             $consultaBusqueda = 
                 "SELECT 
@@ -89,7 +134,7 @@
                     COALESCE(TRIM(ved.VtaDetId), '') AS vtadetid, 
                     COALESCE(TRIM(ved.ProId), '') AS proid, 
                     COALESCE(TRIM(pro.ProCod), '') AS procod, 
-                    COALESCE(TRIM(ved.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
+                    COALESCE(TRIM(pro.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
                     COALESCE(TRIM(NULLIF(pro.ProUbica, '')), 'DATO NO DISPONIBLE') AS proubica, 
                     COALESCE(TRIM(NULLIF(pro.ProUnd, '')), 'DATO NO DISPONIBLE') AS pround, 
                     TRIM(NULLIF(pro.ProCodBar, '')) AS probarcode, 
@@ -132,25 +177,24 @@
 
         }
 
-        
+        $respuesta = array(
+            "mensaje" => "Los datos fueron importados correctamente"
+        );
 
+        $con->close();
+
+    } catch (PDOException $sqlException) {
+        $respuesta = array(
+            "mensaje" => "Error SQL: " . $sqlException->getMessage()
+        );
     } catch (Exception $e) {
         $respuesta = array(
-            "mensaje" => "Error al importar los datos ". $e->getMessage()
+            "mensaje" => "Error general: " . $e->getMessage(),
+            "extra1" => $consulta,
+            "extra2" => $consulta2
         );
-    
-        header('Content-Type: application/json');
-        echo json_encode($respuesta);
-    
-        exit();
-        
     }
 
-    $con->close();
-
-    $respuesta = array(
-        "mensaje" => "Los datos fueron importados correctamente"
-    );
 
     header('Content-Type: application/json');
     echo json_encode($respuesta);
