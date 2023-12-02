@@ -52,6 +52,7 @@
             LEFT JOIN Prefijo AS pr ON pr.PrfId = ve.PrfId
             WHERE 
                 vtaid > $maxVtaid
+                AND vtaid > 242951
                 AND vtafec >= '".$fecha_minima."'  
                 ".$filtroEmpresa."
             ;";
