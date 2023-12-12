@@ -302,9 +302,9 @@ function guardar(estado, observacion, embalaje) {
         .then(data => {
             console.log('Respuesta:', data);
             if(data.status == 1){
-                if (estado == 2){
-                    window.open('documentos/etiquetas' + $('#idFactura').val() + '.pdf', '_blank');
-                }
+                //if (estado == 2){
+                //    window.open('documentos/etiquetas' + $('#idFactura').val() + '.pdf', '_blank');
+                //}
                 window.location.href = 'lista_verificacion.php';
             }else{
                 alert ("Error al guardar");

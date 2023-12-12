@@ -8,14 +8,31 @@
     use PhpOffice\PhpWord\TemplateProcessor;
     use PhpOffice\PhpWord\PhpWord;
 
+    echo "Samuel";
+
+    //$id_recibido = intval($_GET['idFactura']);
+    $id_recibido = $argv[1];
+
+
+    imprimir($id_recibido);
+
     function imprimir($id){
+
+        $controlErrores = 0;
 
         try {
             $con = Connection::getInstance()->getConnection();
         } catch (Exception $e) {
+            $controlErrores++;
             echo 'Error en la conexión: ' . $e->getMessage();
         }
         
+        $sql = "UPDATE facturas
+        SET estadoImpresion = 'En proceso'
+        WHERE vtaid = " . $id . ";";
+
+        $con->query($sql);
+
         try {
             $quer = $con->query("SELECT * FROM Facturas WHERE vtaid = " . $id . ";");
         } catch (Exception $e) {
@@ -27,17 +44,25 @@
             utf8_encode_array($row);
         } catch (Exception $e) {
             echo 'Error al recuperar datos o al ejecutar utf8_encode_array: ' . $e->getMessage();
+            $controlErrores++;
         }
         
         try {
             $elementos = explode("#", $row['Embalaje']);
         } catch (Exception $e) {
             echo 'Error al dividir la cadena: ' . $e->getMessage();
+            $controlErrores++;
         }
 
         $i = 1;
 
         $rutas = array();
+
+        $sql = "UPDATE facturas
+        SET estadoImpresion = 'En proceso antes de elementos'
+        WHERE vtaid = " . $id . ";";
+
+        $con->query($sql);
 
         foreach ($elementos as $elemento) {
 
@@ -92,11 +117,19 @@
                             $i++;
                         }
                     } catch (Exception $e) {
-                        return 'Error en el bucle while: ' . $e->getMessage();
+                        $controlErrores++;
+                        echo 'Error en el bucle while: ' . $e->getMessage();
+                        
                     }
                 }
             }
         }
+
+        $sql = "UPDATE facturas
+        SET estadoImpresion = 'En proceso antes antes de pdf'
+        WHERE vtaid = " . $id . ";";
+
+        $con->query($sql);
 
         try{
 
@@ -112,10 +145,22 @@
 
             }
 
+            $sql = "UPDATE facturas
+            SET estadoImpresion = 'En proceso antes de ejecutar comando'
+            WHERE vtaid = " . $id . ";";
+    
+            $con->query($sql);
+
             $output = [];
             $returnCode = 0;
     
             exec($comando_final, $output, $returnCode);
+
+            $sql = "UPDATE facturas
+            SET estadoImpresion = 'En proceso antes de borrar'
+            WHERE vtaid = " . $id . ";";
+    
+            $con->query($sql);
 
             foreach ($rutas as $ruta) {
 
@@ -126,10 +171,21 @@
             }
 
         } catch (Exception $e) {
-            return 'Error en el bucle while: ' . $e->getMessage();
+            $controlErrores++;
+            echo 'Error en el bucle while: ' . $e->getMessage();
         }
 
-        return "Termino";
+        if($controlErrores == 0){
+            $sql = "UPDATE facturas
+            SET estadoImpresion = 'Impreso'
+            WHERE vtaid = " . $id . ";";
+        }else{
+            $sql = "UPDATE facturas
+            SET estadoImpresion = 'Error'
+            WHERE vtaid = " . $id . ";";
+        }
+
+        $con->query($sql);
 
     }
 

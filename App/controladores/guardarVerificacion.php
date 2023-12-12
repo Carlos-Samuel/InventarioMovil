@@ -1,7 +1,7 @@
 <?php
 
     require_once 'Connection.php';
-    include 'imprimir.php';
+    #include 'imprimir.php';
     include_once 'funciones.php';
    
 
@@ -58,7 +58,12 @@
             $resultado = $con->query($sql);
 
             if ($idEstado == 2){
-                imprimir($idFactura);
+                //imprimir($idFactura);
+                // Usar shell_exec para ejecutar el script PHP con la variable como argumento
+                //$resultado = shell_exec("php imprimir.php '$idFactura' > /dev/null 2>&1 &");
+                $comando_ejecutar = "start /B php imprimir.php $idFactura > NUL 2>&1";
+                popen($comando_ejecutar, "r");
+
             };
             
 

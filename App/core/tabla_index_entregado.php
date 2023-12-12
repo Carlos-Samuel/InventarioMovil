@@ -45,7 +45,12 @@
             $row['verificador'] = "<p>" . $columna['NombresVerificador'] . " " .$columna['ApellidosVerificador'] ."</p>";
             $row['horaVerificado'] = "<p>" . $columna['fecha_y_hora_verificado'] . "</p>";
 
-            $documento = "<a href='documentos/etiquetas" . $columna['vtaid'] . ".pdf' target='_blank'><i class = 'fa fa-print'></i></a>";
+            if ($columna['estadoImpresion']=='Impreso'){
+                $documento = "<a href='documentos/etiquetas" . $columna['vtaid'] . ".pdf' target='_blank'><i class = 'fa fa-print'></i></a>";
+            }else{
+                $documento =  "<p>" . $columna['estadoImpresion'] . "</p>";
+            }
+
             $row['documento'] = $documento;
             
             $boton = "<a href='entrega.php?id=" . $columna['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
