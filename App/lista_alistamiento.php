@@ -16,8 +16,18 @@
 
     require_once 'controladores/Connection.php';
 
+    $limite = 0;
+    if (isset($_GET['limit']) && is_numeric($_GET['limit'])) {
+        $limite = intval($_GET['limit']);
+    }
+
     $con = Connection::getInstance()->getConnection();
-    $querF = $con->query("SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2 ORDER BY vtafec ASC, vtahor ASC;");
+
+    $consulta = "SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2 ORDER BY vtafec ASC, vtahor ASC";
+
+    $consulta .= " LIMIT " . (($limite) * 5) .", 5;";
+
+    $querF = $con->query($consulta);
 
 ?>
 <!doctype html>
@@ -42,6 +52,21 @@
                         <br>
                         <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
                         <br>
+                        <?php
+                            if ($limite!=0){
+                        ?>
+                        <a href = "lista_alistamiento.php?limit=<?php echo $limite-1; ?> " ><button class="btn btn-warning primeButton" type="button">Pagina anterior</button></a>
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        &nbsp;
+                        <?php
+                            }
+                        ?>
+                        <a href = "lista_alistamiento.php?limit=<?php echo $limite+1; ?>" ><button class="btn btn-success primeButton" type="button">Pagina siguiente</button></a>
                         <br>
                         <table>
                             <thead>
