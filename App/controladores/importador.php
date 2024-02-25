@@ -135,7 +135,13 @@
                     COALESCE(TRIM(ved.VtaDetId), '') AS vtadetid, 
                     COALESCE(TRIM(ved.ProId), '') AS proid, 
                     COALESCE(TRIM(pro.ProCod), '') AS procod, 
-                    COALESCE(TRIM(pro.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
+                    --COALESCE(TRIM(pro.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
+                    CASE
+                        WHEN TRIM(pro.ProNom) = '.' THEN COALESCE(ved.ProNom, 'DATO NO DISPONIBLE')
+                        WHEN TRIM(pro.ProNom) = '..' THEN COALESCE(ved.ProNom, 'DATO NO DISPONIBLE')
+                        WHEN TRIM(pro.ProNom) LIKE '.%.' THEN COALESCE(ved.ProNom, 'DATO NO DISPONIBLE')
+                        ELSE COALESCE(TRIM(pro.ProNom), 'DATO NO DISPONIBLE')
+                    END AS pronom,
                     COALESCE(TRIM(NULLIF(pro.ProUbica, '')), 'DATO NO DISPONIBLE') AS proubica, 
                     COALESCE(TRIM(NULLIF(pro.ProUnd, '')), 'DATO NO DISPONIBLE') AS pround, 
                     TRIM(NULLIF(pro.ProCodBar, '')) AS probarcode, 

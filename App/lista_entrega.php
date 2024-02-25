@@ -103,9 +103,18 @@
                                         <td><?php echo $verificacion['fecha_y_hora_verificado'] ?></td>
                                         <td>
                                             <?php 
-                                                echo "<a href='documentos/etiquetas" . $verificacion['vtaid'] . ".pdf' target='_blank'>";
+                                                if ($verificacion['estadoImpresion']=='Impreso'){
+                                                    echo "<a href='documentos/etiquetas" . $verificacion['vtaid'] . ".pdf' target='_blank'>";
+                                                
                                             ?>
                                                 <i class = "fa fa-print"></i>
+                                            <?php
+                                                }else{
+                                            ?>
+                                                <td><?php echo $verificacion['estadoImpresion'] ?></td>
+                                            <?php
+                                                }
+                                            ?>
                                             </a>
                                         </td>
                                         <td>
