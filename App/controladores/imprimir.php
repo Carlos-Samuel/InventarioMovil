@@ -8,8 +8,6 @@
     use PhpOffice\PhpWord\TemplateProcessor;
     use PhpOffice\PhpWord\PhpWord;
 
-    echo "Samuel";
-
     //$id_recibido = intval($_GET['idFactura']);
     $id_recibido = $argv[1];
 
