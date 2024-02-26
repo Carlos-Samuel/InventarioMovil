@@ -57,12 +57,15 @@
 
             $resultado = $con->query($sql);
 
+            $estatus = 1;
+
             if ($idEstado == 2){
+                $estatus = 7;
                 //imprimir($idFactura);
                 // Usar shell_exec para ejecutar el script PHP con la variable como argumento
                 //$resultado = shell_exec("php imprimir.php '$idFactura' > /dev/null 2>&1 &");
-                $comando_ejecutar = "start /B C:\xampp\php\php imprimir.php " . $idFactura . " > NUL 2>&1";
-                popen($comando_ejecutar, "r");
+                //$comando_ejecutar = "start /B C:\xampp\php\php imprimir.php " . $idFactura . " > NUL 2>&1";
+                //popen($comando_ejecutar, "r");
 
             };
             
@@ -70,7 +73,7 @@
             if ($resultado) {
                 $response = array(
                     "message" => "Factura actualizada correctamente",
-                    "status" => 1
+                    "status" => $estatus
                 );
             } else {
                 $response = array(
