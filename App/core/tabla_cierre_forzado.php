@@ -1,7 +1,7 @@
 <?php
     require_once '../controladores/Connection.php';
 
-    include 'funciones.php';
+    include '../controladores/funciones.php';
 
     try {
 
@@ -69,7 +69,7 @@
             $row['alistador'] = "<p>" . ($columna['NombresAlistador']) . " " .($columna['ApellidosAlistador']) ."</p>";
             $row['ObservacionesFor'] = "<p>" . $columna['ObservacionesFor'] . "</p>";
 
-            utf8_encode_array($row);
+            //utf8_encode_array($row);
 
             $response[] = $row;
         }

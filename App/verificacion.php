@@ -50,7 +50,7 @@
             if ($quer->num_rows > 0) {
                 $row = $quer->fetch_assoc();
 
-                utf8_encode_array($row);
+                //utf8_encode_array($row);
         
                 $prefijo = $row['PrfCod'];
                 $numDoc = $row['VtaNum'];
@@ -62,6 +62,7 @@
                 $alistador = $row['Nombres'] . " " . $row['Apellidos'];
                 $fecha_hora_alitado = $row['fecha_y_hora'];
                 $observaciones = $row['facObservaciones'];
+                $justificacion = $row['ObservacionesFor'];
 
                 if ($idVerificador != $row['idVerificador']){
                     $controladorAlistador = true; 
@@ -93,20 +94,26 @@
             $datosProductos = array();
     
             while ($columna = $quer2->fetch_assoc()) {
-                $row['id'] = $columna['VtaDetId'];
-                $row['item'] = $columna['ProId'];
-                $row['ProCod'] = $columna['ProCod'];
-                $row['ProCodBar'] = $columna['ProCodBar'];
-                $row['descripcion'] = $columna['ProNom'];
-                $row['ubicacion'] = $columna['ProUbica'];
-                $row['presentacion'] = $columna['ProPresentacion'];
-                $row['cantidad'] = $columna['VtaCant'];
-                $row['alistado'] = $columna['AlisCant'];
-                $row['verificado'] = $columna['VerCant'];
 
-                utf8_encode_array($row);
+                $rowN = [];
+
+                $rowN['id'] = $columna['VtaDetId'];
+                $rowN['item'] = utf8_encode($columna['ProId']);
+                $rowN['ProCod'] = $columna['ProCod'];
+                $rowN['ProCodBar'] = $columna['ProCodBar'];
+                $rowN['descripcion'] = utf8_encode($columna['ProNom']);
+                $rowN['ubicacion'] = utf8_encode($columna['ProUbica']);
+                $rowN['presentacion'] = utf8_encode($columna['ProPresentacion']);
+                $rowN['cantidad'] = $columna['VtaCant'];
+                $rowN['alistado'] = $columna['AlisCant'];
+                $rowN['verificado'] = $columna['VerCant'];
+
+                //var_dump($rowN);
+                //var_dump("<br>");
+
+                //utf8_encode_array($row);
     
-                $datosProductos[] = $row;
+                $datosProductos[] = $rowN;
             }
 
             require_once 'controladores/ordenarProductos.php';
@@ -214,10 +221,16 @@
                                         <td data-label="Alistador"><?php echo $alistador ?></td>
                                         <td data-label="FechaHoraAlistado"><?php echo $fecha_hora_alitado ?></td>
                                     </tr>
-                                    <!-- <tr>
-                                        <td colspan="2"><strong>OBSERVACIONES</strong></td>
-                                        <td colspan="7"><?php //echo $observaciones ?></td>
-                                    </tr> -->
+                                    <?php
+                                        if (isset($justificacion) && $justificacion != 0){
+                                    ?>
+                                    <tr>
+                                        <td colspan="2"><strong>JUSTIFICACIÓN</strong></td>
+                                        <td colspan="7"><?php echo $justificacion ?></td>
+                                    </tr>
+                                    <?php
+                                        }
+                                    ?>
                                 </tbody>
                             </table>
                         </div>

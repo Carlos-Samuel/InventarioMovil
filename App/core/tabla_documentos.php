@@ -1,7 +1,7 @@
 <?php
     require_once '../controladores/Connection.php';
 
-    include 'funciones.php';
+    include '../controladores/funciones.php';
 
     try {
 

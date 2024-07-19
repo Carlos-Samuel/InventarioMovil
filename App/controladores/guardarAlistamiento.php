@@ -21,7 +21,7 @@
 
             if (isset($data['justificacion'])){
                 $justificacion = $data['justificacion'];
-                $justificacion = utf8_encode($con->real_escape_string($justificacion));
+                $justificacion = $con->real_escape_string($justificacion);
             }
 
             if (isset($data['usuario'])){

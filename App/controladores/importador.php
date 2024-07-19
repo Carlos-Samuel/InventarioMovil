@@ -10,7 +10,7 @@
     if (isset($data['fecha']) && !empty($data['fecha'])) {
         $fecha_minima = $data['fecha'];
     } else {
-        $fecha_minima = '2023-08-12';
+        $fecha_minima = '2024-07-19';
     }
 
     $con = Connection::getInstance()->getConnection();

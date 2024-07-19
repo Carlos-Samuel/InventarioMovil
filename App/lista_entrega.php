@@ -119,7 +119,7 @@
                                         </td>
                                         <td>
                                             <?php 
-                                                echo "<a href='verificacion.php?id=" . $verificacion['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
+                                                echo "<a href='entrega.php?id=" . $verificacion['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
                                             ?>
                                         </td>
                                     </tr>

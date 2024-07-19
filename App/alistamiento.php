@@ -76,20 +76,23 @@
             $datosProductos = array();
     
             while ($columna = $quer2->fetch_assoc()) {
-                $row['id'] = $columna['VtaDetId'];
-                $row['item'] = $columna['ProId'];
-                $row['ProCod'] = $columna['ProCod'];
-                $row['ProCodBar'] = $columna['ProCodBar'];
-                $row['descripcion'] = $columna['ProNom'];
-                $row['ubicacion'] = $columna['ProUbica'];
-                $row['presentacion'] = $columna['ProPresentacion'];
-                $row['cantidad'] = $columna['VtaCant'];
-                $row['alistado'] = $columna['AlisCant'];
-                $row['diferencia'] = $columna['VtaCant'] - $columna['AlisCant'];
 
-                utf8_encode_array($row);
+                $row2 = [];
+
+                $row2['id'] = $columna['VtaDetId'];
+                $row2['item'] = $columna['ProId'];
+                $row2['ProCod'] = $columna['ProCod'];
+                $row2['ProCodBar'] = $columna['ProCodBar'];
+                $row2['descripcion'] = $columna['ProNom'];
+                $row2['ubicacion'] = $columna['ProUbica'];
+                $row2['presentacion'] = $columna['ProPresentacion'];
+                $row2['cantidad'] = $columna['VtaCant'];
+                $row2['alistado'] = $columna['AlisCant'];
+                $row2['diferencia'] = $columna['VtaCant'] - $columna['AlisCant'];
+
+                utf8_encode_array($row2);
     
-                $datosProductos[] = $row;
+                $datosProductos[] = $row2;
             }
 
             require_once 'controladores/ordenarProductos.php';
