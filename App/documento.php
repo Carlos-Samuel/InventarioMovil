@@ -77,7 +77,9 @@
                         </div>
                     </div>
                     <br>
-                    <button class='btn btn-danger' id = "borrarFechas">Borrar</button>
+                    <button class='btn btn-warning' id = "borrarFechas">Limpiar fechas</button>
+                    <br>
+                    <button class='btn btn-danger' id = "borrarAlistamientos">Eliminar registros para Alistamiento sin empezar</button>
                     <br>
                     <table id="tablaDocumento">
                         <thead>
@@ -107,6 +109,8 @@
         <script>
 
             var botonB = document.getElementById('borrarFechas');
+            var botonA = document.getElementById('borrarAlistamientos');
+            
 
             const fechaInicioInput = document.getElementById('fechaInicio');
             const fechaFinInput = document.getElementById('fechaFin');
@@ -125,6 +129,66 @@
                 fechaFinInput.value = null;
                 tablaEstadisticas.ajax.reload();
             });
+
+            botonA.addEventListener('click', function() {
+                
+                Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡Una vez eliminados los registros no se pueden recuperar!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, estoy seguro',
+                cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        let fecIni = $('#fechaInicio').val();
+                        let fecFin = $('#fechaFin').val();
+
+                        if (!fecIni || !fecFin) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Por favor, ingresa ambas fechas antes de continuar.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            var dataToSend = {
+                                fecIni: fecIni,
+                                fecFin: fecFin
+                            };
+
+                            var requestOptions = {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(dataToSend)
+                            };
+
+                            fetch('controladores/borrarAlistamientos.php', requestOptions)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Error en la respuesta de la red');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                tablaEstadisticas.ajax.reload();
+                            })
+                            .catch(error => {
+                                alert('Error:', error);
+                            });
+
+                        }
+
+                    }
+                });
+
+            });
+
 
 
             //$(document).ready( function () {

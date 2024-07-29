@@ -313,7 +313,7 @@
                         <?php
                             foreach ($datosEmbalajes as $producto) {
                         ?>
-                            <tr data-id="<?php echo $producto['id']; ?>">
+                            <tr data-id="<?php echo $producto['idEmbalajes']; ?>">
                                 <td data-label="Descripcion"><?php echo $producto['Descripcion'] ?></td>
                                 <td data-label="Cantidad" class="input-container">
                                     <input type="number" id="numero_<?php echo $producto['idEmbalajes'] ?>" name="numero_<?php echo $producto['idEmbalajes'] ?>">
