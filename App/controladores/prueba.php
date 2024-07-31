@@ -8,8 +8,7 @@
     use PhpOffice\PhpWord\TemplateProcessor;
     use PhpOffice\PhpWord\PhpWord;
 
-    $id_recibido = intval($_POST['idFactura']);
-    //$id_recibido = $argv[1];
+    $id_recibido = 269363;
 
 
     imprimir($id_recibido);
