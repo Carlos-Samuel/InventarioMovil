@@ -38,15 +38,15 @@
                 ON
                     Est.idEstados = F.facEstado
             WHERE
-                F.Forzador = 1
+                F.Forzado = 1
             ";
             
         
 
         if ($_GET['inicial'] != "" || $_GET['final'] != ""){
-            $sql = $sql . " WHERE ";
+            //$sql = $sql . " WHERE ";
             if ($_GET['inicial'] != ""){
-                $sql = $sql . " F.vtafec >= '" . $_GET['inicial'] . "' ";
+                $sql = $sql . " AND F.vtafec >= '" . $_GET['inicial'] . "' ";
             }
             if ($_GET['inicial'] != "" && $_GET['final'] != ""){
                 $sql = $sql . " AND " ;
@@ -56,6 +56,7 @@
             }
         }
 
+        //ECHO $sql;
 
         $quer = $con->query($sql);
 

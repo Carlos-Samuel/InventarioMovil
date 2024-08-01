@@ -34,6 +34,7 @@
             $row['vendedor'] = "<p>" . utf8_encode($columna['VenNom']) . "</p>";
             $row['alistador'] = "<p>" . $columna['Nombres'] . " " .$columna['Apellidos'] ."</p>";
             $row['horaAlistado'] = "<p>" . $columna['fecha_y_hora'] . "</p>";
+            $row['observacion'] = "<p>" . utf8_encode($columna['facObservaciones']) . "</p>";
 
             $boton = "<a href='verificacion.php?id=" . $columna['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
             $row['accion'] = $boton;

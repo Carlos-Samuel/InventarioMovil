@@ -12,7 +12,17 @@
 
             $fecFin = $data['fecFin'];
 
-            $query = "DELETE FROM Facturas WHERE facEstado = 1 AND InicioAlistamiento IS NULL AND vtafec >= '$fecIni' AND vtafec <= '$fecFin'";
+            $prefijoBorrar = "";
+
+            if (isset($data['fecFin'])){
+                $prefijoBorrar = $data['prefijoBorrar'];
+            }
+
+            $query = "DELETE FROM Facturas WHERE facEstado = 1 AND FinAlistamiento IS NULL AND vtafec >= '$fecIni' AND vtafec <= '$fecFin'";
+
+            if ($prefijoBorrar != ""){
+                $query = $query . " AND PrfCod = '" . $prefijoBorrar . "' ";
+            }
 
             if ($con->query($query)) {
                 $response = array(
@@ -20,7 +30,7 @@
                 );
             } else {
                 $response = array(
-                    "error" => "Error al borrar el registro: " . $con->error
+                    "error" => "Error al borrar los registro: " . $con->error
                 );
             }
                 
@@ -31,9 +41,9 @@
         }
     } catch (Exception $e) {
         $response = array(
-            "error" => "Error al borrar: "
+            "error" => "Error al borrar: " . $e->getMessage()
         );
-    }
+    }    
 
     header("Content-Type: application/json");
     echo json_encode($response);

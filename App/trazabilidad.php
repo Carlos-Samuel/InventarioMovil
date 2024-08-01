@@ -37,6 +37,12 @@
             .invisible-table td:last-child {
                 border-right: none;
             }
+
+            #prefijo, #documento {
+                font-size: 18px; /* Aumenta el tamaño de la letra */
+                margin: 20px; /* Espacio exterior */
+                border: 2px solid black; /* Borde negro de 2px de grosor */
+            }
         </style>
     </head>
     <body>
@@ -53,11 +59,12 @@
                     <br>
                     <div style="display: flex; justify-content: space-between; margin-top: 20px;">
                         <div style="width: 45%;">
-                            <label for="prefijo"><strong>Prefijo</strong></label>
+                            <h1>Prefijo</h1>
                             <input type="text" id="prefijo" name="prefijo">
                         </div>
                         <div style="width: 45%;">
-                            <label for="documento"><strong># Documento</strong></label>
+                            <h1># Documento</h1>
+                            <!--<label for="documento"><strong># Documento</strong></label>-->
                             <input type="documento" id="documento" name="documento">
                         </div>
                     </div>
@@ -107,6 +114,16 @@
                             <td id="datos-total-embalajes"></td>
                         </tr>
                         <tr>
+                            <th id="Nitems">NUMERO ITEMS</th>
+                            <th id="tiempoAlistamientoItems">T. ALISTAMIENTO PROMEDIO POR ITEM</th>
+                            <th id="tiempoVerificacionItems">T. VERIFICACION PROMEDIO POR ITEM</th>
+                        </tr>
+                        <tr>
+                            <td id="datos-numero-items"></td>
+                            <td id="datos-tiempo-alistamiento-items"></td>
+                            <td id="datos-tiempo-verificacion-items"></td>
+                        </tr>
+                        <tr>
                             <th colspan="2" id="estado-documento">Estado documento</th>
                             <td id="datos-estado-documento"></td>
                         </tr>
@@ -139,7 +156,7 @@
                     body: JSON.stringify(dataToSend)
                 };
 
-                fetch('controladores/buscarFactura.php', requestOptions)
+                fetch('controladores/buscarFactura2.php', requestOptions)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Error en la respuesta de la red');
@@ -177,6 +194,15 @@
                             if(data.datos.embalaje != null){
                                 $("#datos-total-embalajes").text(sumarNumerosEnLista(data.datos.embalaje));
                             }
+                            if(data.datos.items != null){
+                                $("#datos-numero-items").text(data.datos.items);
+                                if(data.datos.duracionAlistamiento != null){
+                                    $("#datos-tiempo-alistamiento-items").text((data.datos.duracionAlistamiento / data.datos.items).toFixed(2) + " minutos");
+                                }
+                                if(data.datos.duracionVerificacion != null){
+                                    $("#datos-tiempo-verificacion-items").text((data.datos.duracionVerificacion / data.datos.items).toFixed(2) + " minutos");
+                                }
+                            }
                             estado = data.datos.estado;
 
                             ObservacionesFor = data.datos.ObservacionesFor;
@@ -196,6 +222,12 @@
                         }else if(data.status == 3){
                             Swal.fire({
                                 title: 'Factura no encontrada',
+                                icon: 'error',
+                                confirmButtonText: 'Entendido'
+                            });
+                        }else if(data.status == 4){
+                            Swal.fire({
+                                title: 'Factura de consulta',
                                 icon: 'error',
                                 confirmButtonText: 'Entendido'
                             });

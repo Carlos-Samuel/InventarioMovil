@@ -54,10 +54,8 @@
                 ON
                     Est.idEstados = F.facEstado
             ";
-            
-        
 
-        if ($_GET['inicial'] != "" || $_GET['final'] != ""){
+        if ($_GET['inicial'] != "" || $_GET['final'] != "" || $_GET['prefijoFiltrar'] != ""){
             $sql = $sql . " WHERE ";
             if ($_GET['inicial'] != ""){
                 $sql = $sql . " F.vtafec >= '" . $_GET['inicial'] . "' ";
@@ -68,6 +66,12 @@
             if ($_GET['final'] != ""){
                 $sql = $sql . " F.vtafec <= '" . $_GET['final'] . "' ";
             }
+            if (($_GET['inicial'] != "" || $_GET['final'] != "" ) &&  $_GET['prefijoFiltrar'] != ""){
+                $sql = $sql . " AND " ;
+            }
+            if ($_GET['prefijoFiltrar'] != ""){
+                $sql = $sql . " F.PrfCod = '" . $_GET['prefijoFiltrar'] . "' ";
+            }
         }
 
         $quer = $con->query($sql);
@@ -76,7 +80,7 @@
         $response = array();
 
         while ($columna = $quer->fetch_assoc()) {
-            $row['id'] = "<p>" . $columna['PrfId'] . " " .$columna['VtaNum'] . "</p>";
+            $row['id'] = "<p>" . $columna['PrfCod'] . " " .$columna['VtaNum'] . "</p>";
             $row['nombre'] = "<p>" . ($columna['TerNom']) . " " . ($columna['TerRaz']) . "</p>";
             $row['fecha'] = "<p>" . $columna['vtafec'] . " " . $columna['vtahor'] . "</p>";
             $row['vendedor'] = "<p>" . ($columna['VenNom']) . "</p>";
