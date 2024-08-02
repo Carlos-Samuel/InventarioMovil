@@ -76,7 +76,7 @@
                         <tr>
                             <th id="factura-prefijo">Factura - Prefijo</th>
                             <th id="nombre-razon-social">Nombre - Razón Social</th>
-                            <th id="hora-factura">Hora Factura</th>
+                            <th id="hora-factura">Fecha y Hora Factura</th>
                         </tr>
                         <tr>
                             <td id="datos-factura"></td>
@@ -167,7 +167,7 @@
                         if(data.status == 1){
                             $("#datos-factura").text(data.datos.PrfId + " " + data.datos.VtaNum);
                             $("#datos-nombre").text(data.datos.TerNom);
-                            $("#datos-hora").text(data.datos.vtahor);
+                            $("#datos-hora").text(data.datos.vtafec + " " + data.datos.vtahor);
                             $("#datos-vendedor").text(data.datos.VenNom);
                             
                             if(data.datos.NombresAlistador != 'null'){

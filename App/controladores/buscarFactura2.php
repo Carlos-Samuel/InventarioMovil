@@ -17,74 +17,39 @@
             $prefijo = $con->real_escape_string($prefijo);
             $documento = $con->real_escape_string($documento);
             
-            $resultado = $con->query(
-                "SELECT 
-                    F.*,
-                    A.Nombres AS NombresAlistador,
-                    A.Apellidos AS ApellidosAlistador,
-                    TIMESTAMPDIFF(MINUTE, InicioAlistamiento, FinAlistamiento) AS duracionAlistamiento,
-                    V.Nombres AS NombresVerificador,
-                    V.Apellidos AS ApellidosVerificador,
-                    TIMESTAMPDIFF(MINUTE, InicioVerificacion, FinVerificacion) AS duracionVerificacion,
-                    E.Nombres AS NombresEntregador,
-                    E.Apellidos AS ApellidosEntregador,
-                    TIMESTAMPDIFF(MINUTE, InicioEntrega, FinEntrega) AS duracionEntrega,
-                    LTRIM(F.Embalaje) AS embalaje,
-                    Est.Descripcion AS estado,
-                    count(*) AS items
-                FROM 
-                    Facturas AS F
-                LEFT JOIN
-                    Usuarios AS A
-                    ON
-                        A.idUsuarios = F.idAlistador
-                LEFT JOIN
-                    Usuarios AS V
-                    ON
-                        V.idUsuarios = F.idVerificador
-                LEFT JOIN
-                    Usuarios AS E
-                    ON
-                        E.idUsuarios = F.idEntregador
-                LEFT JOIN
-                    Estados AS Est
-                    ON
-                        Est.idEstados = F.facEstado
-                LEFT JOIN 
-                    Productos AS Pro
-                    ON 
-                        F.vtaid = Pro.vtaid
-                WHERE 
-                    PrfCod = '".$prefijo."' 
-                    AND VtaNum = $documento;");
-
+            $query = "
+            SELECT 
+                idUsuarios, 
+                CONCAT(Nombres, ' ', Apellidos) AS NombreCompleto
+            FROM 
+                Usuarios";
+            
+            $resultado = $con->query($query);
+            
             if ($resultado->num_rows > 0) {
-                $row = $resultado->fetch_assoc();
-                utf8_encode_array($row);
-                
-                $response = array(
-                    "message" => "Factura actualizada correctamente",
-                    "status" => 1,
-                    "datos" => $row
-                );
-
+                $usuarios = [];
+                while ($row = $resultado->fetch_assoc()) {
+                    $usuarios[] = [
+                        "id" => $row["idUsuarios"],
+                        "nombre" => $row["NombreCompleto"]
+                    ];
+                }
+                echo json_encode(["status" => 1, "usuarios" => $usuarios]);
             } else {
-                $response = array(
-                    "error" => "Factura no encontrada",
-                    "status" => 3
-                );
+                echo json_encode(["status" => 0, "error" => "No se encontraron usuarios"]);
             }
+            
         } else {
-            $response = array(
+            $response = [
                 "error" => "Datos no proporcionados",
                 "status" => 2
-            );
+            ];
         }
     } catch (Exception $e) {
-        $response = array(
+        $response = [
             "error" => "Error en la conexión: " . $e->getMessage(),
             "status" => 4
-        );
+        ];
     }
 
     header("Content-Type: application/json");
