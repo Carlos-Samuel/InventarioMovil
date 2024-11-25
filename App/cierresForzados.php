@@ -133,7 +133,7 @@
                     processing: true,
                     pageLength: 10,
                     ajax: {
-                        url: 'core/tabla_cierre_forzado.php',
+                        url: 'core/tabla_cierre_forzado_informe.php',
                         type: 'GET',
                         data: function(data) {
                             data.inicial = $('#fechaInicio').val(),
