@@ -1,7 +1,7 @@
 <?php
     require_once '../controladores/Connection.php';
 
-    include 'funciones.php';
+    include '../controladores/funciones.php';
 
     try {
 
@@ -38,25 +38,9 @@
                 ON
                     Est.idEstados = F.facEstado
             WHERE
-                F.Forzador = 1
+                F.Forzado = 1
             ";
             
-        
-
-        if ($_GET['inicial'] != "" || $_GET['final'] != ""){
-            $sql = $sql . " WHERE ";
-            if ($_GET['inicial'] != ""){
-                $sql = $sql . " F.vtafec >= '" . $_GET['inicial'] . "' ";
-            }
-            if ($_GET['inicial'] != "" && $_GET['final'] != ""){
-                $sql = $sql . " AND " ;
-            }
-            if ($_GET['final'] != ""){
-                $sql = $sql . " F.vtafec <= '" . $_GET['final'] . "' ";
-            }
-        }
-
-
         $quer = $con->query($sql);
 
 
@@ -68,6 +52,7 @@
             $row['forzador'] = "<p>" . ($columna['NombresForzador']) . " " .($columna['ApellidosForzador']) ."</p>";
             $row['alistador'] = "<p>" . ($columna['NombresAlistador']) . " " .($columna['ApellidosAlistador']) ."</p>";
             $row['ObservacionesFor'] = "<p>" . $columna['ObservacionesFor'] . "</p>";
+            $row['procesar'] ="<a href='cierreForzadoDetalle.php?id=" . $columna['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
 
             utf8_encode_array($row);
 

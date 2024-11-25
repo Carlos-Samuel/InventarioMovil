@@ -106,18 +106,71 @@
             // Crear una conexión a la base de datos (supongo que ya tienes esto configurado)
 
             // Definir la consulta preparada
-            $consulta = "INSERT INTO Facturas (vtaid, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, TIME(NOW()), ?)";
+            $consulta = "INSERT INTO Facturas (VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, TIME(NOW()), ?)";
 
             // Preparar la consulta
             if ($stmt = $con->prepare($consulta)) {
                 // Vincular parámetros y tipos de datos
-                $stmt->bind_param("iissssssssssssss", $vtaid, $VtaNum, $PrfId, $vtafec, $vtahor, $TerId, $TerNom, $TerDir, $TerTel, $terrzn, $VenId, $UsuNom, $CiuId, $ciunom, $vtaobs, $PrfCod);
+                $stmt->bind_param("issssssssssssss", $VtaNum, $PrfId, $vtafec, $vtahor, $TerId, $TerNom, $TerDir, $TerTel, $terrzn, $VenId, $UsuNom, $CiuId, $ciunom, $vtaobs, $PrfCod);
 
                 // Ejecutar la consulta preparada
                 if ($stmt->execute()) {
-                    $respuesta = array(
-                        "mensaje" => "Todo bien"
-                    );
+
+                    $ultimoId = $con->insert_id;
+
+                    $consultaBusqueda = 
+                    "SELECT 
+                        COALESCE(TRIM(ved.VtaId), '') AS vtaid, 
+                        COALESCE(TRIM(ved.VtaDetId), '') AS vtadetid, 
+                        COALESCE(TRIM(ved.ProId), '') AS proid, 
+                        COALESCE(TRIM(pro.ProCod), '') AS procod, 
+                        --COALESCE(TRIM(pro.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
+                        CASE
+                            WHEN TRIM(pro.ProNom) = '.' THEN COALESCE(ved.ProNom, 'DATO NO DISPONIBLE')
+                            WHEN TRIM(pro.ProNom) = '..' THEN COALESCE(ved.ProNom, 'DATO NO DISPONIBLE')
+                            WHEN TRIM(pro.ProNom) LIKE '.%.' THEN COALESCE(ved.ProNom, 'DATO NO DISPONIBLE')
+                            ELSE COALESCE(TRIM(pro.ProNom), 'DATO NO DISPONIBLE')
+                        END AS pronom,
+                        COALESCE(TRIM(NULLIF(pro.ProUbica, '')), 'DATO NO DISPONIBLE') AS proubica, 
+                        COALESCE(TRIM(NULLIF(pro.ProUnd, '')), 'DATO NO DISPONIBLE') AS pround, 
+                        TRIM(NULLIF(pro.ProCodBar, '')) AS probarcode, 
+                        COALESCE(TRIM(ved.VtaCant), 0) AS vtacant 
+                    FROM
+                        ventasdet AS ved
+                    LEFT JOIN productos AS pro ON pro.ProId = ved.ProId
+                    WHERE 
+                        VtaId = {$resultado['vtaid']}";
+    
+                    $quer = $con2->query($consultaBusqueda);
+        
+                    $resultados2 = array();
+        
+                    if ($quer->num_rows > 0) {
+                        while ($fila = $quer->fetch_assoc()) {
+                            $resultados2[] = $fila;
+                        }
+                    } 
+        
+                    foreach ($resultados2 as $resultado) {
+        
+                        $VtaId = $ultimoId;
+                        $VtaDetId = mysqli_real_escape_string($con, $resultado['vtadetid']);
+                        $ProId = mysqli_real_escape_string($con, $resultado['proid']);
+                        $ProCod = mysqli_real_escape_string($con, $resultado['procod']);
+                        $ProNom = mysqli_real_escape_string($con, $resultado['pronom']);
+                        $ProUbica = mysqli_real_escape_string($con, $resultado['proubica']);
+                        $ProPresentacion = mysqli_real_escape_string($con, $resultado['pround']);
+                        $ProCodBar = mysqli_real_escape_string($con, $resultado['probarcode']);
+                        $VtaCant = mysqli_real_escape_string($con, $resultado['vtacant']);
+        
+                        $consulta2 = "INSERT INTO Productos
+                            (VtaId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
+                            VALUES 
+                            ('$VtaId', '$ProCod', '$ProNom', '$ProUbica', '$ProPresentacion', '$ProCodBar', '$VtaCant');";
+                    
+                        $finalConsulta = $con->query($consulta2);
+                    }
+                    
                 } else {
                     $respuesta = array(
                         "mensaje" => "Error general: " . $stmt->error
@@ -127,59 +180,6 @@
                 $stmt->close();
             } else {
                 echo "Error al preparar la consulta: " . $con->error;
-            }
-
-            $consultaBusqueda = 
-                "SELECT 
-                    COALESCE(TRIM(ved.VtaId), '') AS vtaid, 
-                    COALESCE(TRIM(ved.VtaDetId), '') AS vtadetid, 
-                    COALESCE(TRIM(ved.ProId), '') AS proid, 
-                    COALESCE(TRIM(pro.ProCod), '') AS procod, 
-                    --COALESCE(TRIM(pro.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
-                    CASE
-                        WHEN TRIM(pro.ProNom) = '.' THEN COALESCE(ved.ProNom, 'DATO NO DISPONIBLE')
-                        WHEN TRIM(pro.ProNom) = '..' THEN COALESCE(ved.ProNom, 'DATO NO DISPONIBLE')
-                        WHEN TRIM(pro.ProNom) LIKE '.%.' THEN COALESCE(ved.ProNom, 'DATO NO DISPONIBLE')
-                        ELSE COALESCE(TRIM(pro.ProNom), 'DATO NO DISPONIBLE')
-                    END AS pronom,
-                    COALESCE(TRIM(NULLIF(pro.ProUbica, '')), 'DATO NO DISPONIBLE') AS proubica, 
-                    COALESCE(TRIM(NULLIF(pro.ProUnd, '')), 'DATO NO DISPONIBLE') AS pround, 
-                    TRIM(NULLIF(pro.ProCodBar, '')) AS probarcode, 
-                    COALESCE(TRIM(ved.VtaCant), 0) AS vtacant 
-                FROM
-                    ventasdet AS ved
-                LEFT JOIN productos AS pro ON pro.ProId = ved.ProId
-                WHERE 
-                    VtaId = {$resultado['vtaid']}";
-
-            $quer = $con2->query($consultaBusqueda);
-
-            $resultados2 = array();
-
-            if ($quer->num_rows > 0) {
-                while ($fila = $quer->fetch_assoc()) {
-                    $resultados2[] = $fila;
-                }
-            } 
-
-            foreach ($resultados2 as $resultado) {
-
-                $VtaId = mysqli_real_escape_string($con, $resultado['vtaid']);
-                $VtaDetId = mysqli_real_escape_string($con, $resultado['vtadetid']);
-                $ProId = mysqli_real_escape_string($con, $resultado['proid']);
-                $ProCod = mysqli_real_escape_string($con, $resultado['procod']);
-                $ProNom = mysqli_real_escape_string($con, $resultado['pronom']);
-                $ProUbica = mysqli_real_escape_string($con, $resultado['proubica']);
-                $ProPresentacion = mysqli_real_escape_string($con, $resultado['pround']);
-                $ProCodBar = mysqli_real_escape_string($con, $resultado['probarcode']);
-                $VtaCant = mysqli_real_escape_string($con, $resultado['vtacant']);
-
-                $consulta2 = "INSERT INTO Productos
-                    (VtaId, VtaDetId, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
-                    VALUES 
-                    ('$VtaId', '$VtaDetId', '$ProId', '$ProCod', '$ProNom', '$ProUbica', '$ProPresentacion', '$ProCodBar', '$VtaCant');";
-            
-                $finalConsulta = $con->query($consulta2);
             }
 
         }

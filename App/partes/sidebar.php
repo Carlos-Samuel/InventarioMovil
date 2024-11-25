@@ -17,6 +17,24 @@
       <nav class="menu open-current-submenu">
         <ul>
           <li class="menu-header"><span> INVENTARIO </span></li>
+          <li class="menu-item">
+            <a href="cierresForzadosControl.php">
+              <span class="menu-icon">
+                <?php
+                  if ($activado == "CierresForzadosControl"){
+                ?>
+                  <i class="fa fa-bookmark"></i>
+                <?php
+                  }else{
+                ?>
+                  <i class="ri-book-2-fill"></i>
+                <?php
+                  }
+                ?>
+              </span>
+              <span class="menu-title">Cierres Forzados</span>
+            </a>
+          </li>
           <?php
             $permiso1 = "Admin";
             $permiso2 = "Alistamiento";

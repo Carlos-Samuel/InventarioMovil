@@ -23,7 +23,7 @@
 
     $con = Connection::getInstance()->getConnection();
 
-    $consulta = "SELECT * FROM Facturas WHERE facEstado = 1 OR facEstado = 2 ORDER BY vtafec ASC, vtahor ASC";
+    $consulta = "SELECT * FROM Facturas WHERE (facEstado = 1 OR facEstado = 2) AND Forzado = 0 ORDER BY vtafec ASC, vtahor ASC";
 
     $consulta .= " LIMIT " . (($limite) * 5) .", 5;";
 
