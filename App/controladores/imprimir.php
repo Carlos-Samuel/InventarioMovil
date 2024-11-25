@@ -79,14 +79,15 @@
                         while ($j <= $valor) {
                             $template = new TemplateProcessor('../plantillas/etiqueta.docx');
                     
-                            $template->setValue('cliente_nombre', $row['TerNom']);
-                            $template->setValue('razon_social', $row['TerRaz']);
-                            $template->setValue('cliente_telefono', $row['TerTel']);
-                            $template->setValue('cliente_direccion', $row['TerDir']);
-                            $template->setValue('prefijo', $row['PrfCod']);
-                            $template->setValue('n_factura', $row['VtaNum']);
-                            $template->setValue('ciudad', $row['CiuNom']);
-                            $template->setValue('observaciones', $row['ObservacionesVer']);
+                            $template->setValue('cliente_nombre', htmlspecialchars($row['TerNom'], ENT_QUOTES, 'UTF-8'));
+                            $template->setValue('razon_social', htmlspecialchars($row['TerRaz'], ENT_QUOTES, 'UTF-8'));
+                            $template->setValue('cliente_telefono', htmlspecialchars($row['TerTel'], ENT_QUOTES, 'UTF-8'));
+                            $template->setValue('cliente_direccion', htmlspecialchars($row['TerDir'], ENT_QUOTES, 'UTF-8'));
+                            $template->setValue('prefijo', htmlspecialchars($row['PrfCod'], ENT_QUOTES, 'UTF-8'));
+                            $template->setValue('n_factura', htmlspecialchars($row['VtaNum'], ENT_QUOTES, 'UTF-8'));
+                            $template->setValue('ciudad', htmlspecialchars($row['CiuNom'], ENT_QUOTES, 'UTF-8'));
+                            $template->setValue('observaciones', htmlspecialchars($row['ObservacionesVer'], ENT_QUOTES, 'UTF-8'));
+                            
                             $template->setValue('e', $clave);
                             $template->setValue('n', $j);
                             $template->setValue('t', $valor);

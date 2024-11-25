@@ -81,6 +81,7 @@
                                     <th>Fecha y Hora Alistado</th>
                                     <th>Verificador</th>
                                     <th>Fecha y Hora Verificado</th>
+                                    <th>Observacion</th>
                                     <th>Documento</th>
                                     <th>Procesar</th>
                                 </tr>
@@ -101,6 +102,7 @@
                                         <td><?php echo $verificacion['fecha_y_hora_alistado'] ?></td>
                                         <td><?php echo utf8_encode($verificacion['NombresVerificador']) . " " . utf8_encode($verificacion['ApellidosVerificador']) ?></td>
                                         <td><?php echo $verificacion['fecha_y_hora_verificado'] ?></td>
+                                        <td><?php echo $verificacion['facObservaciones'] ?></td>
                                         <td>
                                             <?php 
                                                 if ($verificacion['estadoImpresion']=='Impreso'){
@@ -119,7 +121,7 @@
                                         </td>
                                         <td>
                                             <?php 
-                                                echo "<a href='verificacion.php?id=" . $verificacion['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
+                                                echo "<a href='entrega.php?id=" . $verificacion['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
                                             ?>
                                         </td>
                                     </tr>
@@ -146,6 +148,7 @@
                                     <th>Fecha y Hora Alistado</th>
                                     <th>Verificador</th>
                                     <th>Fecha y Hora Verificado</th>
+                                    <th>Observacion</th>
                                     <th>Documento</th>
                                     <th>Procesar</th>
                                 </tr>
@@ -203,6 +206,7 @@
                         {data: 'horaAlistado', name:'horaAlistado', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'verificador', name:'verificador', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'horaVerificado', name:'horaVerificado', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'observacion', name:'observacion', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'documento', name:'documento', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'accion', name:'accion', orderable: true, searchable: true, className: 'dt-body-center'}
 

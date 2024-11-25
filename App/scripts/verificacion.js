@@ -54,6 +54,13 @@ function busqueda(){
         td = tr[i].getElementsByTagName('td');
         var cont = 0;
         if (filter!=""){
+            if (td[0]) {
+                txtValue = td[0].textContent || td[0].innerText;
+                if (txtValue == filter) {
+                    tr[i].style.display = '';
+                    cont++;
+                } 
+            }
             if (td[1]) {
                 txtValue = td[1].textContent || td[1].innerText;
                 if (txtValue == filter) {
@@ -309,7 +316,7 @@ function guardar(estado, observacion, embalaje) {
                 //}
                 window.location.href = 'lista_verificacion.php';
             }else{
-                alert ("Error al guardar");
+                alert ("Error al guardar 2");
             }
             
         })

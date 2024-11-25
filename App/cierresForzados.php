@@ -77,7 +77,7 @@
                         </div>
                     </div>
                     <br>
-                    <button class='btn btn-danger' id = "borrarFechas">Borrar</button>
+                    <button class='btn btn-danger' id = "borrarFechas">Limpiar fechas</button>
                     <br>
                     <table id="tablaDocumento">
                         <thead>

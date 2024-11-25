@@ -184,9 +184,9 @@
                         {data: 'ciudad', name:'ciudad', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'vendedor', name:'vendedor', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'hora', name:'hora', orderable: true, searchable: true, className: 'dt-body-center'},
-                        {data: 'observacion', observacion:'password', orderable: true, searchable: true, className: 'dt-body-center'},
-                        {data: 'accion', observacion:'accion', orderable: true, searchable: true, className: 'dt-body-center'},
-                        {data: 'segundaAccion', observacion:'segundaAccion', orderable: true, searchable: true, className: 'dt-body-center'}
+                        {data: 'observacion', name:'observacion', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'accion', name:'accion', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'segundaAccion', name:'segundaAccion', orderable: true, searchable: true, className: 'dt-body-center'}
                         
                     ],
 

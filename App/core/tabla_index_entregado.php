@@ -44,6 +44,7 @@
             $row['horaAlistado'] = "<p>" . $columna['fecha_y_hora_alistado'] . "</p>";
             $row['verificador'] = "<p>" . $columna['NombresVerificador'] . " " .$columna['ApellidosVerificador'] ."</p>";
             $row['horaVerificado'] = "<p>" . $columna['fecha_y_hora_verificado'] . "</p>";
+            $row['observacion'] = "<p>" . utf8_encode($columna['facObservaciones']) . "</p>";
 
             if ($columna['estadoImpresion']=='Impreso'){
                 $documento = "<a href='documentos/etiquetas" . $columna['vtaid'] . ".pdf' target='_blank'><i class = 'fa fa-print'></i></a>";

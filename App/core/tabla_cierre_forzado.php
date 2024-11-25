@@ -54,7 +54,7 @@
             $row['ObservacionesFor'] = "<p>" . $columna['ObservacionesFor'] . "</p>";
             $row['procesar'] ="<a href='cierreForzadoDetalle.php?id=" . $columna['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
 
-            utf8_encode_array($row);
+            //utf8_encode_array($row);
 
             $response[] = $row;
         }

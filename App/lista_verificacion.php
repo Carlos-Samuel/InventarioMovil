@@ -71,6 +71,7 @@
                                     <th>Vendedor</th>
                                     <th>Alistador</th>
                                     <th>Fecha y Hora Alistado</th>
+                                    <th>Observacion</th>
                                     <th>Procesar</th>
                                 </tr>
                             </thead>
@@ -88,6 +89,7 @@
                                         <td><?php echo utf8_encode($verificacion['VenNom']) ?></td>
                                         <td><?php echo utf8_encode($verificacion['Nombres']) . " " . utf8_encode($verificacion['Apellidos']) ?></td>
                                         <td><?php echo $verificacion['fecha_y_hora'] ?></td>
+                                        <td><?php echo $verificacion['facObservaciones'] ?></td>
                                         <td>
                                             <?php 
                                                 echo "<a href='verificacion.php?id=" . $verificacion['vtaid'] . "' class='btn btn-primary'>Procesar</a>";
@@ -114,6 +116,7 @@
                                     <th>Vendedor</th>
                                     <th>Alistador</th>
                                     <th>Fecha y Hora Alistadoo</th>
+                                    <th>Observacion</th>
                                     <th>Procesar</th>
                                 </tr>
                             </thead>
@@ -168,6 +171,7 @@
                         {data: 'vendedor', name:'vendedor', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'alistador', name:'alistador', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'horaAlistado', name:'horaAlistado', orderable: true, searchable: true, className: 'dt-body-center'},
+                        {data: 'observacion', name:'observacion', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'accion', name:'accion', orderable: true, searchable: true, className: 'dt-body-center'}
                     ],
 

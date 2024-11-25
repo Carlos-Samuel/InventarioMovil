@@ -17,10 +17,14 @@
     }
 
     function utf8_encode_array(&$array) {
-        foreach ($array as &$value) {
-            if (is_string($value) && $value !== "NULL" && !empty($value)) {
-                $value = utf8_encode($value);
+        try {
+            foreach ($array as &$value) {
+                if (is_string($value) && $value !== "NULL" && !empty($value)) {
+                    $value = utf8_encode($value);
+                }
             }
+        } catch (Exception $e) {
+            echo "Error al codificar a UTF-8: " . $e->getMessage();
         }
     }
 
