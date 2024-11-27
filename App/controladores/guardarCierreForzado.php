@@ -31,7 +31,7 @@
             
             $mensajeLog = $mensajes[$idEstado];
 
-            $sql = "UPDATE Facturas SET facEstado = 0, Forzado = $estadoForzado, FinEntrega = '$horaLocal', idEntregador = $idEncargado WHERE vtaid = $idFactura";   
+            $sql = "UPDATE Facturas SET Forzado = $estadoForzado, FinEntrega = '$horaLocal', idEntregador = $idEncargado WHERE vtaid = $idFactura";   
 
             $resultado = $con->query($sql);
 
