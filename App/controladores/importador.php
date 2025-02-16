@@ -52,11 +52,10 @@
             LEFT JOIN Prefijo AS pr ON pr.PrfId = ve.PrfId
             WHERE 
                 vtaid > $maxVtaid
-                AND vtaid > 242951
                 AND vtafec >= '".$fecha_minima."'  
-                ".$filtroEmpresa."
+                
             ;";
-
+        // ".$filtroEmpresa."
         $quer = $con2->query($consultaBusqueda1);
 
         $resultados = array();
@@ -77,15 +76,15 @@
         }
 
         foreach ($resultados as $resultado) {
-
-            //$consulta = 
-           // "INSERT INTO Facturas(vtaid, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod)
-            //VALUES (
-            //    '{$resultado['vtaid']}', '{$resultado['VtaNum']}', '{$resultado['PrfId']}', '{$resultado['vtafec']}', '{$resultado['vtahor']}', '{$resultado['TerId']}', '{$resultado['TerNom']}', '{$resultado['TerDir']}', '{$resultado['TerTel']}', '{$resultado['terrzn']}', '{$resultado['VenId']}', '{$resultado['UsuNom']}', {$resultado['CiuId']}, '{$resultado['ciunom']}', '{$resultado['vtaobs']}', 1, TIME(NOW()), '{$resultado['PrfCod']}'
-            //);";
+/*
+            $consulta = 
+            "INSERT INTO Facturas(vtaid, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod)
+            VALUES (
+                '{$resultado['vtaid']}', '{$resultado['VtaNum']}', '{$resultado['PrfId']}', '{$resultado['vtafec']}', '{$resultado['vtahor']}', '{$resultado['TerId']}', '{$resultado['TerNom']}', '{$resultado['TerDir']}', '{$resultado['TerTel']}', '{$resultado['terrzn']}', '{$resultado['VenId']}', '{$resultado['UsuNom']}', {$resultado['CiuId']}, '{$resultado['ciunom']}', '{$resultado['vtaobs']}', 1, TIME(NOW()), '{$resultado['PrfCod']}'
+            );";
 
             //$finalConsulta = $con->query($consulta);
-
+            */
             $vtaid = (int)$resultado['vtaid'];
             $VtaNum = (int)$resultado['VtaNum'];
             $PrfId = (int)$resultado['PrfId'];
@@ -102,16 +101,16 @@
             $ciunom = $resultado['ciunom'];
             $vtaobs = $resultado['vtaobs'];
             $PrfCod = $resultado['PrfCod'];
-
+            
             // Crear una conexión a la base de datos (supongo que ya tienes esto configurado)
 
             // Definir la consulta preparada
-            $consulta = "INSERT INTO Facturas (VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, TIME(NOW()), ?)";
+            $consulta = "INSERT INTO Facturas (vtaid_res, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, TIME(NOW()), ?)";
 
             // Preparar la consulta
             if ($stmt = $con->prepare($consulta)) {
                 // Vincular parámetros y tipos de datos
-                $stmt->bind_param("issssssssssssss", $VtaNum, $PrfId, $vtafec, $vtahor, $TerId, $TerNom, $TerDir, $TerTel, $terrzn, $VenId, $UsuNom, $CiuId, $ciunom, $vtaobs, $PrfCod);
+                $stmt->bind_param("iissssssssssssss",$vtaid, $VtaNum, $PrfId, $vtafec, $vtahor, $TerId, $TerNom, $TerDir, $TerTel, $terrzn, $VenId, $UsuNom, $CiuId, $ciunom, $vtaobs, $PrfCod);
 
                 // Ejecutar la consulta preparada
                 if ($stmt->execute()) {

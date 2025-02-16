@@ -13,3 +13,9 @@
 
     ALTER TABLE facturas
     ADD COLUMN estadoImpresion VARCHAR(256) DEFAULT 'Previo';
+
+--Cuarto
+
+ALTER TABLE `Facturas`
+ADD COLUMN `vtaid_res` INT(11) NULL AFTER `vtaid`,
+MODIFY COLUMN `vtaid` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'Id Venta';

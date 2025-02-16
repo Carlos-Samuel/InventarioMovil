@@ -1,3 +1,7 @@
+Instalar XAMPP, habilitar apache como un servicio
+
+
+
 Habilite la libreria en php.ini
 
     extension=zip
@@ -8,11 +12,55 @@ Ejecutar estos comandos
 
     composer require phpoffice/phpword mpdf/mpdf
 
-    composer require phpoffice/phpword tcpdf/tcpdf
+	composer require phpoffice/phpword tecnickcom/tcpdf
+
 
 instale ghostscript 
 
 instale libreoffice, muy importante que sea libreoffice y no openoffice
 
     Una vez instalados esos 2 es necesario reemplazar las rutas en el archivo imprimir
+
+
+Ajustar la entrada por el puerto:
+
+	En C:\xampp\apache\conf\httpd.conf, se puede acceder desde la interfaz de XAMPP
+
+	Descomentar esta linea 
+		Listen 80
+
+	Cambiar esto por esto 
+
+		ServerName localhost:80
+
+		ServerName 0.0.0.0:80
+
+	Y
+
+	<Directory "C:/xampp/htdocs">
+    		AllowOverride All
+    		Require local
+	</Directory>
+	
+	por esto 
+
+
+
+	<Directory "C:/xampp/htdocs">
+    		AllowOverride All
+    		Require all granted
+	</Directory>
+
+
+	Hay que modificar la regla en el firewall:
+
+	Ve a Panel de Control → Firewall de Windows Defender.
+		Clic en Configuración avanzada.
+		En Reglas de entrada, busca "Apache HTTP Server".
+		Si no está permitido, crea una nueva regla:
+		Tipo: Puerto → TCP → 80
+		Permitir la conexión.
+
+	Reiniciar el servidor
+
 

@@ -81,6 +81,9 @@ INSERT INTO `Estados` (`idEstados`, `Descripcion`) VALUES
 (6, 'Entrega Incompleto'),
 (7, 'Entregado');
 
+INSERT INTO `estados`(`idEstados`, `Descripcion`) VALUES (8, 'No Procesado');
+
+
 -- --------------------------------------------------------
 
 --
@@ -88,16 +91,18 @@ INSERT INTO `Estados` (`idEstados`, `Descripcion`) VALUES
 --
 
 CREATE TABLE `Facturas` (
-  `vtaid` int(11) NOT NULL COMMENT 'Id Venta',
-  `VtaNum` int(11) DEFAULT NULL COMMENT 'Número  factura',
+  `vtaid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Id Venta',
+  `vtaid_res` INT(11) NULL,
+  `VtaNum` int(11) DEFAULT NULL COMMENT 'Número factura',
   `PrfId` int(11) DEFAULT NULL COMMENT 'Id Prefijo',
+  `PrfCod` CHAR(10) DEFAULT NULL,
   `vtafec` date DEFAULT NULL COMMENT 'Fecha factura',
   `vtahor` time DEFAULT NULL COMMENT 'Hora factura',
   `TerId` int(11) DEFAULT NULL COMMENT 'Id Cliente',
   `TerNom` varchar(100) DEFAULT NULL COMMENT 'Nombre cliente',
   `TerDir` varchar(200) DEFAULT NULL COMMENT 'Dirección cliente',
   `TerTel` varchar(50) DEFAULT NULL COMMENT 'Teléfono Cliente',
-  `TerRaz` varchar(100) DEFAULT NULL COMMENT 'Razon Cliente',
+  `TerRaz` varchar(100) DEFAULT NULL COMMENT 'Razón Cliente',
   `VenId` int(11) DEFAULT NULL COMMENT 'Id Vendedor',
   `VenNom` varchar(100) DEFAULT NULL COMMENT 'Nombre Vendedor',
   `CiuId` int(11) DEFAULT NULL COMMENT 'Id Ciudad',
@@ -110,22 +115,25 @@ CREATE TABLE `Facturas` (
   `MomentoCarga` datetime DEFAULT NULL COMMENT 'Fecha y hora de carga facturas',
   `InicioAlistamiento` datetime DEFAULT NULL COMMENT 'Fecha y hora de inicio de alistamiento',
   `FinAlistamiento` datetime DEFAULT NULL COMMENT 'Fecha y hora de fin de alistamiento',
-  `InicioVerificacion` datetime DEFAULT NULL COMMENT 'Fecha y hora de inicio de verificacion',
-  `FinVerificacion` datetime DEFAULT NULL COMMENT 'Fecha y hora de fin de verificacion',
+  `InicioVerificacion` datetime DEFAULT NULL COMMENT 'Fecha y hora de inicio de verificación',
+  `FinVerificacion` datetime DEFAULT NULL COMMENT 'Fecha y hora de fin de verificación',
   `InicioEntrega` datetime DEFAULT NULL COMMENT 'Fecha y hora de inicio de entrega',
   `FinEntrega` datetime DEFAULT NULL COMMENT 'Fecha y hora de fin de entrega',
-  `Forzado` tinyint(1) DEFAULT '0' COMMENT 'Si se forzo el alistamiento',
-  `Forzador` varchar(45) DEFAULT '0' COMMENT 'Cedula del usuario que permitio el forzado',
+  `Forzado` tinyint(1) DEFAULT '0' COMMENT 'Si se forzó el alistamiento',
+  `Forzador` varchar(45) DEFAULT '0' COMMENT 'Cédula del usuario que permitió el forzado',
   `ObservacionesFor` varchar(100) DEFAULT '0' COMMENT 'Observaciones de forzado',
-  `Justificacion` varchar(100) DEFAULT NULL COMMENT 'Justificacion de porque se dejo pendiente el alistamiento',
+  `Justificacion` varchar(100) DEFAULT NULL COMMENT 'Justificación de por qué se dejó pendiente el alistamiento',
   `Embalaje` varchar(100) DEFAULT '0' COMMENT 'Embalajes',
-  `ObservacionesVer` varchar(100) DEFAULT '0' COMMENT 'Observaciones verificacion'
+  `ObservacionesVer` varchar(100) DEFAULT '0' COMMENT 'Observaciones verificación',
+  `estadoImpresion` VARCHAR(256) DEFAULT 'Previo',
+  PRIMARY KEY (`vtaid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 
 --
 -- Volcado de datos para la tabla `Facturas`
 --
-
+/*
 INSERT INTO `Facturas` (`vtaid`, `VtaNum`, `PrfId`, `vtafec`, `vtahor`, `TerId`, `TerNom`, `TerDir`, `TerTel`, `TerRaz`, `VenId`, `VenNom`, `CiuId`, `CiuNom`, `facObservaciones`, `facEstado`, `idAlistador`, `idVerificador`, `idEntregador`, `MomentoCarga`, `InicioAlistamiento`, `FinAlistamiento`, `InicioVerificacion`, `FinVerificacion`, `InicioEntrega`, `FinEntrega`, `Forzado`, `Forzador`, `ObservacionesFor`, `Justificacion`, `Embalaje`, `ObservacionesVer`) VALUES
 (1, 30681, 26, '2023-08-12', '10:41:00', 299, 'FLOREZ BERMUDEZ ALBA CAROLINA', 'calle 36 26 76 cadena', '3143815275', 'SOLUPLASTICOS CADENA', 4, 'KATERINE', 0, 'DATO NO DISPONIBLE', '', 1, NULL, NULL, NULL, '2023-10-04 01:37:22', NULL, NULL, NULL, NULL, NULL, NULL, 0, '0', '0', NULL, '0', '0'),
 (2, 45294, 11, '2023-08-12', '10:56:02', 11719, 'VILLALBA CRUZ MARTHA CECILIA', 'crra 24 n 4 c - 11 barrio alborada', '3114834652', 'FERREELECTRICOS SANTA MONICA', 4, 'KATERINE', 0, 'DATO NO DISPONIBLE', '', 1, NULL, NULL, NULL, '2023-10-04 01:37:22', NULL, NULL, NULL, NULL, NULL, NULL, 0, '0', '0', NULL, '0', '0'),
@@ -137,7 +145,7 @@ INSERT INTO `Facturas` (`vtaid`, `VtaNum`, `PrfId`, `vtafec`, `vtahor`, `TerId`,
 (8, 194893, 10, '2023-08-12', '11:31:41', 6, 'MOSTRADOR VENTAS', 'Cl 36 26 51 San Isidro', '', 'MOSTRADOR', 8, 'ALEJANDRA', 0, 'DATO NO DISPONIBLE', '', 1, NULL, NULL, NULL, '2023-10-04 01:37:22', NULL, NULL, NULL, NULL, NULL, NULL, 0, '0', '0', NULL, '0', '0'),
 (9, 30683, 26, '2023-08-12', '11:32:16', 4875, 'SUPER TRANSPORTES DE COLOMBIA', 'CLL 9 13 66 BRR NICOLINO MATTAR CUMARIBO VICHADA', '313 2937557', 'SUPER TRANSPORTES DE COLOMBIA', 4, 'KATERINE', 0, 'DATO NO DISPONIBLE', '', 1, NULL, NULL, NULL, '2023-10-04 01:37:22', NULL, NULL, NULL, NULL, NULL, NULL, 0, '0', '0', NULL, '0', '0'),
 (19, 194894, 10, '2023-08-12', '11:37:19', 6, 'MOSTRADOR VENTAS', 'Cl 36 26 51 San Isidro', '', 'MOSTRADOR', 2, 'JESSICA', 0, 'DATO NO DISPONIBLE', '', 1, NULL, NULL, NULL, '2023-10-04 01:37:22', NULL, NULL, NULL, NULL, NULL, NULL, 0, '0', '0', NULL, '0', '0');
-
+*/
 -- --------------------------------------------------------
 
 --
@@ -172,6 +180,7 @@ CREATE TABLE `Productos` (
   `VtaId` int(11) DEFAULT NULL COMMENT 'Id Venta',
   `VtaDetId` int(11) NOT NULL COMMENT 'Id Detalle ventas',
   `ProId` int(11) DEFAULT NULL COMMENT 'Id Producto',
+  `ProCod` VARCHAR(50) DEFAULT NULL,
   `ProNom` varchar(200) DEFAULT NULL COMMENT 'Nombre producto',
   `ProUbica` varchar(50) DEFAULT NULL COMMENT 'Ubicacion producto',
   `ProPresentacion` varchar(50) DEFAULT NULL COMMENT 'Presentacion producto',
@@ -180,7 +189,7 @@ CREATE TABLE `Productos` (
   `AlisCant` double DEFAULT '0' COMMENT 'Cantidad alistada',
   `VerCant` double DEFAULT '-1' COMMENT 'Cantidad verificada'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+/*
 --
 -- Volcado de datos para la tabla `Productos`
 --
@@ -243,7 +252,7 @@ INSERT INTO `Productos` (`VtaId`, `VtaDetId`, `ProId`, `ProNom`, `ProUbica`, `Pr
 (9, 1616459, 2823, 'LLAVE LAVAMANOS ALETA CIERRE RAPIDO UDUKE HT1201', 'DATO NO DISPONIBLE', 'UNIDAD', '', 1, 0, -1),
 (10, 1616460, 293, 'LINEA BK PLUS BLANCA TOMA DOBLE UDUKE', 'P16B3A6', 'UNIDAD', '', 20, 0, -1),
 (10, 1616461, 3495, 'LINEA BK PLUS INCRUSTAR SWICHE SENCILLO CONMUTABLE', 'DATO NO DISPONIBLE', 'UNIDAD', '', 20, 0, -1);
-
+*/
 -- --------------------------------------------------------
 
 --
@@ -322,7 +331,6 @@ ALTER TABLE `Estados`
 -- Indices de la tabla `Facturas`
 --
 ALTER TABLE `Facturas`
-  ADD PRIMARY KEY (`vtaid`),
   ADD KEY `idAlistador` (`idAlistador`),
   ADD KEY `idVerificador` (`idVerificador`),
   ADD KEY `idEntregador` (`idEntregador`),
