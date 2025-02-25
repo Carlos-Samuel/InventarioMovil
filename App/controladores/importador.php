@@ -10,11 +10,12 @@
     if (isset($data['fecha']) && !empty($data['fecha'])) {
         $fecha_minima = $data['fecha'];
     } else {
-        $fecha_minima = '2024-11-27';
+        //$fecha_minima = '2024-11-27';
+        $fecha_minima = '2025-02-11';
     }
 
     $con = Connection::getInstance()->getConnection();
-    $quer = $con->query("SELECT COALESCE(MAX(vtaid), 0) AS max_vtaid FROM Facturas");
+    $quer = $con->query("SELECT COALESCE(MAX(vtaid_res), 0) AS max_vtaid FROM Facturas");
 
     if ($quer->num_rows > 0) {
         $row = $quer->fetch_assoc();
