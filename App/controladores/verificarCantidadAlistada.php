@@ -28,6 +28,8 @@
                 $row = $resultado->fetch_assoc();
         
                 $AlisCant = $row['AlisCant'];
+        
+                $ProId = $row['ProId'];
 
                 if ($AlisCant == $cantidadAlistada) {
                     $estado = true;
@@ -38,7 +40,8 @@
                 $response = array(
                     "message" => "Producto encontrado",
                     "status" => 1,
-                    "estado" => $estado
+                    "estado" => $estado,
+                    "proId" => $ProId
                 );
     
             } else {

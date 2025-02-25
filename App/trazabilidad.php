@@ -96,7 +96,7 @@
                         <tr>
                             <th id="verificador">Verificador - Hora FECHA verificación</th>
                             <th id="duracion-verificacion">Duración verificación</th>
-                            <th id="entregado">Entregado - hora FECHA entrega</th>
+                            <th id="entregado">Empaquetado - hora FECHA empaquetado</th>
                         </tr>
                         <tr>
                             <td id="datos-verificador"></td>
@@ -104,7 +104,7 @@
                             <td id="datos-entregado"></td>
                         </tr>
                         <tr>
-                            <th id="duracion-entrega">DURACION ENTREGA</th>
+                            <th id="duracion-entrega">DURACION EMPAQUETADO</th>
                             <th id="embalaje">EMBALAJE</th>
                             <th id="total-embalajes">Total de embalajes</th>
                         </tr>

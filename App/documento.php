@@ -98,8 +98,8 @@
                                 <th>DURACIÓN ALISTAMIENTO</th>
                                 <th>Verificador - Hora FECHA verificacion</th>
                                 <th>DURACIÓN VERIFICACION</th>
-                                <th>Entregado - Hora FECHA entrega</th>
-                                <th>DURACIÓN ENTREGA</th>
+                                <th>Empaquetado - Hora FECHA empaquetado</th>
+                                <th>DURACIÓN EMPAQUETADO</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>

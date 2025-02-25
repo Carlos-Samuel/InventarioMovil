@@ -45,6 +45,7 @@
                 $ciudad = $row['CiuNom'];
                 $vendedor = $row['VenNom'];
                 $hora = $row['vtahor'];
+                $vtaid_res = $row['vtaid_res'];
 
                 if ($idAlistador != $row['idAlistador']){
                     $controladorAlistador = true; 
@@ -225,9 +226,15 @@
                     <div class="d-grid gap-2">
                         <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
                     </div>
+                    <?php
+                    if (isset($vtaid_res)){
+                    ?>
                     <div class="d-grid gap-2">
                         <button id="botonDevolver" class="btn btn-danger primeButton" type="button">Devolver</button>
                     </div>
+                    <?php
+                    }
+                    ?>
                     <div class="d-grid gap-2">
                         <button id="botonForzado" class="btn btn-info primeButton" type="button">Cierre forzado</button>
                     </div>

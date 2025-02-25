@@ -162,17 +162,12 @@ function busqueda(){
     tbody = table.getElementsByTagName('tbody')[0];
     tr = tbody.getElementsByTagName('tr');
 
-    console.log("Datos");
-    console.log(filter);
-
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName('td');
         var cont = 0;
         for (j = 0; j < 2; j++) {
             if (td[j]) {
                 txtValue = td[j].textContent || td[j].innerText;
-                console.log("El valor de texto es: ");
-                console.log(txtValue.toUpperCase());
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = '';
                     cont++;

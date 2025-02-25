@@ -28,6 +28,9 @@ btnCancelarCerrar.addEventListener('click', ocultarDialogo);
 
 let controladorRevision = 0;
 
+//Esta es una variable para cuando mas de un proyecto tiene el mismo id
+let productosConCantidad = 0;
+
 quitarDatos();
 
 function ocultarDialogo() {
@@ -49,7 +52,7 @@ function busqueda(){
     tbody = table.getElementsByTagName('tbody')[0];
     tr = tbody.getElementsByTagName('tr');
 
-    
+    conTotal = 0;
     for (i = 0; i < tr.length; i++) {
         td = tr[i].getElementsByTagName('td');
         var cont = 0;
@@ -59,6 +62,7 @@ function busqueda(){
                 if (txtValue == filter) {
                     tr[i].style.display = '';
                     cont++;
+                    conTotal++;
                 } 
             }
             if (td[1]) {
@@ -66,6 +70,7 @@ function busqueda(){
                 if (txtValue == filter) {
                     tr[i].style.display = '';
                     cont++;
+                    conTotal++;
                 } 
             }
             if (td[2]) {
@@ -78,10 +83,6 @@ function busqueda(){
 
                 for (j = 0; j < palabras.length; j++) {
                     var palabra = palabras[j].toUpperCase();
-                    console.log("La palabra es: ");
-                    console.log(palabra);
-                    console.log("Buscada en");
-                    console.log(txtValue);
                     if (txtValue.toUpperCase().indexOf(palabra) === -1) {
                         controladorCompleto = false;
                         break;
@@ -91,6 +92,7 @@ function busqueda(){
                 if (controladorCompleto) {
                     tr[i].style.display = '';
                     cont++;
+                    conTotal++;
                 } 
             }
  
@@ -99,6 +101,15 @@ function busqueda(){
             tr[i].style.display = 'none';
         }
     }
+
+    if (conTotal == 0 && filter != ''){
+        Swal.fire({
+            title: 'Producto no encontrado',
+            icon: 'error',
+            confirmButtonText: 'Entendido'
+        });
+    }
+
     document.getElementById('busqueda').value = '';
 };
 
@@ -168,12 +179,31 @@ function RevisarBarCode(){
 
 }
 
-function vaciarEspacioTexto() {
-    document.getElementById('busqueda').value = '';
-    controladorRevision = 0;
-    busqueda();
+function vaciarEspacioTexto(proId) {
+
+    let numeroAparaciones = contarApariciones(proId);
+    productosConCantidad++;
+
+    if (productosConCantidad >= numeroAparaciones){
+        productosConCantidad = 0;
+        document.getElementById('busqueda').value = '';
+        controladorRevision = 0;
+        busqueda();
+    }
 }
 
+function contarApariciones(proId) {
+    let filas = document.querySelectorAll("#tablaVerificacion tbody tr");
+    let contador = 0;
+
+    filas.forEach(fila => {
+        if (fila.getAttribute("data-proid") === proId) {
+            contador++;
+        }
+    });
+
+    return contador;
+}
 
 document.getElementById('tablaVerificacion').addEventListener('change', function(event) {
     var target = event.target;
@@ -208,7 +238,7 @@ document.getElementById('tablaVerificacion').addEventListener('change', function
 
                     if (data.estado){
                         nuevaClase = 'verificacion-completo';
-                        vaciarEspacioTexto();
+                        vaciarEspacioTexto(data.proId);
                     }else{
                         nuevaClase = 'verificacion-incorrecto';
                         Swal.fire({

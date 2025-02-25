@@ -252,20 +252,14 @@
                                         <th>Descripción</th>
                                         <th>Presentación</th>
                                         <th class="input-container">Cantidad</th>
-                                        <!-- <th>Procesar</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
                                         foreach ($datosProductos as $producto) {
-                                            // if ($producto['alistado'] == 0 && $producto['cantidad'] != 0){
-                                            //     $filaClase = '';
-                                            // }else{
-                                                $filaClase = ($producto['alistado'] == $producto['verificado']) ? 'verificacion-completo' : '';
-                                            // }
-                                            //echo $producto['ProCodBar'];
+                                            $filaClase = ($producto['alistado'] == $producto['verificado']) ? 'verificacion-completo' : '';
                                     ?>
-                                        <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>">
+                                        <tr class="<?php echo $filaClase; ?>" data-id="<?php echo $producto['id']; ?>" data-proid="<?php echo $producto['item']; ?>">
                                         <td data-label="ProCod"><?php echo $producto['ProCod'] ?></td>
                                             <td data-label="ProCodBar"><?php echo $producto['ProCodBar'] ?></td> 
                                             <td data-label="Descripcion"><?php echo $producto['descripcion'] ?></td>
@@ -273,9 +267,6 @@
                                             <td data-label="Cantidad" class="input-container">
                                                 <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value = "<?php echo ($producto['alistado'] == $producto['verificado']) ? $producto['verificado'] : ''; ?>">
                                             </td>
-                                            <!-- <td data-label="Procesar">
-                                                <button class="btn btn-primary primeButton procesar-btn" data-item="<?php echo $producto['item'] ?>">Procesar</button>
-                                            </td>     -->
                                         </tr>
                                     <?php
                                         }

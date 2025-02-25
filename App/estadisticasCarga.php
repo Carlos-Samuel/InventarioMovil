@@ -112,7 +112,7 @@
                             <td><button class="boton-estilizadoDetalles" type="button" id ="botonV">Detalles</button></td>
                         </tr>
                         <tr>
-                            <td>Entregar</td>
+                            <td>Empaquetar</td>
                             <td><?php echo $datosProductos[5] + $datosProductos[6]; ?></td>
                             <td><button class="boton-estilizadoDetalles" type="button" id ="botonE" >Detalles</button></td>
                         </tr>

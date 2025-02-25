@@ -10,7 +10,7 @@
     if (isset($data['fecha']) && !empty($data['fecha'])) {
         $fecha_minima = $data['fecha'];
     } else {
-        $fecha_minima = '2024-07-19';
+        $fecha_minima = '2024-11-27';
     }
 
     $con = Connection::getInstance()->getConnection();
@@ -20,6 +20,8 @@
         $row = $quer->fetch_assoc();
 
         $maxVtaid = $row['max_vtaid'];
+    } else {
+        $maxVtaid = 0;
     }
 
     try {
@@ -163,9 +165,9 @@
                         $VtaCant = mysqli_real_escape_string($con, $resultado['vtacant']);
         
                         $consulta2 = "INSERT INTO Productos
-                            (VtaId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
+                            (VtaId, VtaDetId_res, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
                             VALUES 
-                            ('$VtaId', '$ProCod', '$ProNom', '$ProUbica', '$ProPresentacion', '$ProCodBar', '$VtaCant');";
+                            ('$VtaId', '$VtaDetId', '$ProId', '$ProCod', '$ProNom', '$ProUbica', '$ProPresentacion', '$ProCodBar', '$VtaCant');";
                     
                         $finalConsulta = $con->query($consulta2);
                     }
@@ -196,8 +198,6 @@
     } catch (Exception $e) {
         $respuesta = array(
             "mensaje" => "Error general: " . $e->getMessage(),
-            "extra1" => $consulta,
-            "extra2" => $consulta2
         );
     }
 

@@ -114,11 +114,11 @@
                     <table id="tablaEntrega">
                         <thead>
                             <tr>
-                                <th>Entregador</th>
+                                <th>Empaquetador</th>
                                 <th>Rango de fecha</th>
-                                <th># de facturas entregadas</th>
+                                <th># de facturas empaquetadas</th>
                                 <th># items</th>
-                                <th># de productos entregados</th>
+                                <th># de productos empaquetados</th>
                                 <th>T. total</th>
                                 <th>T. promedio cada item</th>
                                 <th>T. total entre fin a. a inicio v.</th>

@@ -9,8 +9,8 @@
   <div class="sidebar-layout">
     <div class="sidebar-header">
       <div class="pro-sidebar-logo">
-        <div>A</div>
-        <p id = "titulo_sidebar">Admin CS<p>
+        <div>LK</div>
+        <p id = "titulo_sidebar">Logisti-K<p>
       </div>
     </div>
     <div class="sidebar-content">
@@ -128,7 +128,7 @@
                   }
                 ?>
               </span>
-              <span class="menu-title">Entrega</span>
+              <span class="menu-title">Empaquetado</span>
             </a>
           </li>
           <?php

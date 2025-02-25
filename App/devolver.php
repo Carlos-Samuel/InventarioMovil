@@ -1,14 +1,18 @@
 <?php
     session_start(); 	
     date_default_timezone_set('America/Bogota');
+    require_once 'controladores/Connection.php';
+    require_once 'controladores/Connection2.php';
 
     if (!isset($_SESSION["cedula"]) || !isset($_SESSION["nombres"])) {
         header("Location: index.php");
         exit();
     }
 
+    $con = Connection::getInstance()->getConnection();
+    $con2 = Connection2::getInstance2()->getConnection2();
+
     $permiso1 = "Admin";
-    //$permiso2 = "Alistamiento";
 
     if (!(strpos($_SESSION['permisos'], $permiso1))) {
         header("Location: dashboard.php");
@@ -16,12 +20,6 @@
     }
 
     $id_recibido = $_GET['id'];
-
-    require_once 'controladores/Connection.php';
-    require_once 'controladores/Connection2.php';
-
-    $con = Connection::getInstance()->getConnection();
-    $con2 = Connection2::getInstance2()->getConnection2();
 
     $mensaje = [];
 
@@ -58,7 +56,7 @@
 
     $sql_general = 
         "UPDATE 
-            `Facturas` 
+            `XXXX` 
         SET 
             `facEstado`=1,`idAlistador`=NULL,
             `idVerificador`=NULL,
@@ -73,9 +71,22 @@
 
     $consultas_actualizacion[] = $sql_general;
 
+    $consultaEstadoFactura = 
+        "SELECT 
+            VtaNum AS numero,
+            PrfCod AS prefijo,
+            vtaid_res AS vtaid_res
+        FROM
+            facturas
+        WHERE 
+            VtaId = $id_recibido";
 
+    $quer = $con->query($consultaEstadoFactura);
 
-
+    $fila = $quer->fetch_assoc();
+    $numero = $fila['numero'];
+    $prefijo = $fila['prefijo'];
+    $id_respaldo = $fila['vtaid_res'];
 
 ?>
 <!doctype html>
@@ -97,7 +108,7 @@
             <div class="layout">
                 <main class="content">
                     <br>
-                    <h3>Factura <?php echo $id_recibido; ?></h3>
+                    <h3>Factura <?php echo $prefijo . " " . $numero; ?></h3>
                     <?php
                         $consultaFactura1 = 
                             "SELECT 
@@ -122,7 +133,7 @@
                             LEFT JOIN vendedor AS ven ON ven.venid = ve.VenId
                             LEFT JOIN ciudad AS ci ON ci.ciuid = ve.CiuId
                             WHERE 
-                                vtaid = $id_recibido
+                                vtaid = $id_respaldo
                             ;";
 
                         $quer = $con2->query($consultaFactura1);
@@ -191,7 +202,7 @@
                                 ventasdet AS ved
                             LEFT JOIN productos AS pro ON pro.ProId = ved.ProId
                             WHERE 
-                                VtaId = $id_recibido";
+                                VtaId = $id_respaldo";
 
                         $quer = $con2->query($consultaElementos1);
 
@@ -228,14 +239,13 @@
                         foreach($resultadosElementos1 as $rE1){
 
                             foreach ($resultadosElementos2 as $rE2) {
-
-                                if ($rE1['proid'] == $rE2['ProId']){
+                                if ($rE1['vtadetid'] == $rE2['VtaDetId_res']){
                                     foreach($valoresColumnasProductos as $vcp){
                                         if ($rE1[$vcp[0]] != $rE2[$vcp[1]]){
-                                            $cambio = "El valor: " . $vcp[1] . " cambio de: " . trim($rE2[$vcp[1]]) . " a: " . trim($rE1[$vcp[0]]);
+                                            $cambio = "El valor: " . $vcp[1] . " cambio de: " . trim($rE2[$vcp[1]]) . " a: " . trim($rE1[$vcp[0]]) . " en el producto " . trim($rE1['pronom']) . " con vtadetid " . trim($rE1['vtadetid']);
                                             $cambiosProductos[] = $cambio;
 
-                                            $sql = "UPDATE Productos SET " . $vcp[1] . " = RTRIM('".$rE1[$vcp[0]]."') WHERE VtaId = " . $rE2['VtaId'] . " ;";
+                                            $sql = "UPDATE Productos SET " . $vcp[1] . " = RTRIM('".$rE1[$vcp[0]]."') WHERE VtaDetId = " . $rE2['VtaDetId'] . " ;";
                                             $consultas_actualizacion[] = $sql;
                                         }
                                     }
@@ -265,11 +275,13 @@
                             echo "<br>";
                             $elementosAgregar = 
                                 "INSERT INTO Productos
-                                    (VtaId, VtaDetId, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
+                                    (VtaIdasdasd, VtaDetId, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
                                 VALUES 
-                                    ('{$resEle1['vtaid']}','{$resEle1['vtadetid']}','{$resEle1['proid']}','{$resEle1['pronom']}','{$resEle1['proubica']}','{$resEle1['pround']}','{$resEle1['probarcode']}','{$resEle1['vtacant']}')
+                                    ('{$id_recibido}','{$resEle1['vtadetid']}','{$resEle1['proid']}','{$resEle1['pronom']}','{$resEle1['proubica']}','{$resEle1['pround']}','{$resEle1['probarcode']}','{$resEle1['vtacant']}')
                                 ;";
                                 
+                            echo $elementosAgregar;
+
                             $consultas_actualizacion[] = $elementosAgregar;
                         }
 
@@ -284,22 +296,29 @@
                         }
 
                         if(isset($_GET['controlador'])){
-
+                            
                             try{
-
+            
                                 foreach($consultas_actualizacion as $consulta_ejecutar){
                                     $con->query($consulta_ejecutar);
                                 }
-
+            
+                                echo '<script>window.location.href="lista_devolver.php";</script>';
+                                exit();
+            
                             }catch (Exception $e) {
+                                echo "<br>";
+                                echo "<h1>Errores al actualizar</h1>";
                                 echo 'Error en la consulta SQL: ' . $e->getMessage();
                             }
-
+            
+            
                         }
+                    
                     ?>
                     <br>
                     <br>
-                    <div class="d-grid gap-2">
+                    <div class="d-grid gap-1">
                         <?php
                             echo '<a href= "devolver.php?id=' . $id_recibido . '&controlador=1" class="btn btn-success primeButton">Actualizar Factura</a>';
                         ?>
@@ -307,6 +326,8 @@
                 </main>
             </div>
         </div>
+
+
         
         <script src="scripts/devolver.js"></script>
         <!-- Incluye la biblioteca jQuery -->

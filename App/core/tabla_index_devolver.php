@@ -5,7 +5,7 @@
     try {
 
         $con = Connection::getInstance()->getConnection();
-        $quer = $con->query("SELECT * FROM Facturas as fac, Estados as es WHERE fac.facEstado = es.idEstados AND fac.facEstado != 7");
+        $quer = $con->query("SELECT * FROM Facturas as fac, Estados as es WHERE fac.facEstado = es.idEstados AND fac.facEstado = 0");
 
         $response = array();
 

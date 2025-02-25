@@ -65,7 +65,7 @@
                                 if (strpos($_SESSION['permisos'], $permiso1) || strpos($_SESSION['permisos'], $permiso2)) {
                             ?>
                                 <div class="d-grid gap-2">
-                                    <a class="btn btn-success primeButton" href = "lista_entrega.php" role = "button">Entrega</a>
+                                    <a class="btn btn-success primeButton" href = "lista_entrega.php" role = "button">Empaque</a>
                                 </div>
                                 <br>
                             <?php
