@@ -3,7 +3,7 @@
     require_once 'Connection2.php';
     require_once 'filtroEmpresas.php';
 
-    set_time_limit(1400); 
+    set_time_limit(900); 
 
     $data = json_decode(file_get_contents("php://input"), true);
 
