@@ -56,7 +56,7 @@
 
     $sql_general = 
         "UPDATE 
-            `XXXX` 
+            `Facturas` 
         SET 
             `facEstado`=1,`idAlistador`=NULL,
             `idVerificador`=NULL,
@@ -280,8 +280,6 @@
                                     ('{$id_recibido}','{$resEle1['vtadetid']}','{$resEle1['proid']}','{$resEle1['pronom']}','{$resEle1['proubica']}','{$resEle1['pround']}','{$resEle1['probarcode']}','{$resEle1['vtacant']}')
                                 ;";
                                 
-                            echo $elementosAgregar;
-
                             $consultas_actualizacion[] = $elementosAgregar;
                         }
 
