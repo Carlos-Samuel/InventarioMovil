@@ -275,7 +275,7 @@
                             echo "<br>";
                             $elementosAgregar = 
                                 "INSERT INTO Productos
-                                    (VtaIdasdasd, VtaDetId, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
+                                    (VtaId, VtaDetId, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
                                 VALUES 
                                     ('{$id_recibido}','{$resEle1['vtadetid']}','{$resEle1['proid']}','{$resEle1['pronom']}','{$resEle1['proubica']}','{$resEle1['pround']}','{$resEle1['probarcode']}','{$resEle1['vtacant']}')
                                 ;";
