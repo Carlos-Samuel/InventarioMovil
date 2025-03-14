@@ -54,8 +54,8 @@
             LEFT JOIN ciudad AS ci ON ci.ciuid = ve.CiuId
             LEFT JOIN Prefijo AS pr ON pr.PrfId = ve.PrfId
             WHERE 
-                vtaid > $maxVtaid
-                AND vtafec >= '".$fecha_minima."'  
+                ve.vtaid > $maxVtaid
+                AND ve.vtafec >= '".$fecha_minima."'  
                 
             ;";
         // ".$filtroEmpresa."
