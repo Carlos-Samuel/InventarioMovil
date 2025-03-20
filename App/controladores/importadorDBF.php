@@ -1,26 +1,48 @@
 <?php
-    require_once 'Connection.php';
-    require_once 'Connection2.php';
+require_once 'Connection.php';
+require_once 'Connection2.php';
+require '../vendor/autoload.php';
 
-    set_time_limit(1400); 
+set_time_limit(1400); 
 
-    try {
-        $db = dbase_open("C:\Users\csamu\OneDrive\Escritorio\LotesyFechas\VENTAS.DBF", 0);
-        if ($db) {
-            $num_registros = dbase_numrecords($db);
-            for ($i = 1; $i <= $num_registros; $i++) {
-                $fila = dbase_get_record_with_names($db, $i);
-                if ($fila['deleted'] != 1) {  // omitir registros eliminados
-                    echo $fila['CAMPO1'] . " - " . $fila['CAMPO2'] . "\n";
-                }
-            }
-            dbase_close($db);
-        }
-        
+use XBase\TableReader;
 
-    } catch (Exception $e) {
-        var_dump("Error general: " . $e->getMessage());
-    }    
+try {
+    // Inicia medición total
+    $inicioTotal = microtime(true);
 
-?>
+    // Medir tiempo en abrir tabla
+    $inicioApertura = microtime(true);
+    $tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
+        'encoding' => 'CP1252'
+    ]);
+    $finApertura = microtime(true);
 
+    echo "Tiempo apertura tabla: " . round($finApertura - $inicioApertura, 4) . " segundos.<br>";
+
+    // Lectura registros
+    echo "Inicia lectura de registros...<br>";
+    $inicioLectura = microtime(true);
+
+    $registros = [];
+    $cont = 0;
+    while ($registro = $tabla->nextRecord()) {
+        $registros[] = $registro;
+        $cont++;
+    }
+
+    $finLectura = microtime(true);
+    echo "Tiempo lectura registros: " . round($finLectura - $inicioLectura, 4) . " segundos.<br>";
+
+    $tabla->close();
+
+    // Fin medición total
+    $finTotal = microtime(true);
+    echo "Tiempo total ejecución: " . round($finTotal - $inicioTotal, 4) . " segundos.<br>";
+    echo "Total de registros: " . $cont . ".<br>";
+
+    echo "Termina";
+
+} catch (Exception $e) {
+    var_dump("Error general: " . $e->getMessage());
+}

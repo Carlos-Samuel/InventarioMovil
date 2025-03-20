@@ -16,6 +16,10 @@ class ComposerStaticInita40e206fae4eb7018fcefd6f126666b7
         array (
             'setasign\\Fpdi\\' => 14,
         ),
+        'X' => 
+        array (
+            'XBase\\' => 6,
+        ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
@@ -42,6 +46,10 @@ class ComposerStaticInita40e206fae4eb7018fcefd6f126666b7
         'setasign\\Fpdi\\' => 
         array (
             0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
+        'XBase\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/hisamu/php-xbase/src',
         ),
         'Psr\\Log\\' => 
         array (
