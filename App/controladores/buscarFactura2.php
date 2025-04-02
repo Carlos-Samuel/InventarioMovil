@@ -34,9 +34,9 @@
                         "nombre" => $row["NombreCompleto"]
                     ];
                 }
-                echo json_encode(["status" => 1, "usuarios" => $usuarios]);
+                $response = ["status" => 1, "usuarios" => $usuarios];
             } else {
-                echo json_encode(["status" => 0, "error" => "No se encontraron usuarios"]);
+                $response = ["status" => 0, "error" => "No se encontraron usuarios"];
             }
             
         } else {

@@ -113,6 +113,9 @@
                                     $row['descripcion'] = $columna['ProNom'];
                                     $row['ubicacion'] = $columna['ProUbica'];
                                     $row['presentacion'] = $columna['ProPresentacion'];
+                                    $row['loteVencimiento'] = $columna['vnclot'];
+                                    $row['fechaVencimiento'] = $columna['vncfec'];
+                                    $row['fechaVencimiento'] = empty($columna['vncfec']) ? "NULL" : "'".$columna['vncfec']."'";
                                     $row['cantidad'] = $columna['VtaCant'];
                                     $row['alistado'] = $columna['AlisCant'];
                                     $row['diferencia'] = $columna['VtaCant'] - $columna['AlisCant'];
@@ -124,9 +127,9 @@
     
                                 foreach ($datosProductos as $producto) {
                                     $consultaP = "INSERT INTO Productos
-                                    (VtaId, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
+                                    (VtaId, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant, vncfec, vnclot) 
                                     VALUES 
-                                    ('$nuevoId', ".$producto['ProId'].", '".$producto['ProCod']."', '".$producto['descripcion']."', '".$producto['ubicacion']."', '".$producto['presentacion']."', '".$producto['ProCodBar']."', '".$producto['diferencia']."');";
+                                    ('$nuevoId', ".$producto['ProId'].", '".$producto['ProCod']."', '".$producto['descripcion']."', '".$producto['ubicacion']."', '".$producto['presentacion']."', '".$producto['ProCodBar']."', '".$producto['diferencia']."', ".$producto['fechaVencimiento'].", '".$producto['loteVencimiento']."');";
                                     
 
                                     if (!$consultaProductos= $con->query($consultaP)){

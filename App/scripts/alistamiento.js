@@ -19,9 +19,11 @@ btnMenuCerrar.addEventListener('click', function() {
     modalCerrar.style.display = "block";
 });
 
-btnMenuDevolver.addEventListener('click', function() {
-    modalDevolver.style.display = "block";
-});
+if (typeof tieneVtaid !== 'undefined' && tieneVtaid === true) {
+    btnMenuDevolver.addEventListener('click', function () {
+        modalDevolver.style.display = "block";
+    });
+}
 
 btnMenuForzado.addEventListener('click', function() {
     modalForzado.style.display = "block";

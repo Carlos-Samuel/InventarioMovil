@@ -10,8 +10,8 @@
     if (isset($data['fecha']) && !empty($data['fecha'])) {
         $fecha_minima = $data['fecha'];
     } else {
-        //$fecha_minima = '2024-11-27';
-        $fecha_minima = '2025-02-11';
+        $fecha_minima = '2024-11-27';
+        //$fecha_minima = '2025-02-11';
     }
 
     $con = Connection::getInstance()->getConnection();
@@ -51,12 +51,11 @@
                 ventas AS ve
             LEFT JOIN terceros AS ter ON ter.terid = ve.TerId
             LEFT JOIN vendedor AS ven ON ven.venid = ve.VenId
-            LEFT JOIN ciudad AS ci ON ci.ciuid = ve.CiuId
+            LEFT JOIN ciudad AS ci ON ci.ciuid = ter.CiuId
             LEFT JOIN Prefijo AS pr ON pr.PrfId = ve.PrfId
             WHERE 
                 ve.vtaid > $maxVtaid
                 AND ve.vtafec >= '".$fecha_minima."'  
-                
             ;";
         // ".$filtroEmpresa."
         $quer = $con2->query($consultaBusqueda1);
@@ -105,8 +104,6 @@
             $vtaobs = $resultado['vtaobs'];
             $PrfCod = $resultado['PrfCod'];
             
-            // Crear una conexión a la base de datos (supongo que ya tienes esto configurado)
-
             // Definir la consulta preparada
             $consulta = "INSERT INTO Facturas (vtaid_res, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, TIME(NOW()), ?)";
 

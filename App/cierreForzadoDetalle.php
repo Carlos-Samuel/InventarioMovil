@@ -74,6 +74,8 @@
                 $row['descripcion'] = $columna['ProNom'];
                 $row['ubicacion'] = $columna['ProUbica'];
                 $row['presentacion'] = $columna['ProPresentacion'];
+                $row['loteVencimiento'] = $columna['vnclot'];
+                $row['fechaVencimiento'] = $columna['vncfec'];
                 $row['cantidad'] = $columna['VtaCant'];
                 $row['alistado'] = $columna['AlisCant'];
                 $row['diferencia'] = $columna['VtaCant'] - $columna['AlisCant'];
@@ -156,6 +158,8 @@
                                         <th>Descripción</th>
                                         <th>Ubicación</th>
                                         <th>Presentación</th>
+                                        <th>Fecha Vencimiento</th>
+                                        <th>Lote</th>
                                         <th>Cantidad</th>
                                         <th class="input-container">Alistado</th>
                                         <th>Diferencia</th>
@@ -171,6 +175,8 @@
                                             <td data-label="Descripcion"><?php echo ($producto['descripcion']) ?></td>
                                             <td data-label="Ubicacion"><?php echo ($producto['ubicacion']) ?></td>
                                             <td data-label="Presentacion"><?php echo ($producto['presentacion']) ?></td>
+                                            <td data-label="fechaVencimiento"><?php echo ($producto['fechaVencimiento']) ?></td>
+                                            <td data-label="loteVencimiento"><?php echo ($producto['loteVencimiento']) ?></td>
                                             <td data-label="Cantidad"><?php echo $producto['cantidad'] ?></td>
                                             <td data-label="Alistado"><?php echo $producto['alistado'] ?></td>
                                             <td data-label="Diferencia"><?php echo $producto['diferencia'] ?></td>             

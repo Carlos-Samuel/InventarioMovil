@@ -72,7 +72,8 @@
                   WHEN ProUbica = 'DATO NO DISPONIBLE' THEN 1
                   ELSE 0
                 END,
-                ProUbica ASC;");
+                ProUbica ASC,
+                ProCod ASC;");
 
             $datosProductos = array();
     
@@ -87,6 +88,8 @@
                 $row2['descripcion'] = $columna['ProNom'];
                 $row2['ubicacion'] = $columna['ProUbica'];
                 $row2['presentacion'] = $columna['ProPresentacion'];
+                $row2['loteVencimiento'] = $columna['vnclot'];
+                $row2['fechaVencimiento'] = $columna['vncfec'];
                 $row2['cantidad'] = $columna['VtaCant'];
                 $row2['alistado'] = $columna['AlisCant'];
                 $row2['diferencia'] = $columna['VtaCant'] - $columna['AlisCant'];
@@ -181,6 +184,8 @@
                                         <th>Descripción</th>
                                         <th>Ubicación</th>
                                         <th>Presentación</th>
+                                        <th>Fecha Vencimiento</th>
+                                        <th>Lote</th>
                                         <th>Cantidad</th>
                                         <th class="input-container">Alistado</th>
                                         <th>Diferencia</th>
@@ -202,6 +207,8 @@
                                             <td data-label="Descripcion"><?php echo ($producto['descripcion']) ?></td>
                                             <td data-label="Ubicacion"><?php echo ($producto['ubicacion']) ?></td>
                                             <td data-label="Presentacion"><?php echo ($producto['presentacion']) ?></td>
+                                            <td data-label="fechaVencimiento"><?php echo ($producto['fechaVencimiento']) ?></td>
+                                            <td data-label="loteVencimiento"><?php echo ($producto['loteVencimiento']) ?></td>
                                             <td data-label="Cantidad"><?php echo $producto['cantidad'] ?></td>
                                             <td data-label="Alistado" class="input-container">
                                                 <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value="<?php echo $producto['alistado'] ?>">
@@ -287,6 +294,9 @@
                 </div>
             </div>
         </div>
+        <script>
+            const tieneVtaid = <?= isset($vtaid_res) ? 'true' : 'false' ?>;
+        </script>
         <script src="scripts/alistamiento.js"></script>
         <!-- Incluye la biblioteca jQuery -->
         <script src="js/jquery-3.6.0.min.js"></script>

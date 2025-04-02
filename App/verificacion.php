@@ -104,6 +104,8 @@
                 $rowN['descripcion'] = utf8_encode($columna['ProNom']);
                 $rowN['ubicacion'] = utf8_encode($columna['ProUbica']);
                 $rowN['presentacion'] = utf8_encode($columna['ProPresentacion']);
+                $rowN['loteVencimiento'] = $columna['vnclot'];
+                $rowN['fechaVencimiento'] = $columna['vncfec'];
                 $rowN['cantidad'] = $columna['VtaCant'];
                 $rowN['alistado'] = $columna['AlisCant'];
                 $rowN['verificado'] = $columna['VerCant'];
@@ -251,6 +253,8 @@
                                         <th>Codigo de Barras</th>
                                         <th>Descripción</th>
                                         <th>Presentación</th>
+                                        <th>Fecha Vencimiento</th>
+                                        <th>Lote</th>
                                         <th class="input-container">Cantidad</th>
                                     </tr>
                                 </thead>
@@ -264,6 +268,8 @@
                                             <td data-label="ProCodBar"><?php echo $producto['ProCodBar'] ?></td> 
                                             <td data-label="Descripcion"><?php echo $producto['descripcion'] ?></td>
                                             <td data-label="Presentacion"><?php echo $producto['presentacion'] ?></td>
+                                            <td data-label="fechaVencimiento"><?php echo ($producto['fechaVencimiento']) ?></td>
+                                            <td data-label="loteVencimiento"><?php echo ($producto['loteVencimiento']) ?></td>
                                             <td data-label="Cantidad" class="input-container">
                                                 <input type="number" min = 0 id="numero_<?php echo $producto['id'] ?>" name="numero_<?php echo $producto['id'] ?>" value = "<?php echo ($producto['alistado'] == $producto['verificado']) ? $producto['verificado'] : ''; ?>">
                                             </td>

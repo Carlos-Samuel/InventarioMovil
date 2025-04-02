@@ -3,7 +3,11 @@
     date_default_timezone_set('America/Bogota');
     require_once 'controladores/Connection.php';
     require_once 'controladores/Connection2.php';
+    require 'vendor/autoload.php';
 
+    set_time_limit(1400); 
+    use XBase\TableReader;
+    
     if (!isset($_SESSION["cedula"]) || !isset($_SESSION["nombres"])) {
         header("Location: index.php");
         exit();
@@ -17,6 +21,40 @@
     if (!(strpos($_SESSION['permisos'], $permiso1))) {
         header("Location: dashboard.php");
         exit();
+    }
+
+    $indexado = [];
+
+    try {
+
+        $tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
+            'encoding' => 'CP1252'
+        ]);
+
+        $columnas = [
+            "procod", "bodcod", "tmicod", "docnum", "vncfec", "vnclot", "vnccan",
+            "vncsal", "prfcod", "vncsumres", "vnccns", "vncfecdoc", "empcod"
+        ];    
+
+        while ($registro = $tabla->nextRecord()) {
+            $fila = [];
+            foreach ($columnas as $columna) {
+                $fila[$columna] = $registro->get($columna);
+            }
+
+            $key = $fila['docnum'] . '|' . $fila['prfcod'] . '|' . $fila['procod'];
+
+            if (!isset($indexado[$key])) {
+                $indexado[$key] = [];
+            }
+
+            $indexado[$key][] = $fila;
+        }
+
+        $tabla->close();
+
+    } catch (Exception $e) {
+        var_dump("Error general: " . $e->getMessage());
     }
 
     $id_recibido = $_GET['id'];
@@ -131,7 +169,7 @@
                                 ventas AS ve
                             LEFT JOIN terceros AS ter ON ter.terid = ve.TerId
                             LEFT JOIN vendedor AS ven ON ven.venid = ve.VenId
-                            LEFT JOIN ciudad AS ci ON ci.ciuid = ve.CiuId
+                            LEFT JOIN ciudad AS ci ON ci.ciuid = ter.CiuId
                             WHERE 
                                 vtaid = $id_respaldo
                             ;";
@@ -193,6 +231,7 @@
                                 COALESCE(TRIM(ved.VtaId), '') AS vtaid, 
                                 COALESCE(TRIM(ved.VtaDetId), '') AS vtadetid, 
                                 COALESCE(TRIM(ved.ProId), '') AS proid, 
+                                COALESCE(TRIM(pro.ProCod), '') AS procod, 
                                 COALESCE(TRIM(ved.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
                                 COALESCE(TRIM(NULLIF(pro.ProUbica, '')), 'DATO NO DISPONIBLE') AS proubica, 
                                 COALESCE(TRIM(NULLIF(pro.ProUnd, '')), 'DATO NO DISPONIBLE') AS pround, 
@@ -207,6 +246,7 @@
                         $quer = $con2->query($consultaElementos1);
 
                         $resultadosElementos1 = array();
+                        $resultadosElementos12 = array();
 
                         if ($quer->num_rows > 0) {
                             while ($fila = $quer->fetch_assoc()) {
@@ -215,6 +255,108 @@
                         } else {
                             $mensaje[] = "Elementos no encontrados 1";
                         }
+
+
+
+
+
+
+
+
+
+                        foreach ($resultadosElementos1 as $resultado) {
+        
+                            $VtaId = mysqli_real_escape_string($con, $resultado['vtaid']);
+                            $VtaDetId = mysqli_real_escape_string($con, $resultado['vtadetid']);
+                            $ProId = mysqli_real_escape_string($con, $resultado['proid']);
+                            $ProCod = mysqli_real_escape_string($con, $resultado['procod']);
+                            $ProNom = mysqli_real_escape_string($con, $resultado['pronom']);
+                            $ProUbica = mysqli_real_escape_string($con, $resultado['proubica']);
+                            $ProPresentacion = mysqli_real_escape_string($con, $resultado['pround']);
+                            $ProCodBar = mysqli_real_escape_string($con, $resultado['probarcode']);
+                            $VtaCant = mysqli_real_escape_string($con, $resultado['vtacant']);
+                        
+                            $indexFactura = $numero . '|' . $prefijo . '|';
+
+                            $claveBusqueda = $indexFactura . $ProCod;
+    
+                            if (isset($indexado[$claveBusqueda])) {
+     
+                                $registros = $indexado[$claveBusqueda];
+                                foreach ($registros as $i => $registro) {
+    
+                                    if ($registro['vnccan'] != "0" && (int)$VtaCant > 0){
+    
+                                        $fechavenc = $registro['vncfec'];
+                                        $lotevenc = $registro['vnclot'];
+                                        $cantidad = $registro['vnccan'];
+    
+                                        if((int)$VtaCant <= (int)$cantidad){
+
+                                            $nuevoProducto = [
+                                                "VtaId" => $VtaId,
+                                                "vtadetid" => $VtaDetId,
+                                                "proid" => $ProId,
+                                                "ProCod" => $ProCod,
+                                                "pronom" => $ProNom,
+                                                "proubica" => $ProUbica,
+                                                "pround" => $ProPresentacion,
+                                                "probarcode" => $ProCodBar,
+                                                "vtacant" => $VtaCant,
+                                                "vncfec" => $fechavenc,
+                                                "vnclot" => $lotevenc
+                                            ];
+
+                                            $resultadosElementos12[] = $nuevoProducto;
+                                    
+    
+                                            $registro['vnccan'] = strval((int)$cantidad - (int)$VtaCant);
+                                            $indexado[$claveBusqueda][$i]['vnccan'] = strval((int)$cantidad - (int)$VtaCant);
+    
+                                            $VtaCant = "0";
+    
+                                        }else{
+    
+                                            $nuevoProducto = [
+                                                "VtaId" => $VtaId,
+                                                "vtadetid" => $VtaDetId,
+                                                "proid" => $ProId,
+                                                "ProCod" => $ProCod,
+                                                "pronom" => $ProNom,
+                                                "proubica" => $ProUbica,
+                                                "pround" => $ProPresentacion,
+                                                "probarcode" => $ProCodBar,
+                                                "vtacant" => $cantidad,
+                                                "vncfec" => $fechavenc,
+                                                "vnclot" => $lotevenc
+                                            ];
+
+                                            $resultadosElementos12[] = $nuevoProducto;
+                                            
+    
+                                            $registro['vnccan'] = "0";
+                                            $indexado[$claveBusqueda][$i]['vnccan'] = "0";
+    
+    
+                                            $VtaCant = strval((int)$VtaCant - (int)$cantidad);
+                                        }
+    
+                                    }
+    
+                                }
+    
+                            } else {
+
+                                $resultado['vncfec'] = '';
+                                $resultado['vnclot'] = '';
+    
+                                $resultadosElementos12[] = $resultado;
+
+                            }
+    
+
+                        }
+
 
                         $consultaElementos2 = 
                             "SELECT 
@@ -236,7 +378,7 @@
                             $mensaje[] = "Elementos no encontrados 2";
                         }
 
-                        foreach($resultadosElementos1 as $rE1){
+                        foreach($resultadosElementos12 as $rE1){
 
                             foreach ($resultadosElementos2 as $rE2) {
                                 if ($rE1['vtadetid'] == $rE2['VtaDetId_res']){
@@ -250,7 +392,7 @@
                                         }
                                     }
                                     // Eliminar elementos de los arreglos originales
-                                    unset($resultadosElementos1[array_search($rE1, $resultadosElementos1)]);
+                                    unset($resultadosElementos12[array_search($rE1, $resultadosElementos12)]);
                                     unset($resultadosElementos2[array_search($rE2, $resultadosElementos2)]);
                                     break;
                                 }
@@ -270,14 +412,14 @@
                         echo "<br>";
                         echo "<h5>Productos agregados</h5>";
 
-                        foreach($resultadosElementos1 as $resEle1){
+                        foreach($resultadosElementos12 as $resEle1){
                             echo "Se agrego el elemento " . $resEle1['pronom'] ;
                             echo "<br>";
                             $elementosAgregar = 
                                 "INSERT INTO Productos
-                                    (VtaId, VtaDetId, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
+                                    (VtaId, VtaDetId_res, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant, vncfec, vnclot) 
                                 VALUES 
-                                    ('{$id_recibido}','{$resEle1['vtadetid']}','{$resEle1['proid']}','{$resEle1['pronom']}','{$resEle1['proubica']}','{$resEle1['pround']}','{$resEle1['probarcode']}','{$resEle1['vtacant']}')
+                                    ('{$id_recibido}','{$resEle1['vtadetid']}','{$resEle1['proid']}','{$resEle1['pronom']}','{$resEle1['proubica']}','{$resEle1['pround']}','{$resEle1['probarcode']}','{$resEle1['vtacant']}',COALESCE(NULLIF('{$resEle1['vncfec']}', ''), NULL),'{$resEle1['vnclot']}')
                                 ;";
                                 
                             $consultas_actualizacion[] = $elementosAgregar;

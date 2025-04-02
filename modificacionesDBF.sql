@@ -1,0 +1,3 @@
+ALTER TABLE Productos
+ADD COLUMN vncfec DATE,
+ADD COLUMN vnclot VARCHAR(256);

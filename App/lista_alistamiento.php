@@ -133,8 +133,6 @@
                                 </tr>
                             </thead>
                         </table>    
-                        <!-- <button id="recargarBtn">Recargar DataTable</button> -->
- 
                     </div>  
                 </main>
             </div>

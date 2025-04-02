@@ -50,7 +50,7 @@
                     ON
                         Est.idEstados = F.facEstado
                 WHERE 
-                    PrfID = $prefijo 
+                    PrfCod = '$prefijo' 
                     AND VtaNum = $documento;");
 
             if ($resultado->num_rows > 0) {
