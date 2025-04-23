@@ -133,7 +133,7 @@
                     };
 
                     // Realizar la solicitud utilizando fetch
-                    fetch('controladores/importadorDBF.php', requestOptions)
+                    fetch('controladores/importador.php', requestOptions)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Error en la respuesta de la red');

@@ -2,17 +2,8 @@
     require_once 'Connection.php';
     require_once 'Connection2.php';
     require_once 'filtroEmpresas.php';
-    require '../vendor/autoload.php';
 
     set_time_limit(1400); 
-    use XBase\TableReader;
-
-    function formatearFechaYMDaYSlash($fecha) {
-        if (preg_match('/^\d{8}$/', $fecha)) {
-            return substr($fecha, 0, 4) . '/' . substr($fecha, 4, 2) . '/' . substr($fecha, 6, 2);
-        }
-        return null;
-    }
 
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -75,41 +66,6 @@
             while ($fila = $quer->fetch_assoc()) {
                 $resultados[] = $fila;
             }
-
-            $indexado = [];
-
-            try {
-
-                $tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
-                    'encoding' => 'CP1252'
-                ]);
-
-                $columnas = [
-                    "procod", "bodcod", "tmicod", "docnum", "vncfec", "vnclot", "vnccan",
-                    "vncsal", "prfcod", "vncsumres", "vnccns", "vncfecdoc", "empcod"
-                ];    
-
-                while ($registro = $tabla->nextRecord()) {
-                    $fila = [];
-                    foreach ($columnas as $columna) {
-                        $fila[$columna] = $registro->get($columna);
-                    }
-
-                    $key = $fila['docnum'] . '|' . $fila['prfcod'] . '|' . $fila['procod'];
-
-                    if (!isset($indexado[$key])) {
-                        $indexado[$key] = [];
-                    }
-
-                    $indexado[$key][] = $fila;
-                }
-
-                $tabla->close();
-
-            } catch (Exception $e) {
-                var_dump("Error general: " . $e->getMessage());
-            }
-
         } else {
             $respuesta = array(
                 "mensaje" => "Ninguna factura encontrada"
@@ -122,7 +78,15 @@
         }
 
         foreach ($resultados as $resultado) {
+/*
+            $consulta = 
+            "INSERT INTO Facturas(vtaid, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod)
+            VALUES (
+                '{$resultado['vtaid']}', '{$resultado['VtaNum']}', '{$resultado['PrfId']}', '{$resultado['vtafec']}', '{$resultado['vtahor']}', '{$resultado['TerId']}', '{$resultado['TerNom']}', '{$resultado['TerDir']}', '{$resultado['TerTel']}', '{$resultado['terrzn']}', '{$resultado['VenId']}', '{$resultado['UsuNom']}', {$resultado['CiuId']}, '{$resultado['ciunom']}', '{$resultado['vtaobs']}', 1, TIME(NOW()), '{$resultado['PrfCod']}'
+            );";
 
+            //$finalConsulta = $con->query($consulta);
+            */
             $vtaid = (int)$resultado['vtaid'];
             $VtaNum = (int)$resultado['VtaNum'];
             $PrfId = (int)$resultado['PrfId'];
@@ -140,8 +104,6 @@
             $vtaobs = $resultado['vtaobs'];
             $PrfCod = $resultado['PrfCod'];
             
-            $indexFactura = $VtaNum . '|' . $PrfCod . '|';
-
             // Definir la consulta preparada
             $consulta = "INSERT INTO Facturas (vtaid_res, VtaNum, PrfId, vtafec, vtahor, TerId, TerNom, TerDir, TerTel, TerRaz, VenId, VenNom, CiuId, CiuNom, facObservaciones, facEstado, MomentoCarga, PrfCod) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, TIME(NOW()), ?)";
 
@@ -199,65 +161,13 @@
                         $ProPresentacion = mysqli_real_escape_string($con, $resultado['pround']);
                         $ProCodBar = mysqli_real_escape_string($con, $resultado['probarcode']);
                         $VtaCant = mysqli_real_escape_string($con, $resultado['vtacant']);
-
-
-                        $claveBusqueda = $indexFactura . $ProCod;
-
-                        if (isset($indexado[$claveBusqueda])) {
- 
-                            $registros = $indexado[$claveBusqueda];
-                            foreach ($registros as $i => $registro) {
-
-                                if ($registro['vnccan'] != "0" && (int)$VtaCant > 0){
-
-                                    $fechavenc = $registro['vncfec'];
-                                    $lotevenc = $registro['vnclot'];
-                                    $cantidad = $registro['vnccan'];
-
-                                    if((int)$VtaCant <= (int)$cantidad){
-                                        $consulta2 = "INSERT INTO Productos
-                                        (VtaId, VtaDetId_res, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant, vncfec, vnclot) 
-                                        VALUES 
-                                        ('$VtaId', '$VtaDetId', '$ProId', '$ProCod', '$ProNom', '$ProUbica', '$ProPresentacion', '$ProCodBar', '$VtaCant', '$fechavenc', '$lotevenc');";
-                                
-                                        $finalConsulta = $con->query($consulta2);
-
-                                        $registro['vnccan'] = strval((int)$cantidad - (int)$VtaCant);
-                                        $indexado[$claveBusqueda][$i]['vnccan'] = strval((int)$cantidad - (int)$VtaCant);
-
-                                        $VtaCant = "0";
-
-                                    }else{
-
-                                        $consulta2 = "INSERT INTO Productos
-                                        (VtaId, VtaDetId_res, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant, vncfec, vnclot) 
-                                        VALUES 
-                                        ('$VtaId', '$VtaDetId', '$ProId', '$ProCod', '$ProNom', '$ProUbica', '$ProPresentacion', '$ProCodBar', '$cantidad', '$fechavenc', '$lotevenc');";
-                                
-                                        $finalConsulta = $con->query($consulta2);
-
-                                        $registro['vnccan'] = "0";
-                                        $indexado[$claveBusqueda][$i]['vnccan'] = "0";
-
-
-                                        $VtaCant = strval((int)$VtaCant - (int)$cantidad);
-                                    }
-
-                                }
-
-                            }
-
-                        } else {
-
-                            $consulta2 = "INSERT INTO Productos
+        
+                        $consulta2 = "INSERT INTO Productos
                             (VtaId, VtaDetId_res, ProId, ProCod, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant) 
                             VALUES 
                             ('$VtaId', '$VtaDetId', '$ProId', '$ProCod', '$ProNom', '$ProUbica', '$ProPresentacion', '$ProCodBar', '$VtaCant');";
                     
-                            $finalConsulta = $con->query($consulta2);
-
-                        }
-
+                        $finalConsulta = $con->query($consulta2);
                     }
                     
                 } else {
