@@ -174,6 +174,12 @@
                 0% { transform: rotate(0deg); }
                 100% { transform: rotate(360deg); }
             }
+
+            #overlay {
+                display: none !important;
+                z-index: 0 !important;
+            }
+
         </style>
 
     </head>
@@ -187,14 +193,6 @@
             <div class="layout">
                 <main class="content">
                     <div id="loader"></div>
-                    <div id = "contenidoMovil" style="display: none;">
-                        <br>
-                        <!--
-                            <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
-                        -->
-                        <br>
-                        <br>
-                    </div>
                     <div class="col-sm-12">
                         <div class="table">
                             <table>
@@ -282,8 +280,20 @@
                             <br>
                         </div>
                     </div>
+                    <div id = "contenidoEscritorio" style="display: none;">
+                        <form action="controladores/guardarEvidencia.php" class="dropzone" id="miDropzone"></form>
+
+                        <div id="tablaEvidencias" class="mt-4"></div>
+                    </div>
+
+                    <div id = "contenidoMovil" style="display: none;">
+                        <h1>Esto es el contenido movil</h1>
+                    </div>
+
                     <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
                     <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>
+                    <input id ="preCod" type = "hidden" value = <?php echo $prefijo?>>
+                    <input id ="vtaNum" type = "hidden" value = <?php echo $numDoc?>>
                     <div class="d-grid gap-2">
                         <button id="botonPendiente" class="btn btn-warning primeButton" type="button">Pendiente</button>
                     </div>
@@ -332,12 +342,34 @@
                 </div>
             </div>
         </div>
-        <script src="scripts/verificacion.js"></script>
-        <!-- Incluye la biblioteca jQuery -->
+
+        <!-- Modal -->
+        <div class="modal" id="modalPreview">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Vista previa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" onclick="ocultarPreview()"></button>
+                </div>
+
+                <div class="modal-body text-center" id="contenidoModal">
+                    <!-- Contenido dinámico aquí -->
+                </div>
+
+            </div>
+        </div>
+
+
         <script src="js/jquery-3.6.0.min.js"></script>
+        <!-- Incluye la biblioteca jQuery -->
         <?php
             include('partes/foot.php')
         ?>  
+        <!-- Bootstrap 5 JS (bundle incluye Popper) -->
+        <script src="bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script>
+
+        <script src="scripts/verificacion.js"></script>
+
     </body>
 </html>
 <?php 

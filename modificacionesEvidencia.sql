@@ -1,0 +1,7 @@
+CREATE TABLE EvidenciaMultimedia (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    PrfCod CHAR(10) DEFAULT NULL,
+    VtaNum INT(11) DEFAULT NULL,
+    nombre_archivo VARCHAR(255) NOT NULL,
+    fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP
+);

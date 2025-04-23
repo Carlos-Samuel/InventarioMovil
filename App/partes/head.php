@@ -21,6 +21,10 @@
 <!-- Noty -->
 <link rel="stylesheet" href="css/noty.min.css">
 
+<!-- Libreria Dropzone -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" rel="stylesheet">
+
+
 <style>
     .mensaje {
         position: relative;
@@ -89,3 +93,7 @@
 
 <!-- Noty -->
 <script src="js/noty.min.js"></script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>

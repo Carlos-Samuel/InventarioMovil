@@ -3,6 +3,7 @@ tablaAlistamiento = document.getElementById('tablaVerificacion');
 
 // Modales
 modalCerrar = document.getElementById("modalConfirmarCerrar"); 
+modalPreview = document.getElementById("modalPreview"); 
 
 // Botones del menu
 btnMenuPendiente = document.getElementById("botonPendiente");
@@ -35,6 +36,10 @@ quitarDatos();
 
 function ocultarDialogo() {
     modalCerrar.style.display = 'none';
+}
+
+function ocultarPreview() {
+    modalPreview.style.display = 'none';
 }
 
 function confirmarAccionCerrar() {
@@ -447,4 +452,93 @@ function iniciarCarga() {
         loader.style.display = "block";
         loading = true;
     }
+}
+
+
+
+
+let PrfCod, VtaNum;
+
+Dropzone.options.miDropzone = {
+    acceptedFiles: "image/*,video/*",
+    init: function () {
+        this.on("sending", function(file, xhr, formData) {
+            formData.append("PrfCod", PrfCod);
+            formData.append("VtaNum", VtaNum);
+        });
+
+        this.on("success", function (file, response) {
+            if (response.exito) {
+                this.removeFile(file);
+                cargarTabla();
+            } else {
+                alert("Error al guardar: " + response.mensaje);
+            }
+        });
+
+        this.on("error", function (file, errorMessage) {
+            alert("Error inesperado al subir archivo.");
+        });
+    }
+};
+
+
+function cargarTabla() {
+    $.post('controladores/obtenerEvidencias.php', { PrfCod, VtaNum }, function (response) {
+        if (response.exito) {
+            $('#tablaEvidencias').html(response.html);
+        } else {
+            alert("Error al cargar evidencias: " + response.mensaje);
+        }
+    }, 'json')
+    .fail(function () {
+        alert("Error en la comunicación con el servidor.");
+    });
+}
+
+
+$(document).on('click', '.verArchivo', function () {
+    const tipo = $(this).data('tipo');
+    const src = $(this).data('src');
+    
+    const contenido = tipo === 'imagen'
+        ? `<img src="${src}" class="img-fluid rounded">`
+        : `<video controls autoplay class="w-100 rounded"><source src="${src}" type="video/mp4"></video>`;
+
+    $('#contenidoModal').html(contenido);
+
+    // Cierra cualquier instancia anterior
+    const modalElement = document.getElementById('modalPreview');
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modalPreview.style.display = "block";
+});
+
+
+$(document).on('click', '.eliminarArchivo', function () {
+    const id = $(this).data('id');
+    
+    if (!confirm("¿Está seguro de eliminar este registro?")) return;
+
+    $.post('controladores/eliminarEvidencia.php', { id }, function (response) {
+        if (response.exito) {
+            cargarTabla();
+        } else {
+            alert("Error al eliminar: " + response.mensaje);
+        }
+    }, 'json')
+    .fail(function () {
+        alert("Error en la comunicación al intentar eliminar.");
+    });
+});
+
+
+$(document).ready(() => {    
+    PrfCod = $('#preCod').val();
+    VtaNum = $('#vtaNum').val();
+    cargarTabla();
+});
+
+function cerrarModal() {
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalPreview'));
+    modal.hide();
 }

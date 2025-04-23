@@ -291,6 +291,22 @@
               </span>
               <span class="menu-title">Parametros</span>
             </a>
+            <a href="borrar_evidencia.php">
+              <span class="menu-icon">
+                <?php
+                  if ($activado == "borrarEvidencia"){
+                ?>
+                  <i class="fa fa-bookmark"></i>
+                <?php
+                  }else{
+                ?>
+                  <i class="ri-book-2-fill"></i>
+                <?php
+                  }
+                ?>
+              </span>
+              <span class="menu-title">Borrar Evidencia</span>
+            </a>
             <a href="manejoDatos.php">
               <span class="menu-icon">
                 <?php

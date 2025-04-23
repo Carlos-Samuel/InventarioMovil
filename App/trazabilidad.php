@@ -128,9 +128,43 @@
                             <td id="datos-estado-documento"></td>
                         </tr>
                     </table>
+
+                    <div id="tablaEvidencias" class="mt-4"></div>
+
+
                 </main>
             </div>
         </div>
+
+
+        <!-- Modal -->
+        <div class="modal" id="modalPreview" style="
+            max-width: 900px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1055;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        ">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Vista previa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar" onclick="ocultarPreview()"></button>
+                </div>
+
+                <div class="modal-body text-center" id="contenidoModal">
+                    <!-- Contenido dinámico aquí -->
+                </div>
+
+            </div>
+        </div>
+
+
+
         <?php
             include('partes/foot.php')
         ?>  
@@ -138,8 +172,18 @@
         <script src="js/jquery-3.6.0.min.js"></script>
         <!-- Incluye la biblioteca DataTables -->
         <script type="text/javascript" charset="utf8" src="js/jquery.dataTables.js"></script>
+        <script src="bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script>
 
         <script>
+
+            modalPreview = document.getElementById("modalPreview"); 
+
+            function ocultarPreview() {
+                modalPreview.style.display = 'none';
+
+                document.getElementById("modalPreview").innerHTML = '';
+            }
+
             function buscar(){
 
                 var dataToSend = {
@@ -213,6 +257,12 @@
 
                             $("#datos-estado-documento").text(estado);
                             
+                            PrfCod = $('#prefijo').val();
+                            VtaNum = $('#documento').val();
+
+                            cargarTabla();
+
+
                         }else if(data.status == 2){
                             Swal.fire({
                                 title: 'Datos no proporcionados',
@@ -250,6 +300,42 @@
                 
                 return sumaTotal;
             }
+
+            let PrfCod, VtaNum;
+
+
+            function cargarTabla() {
+                $.post('controladores/obtenerEvidencias2.php', { PrfCod, VtaNum }, function (response) {
+                    if (response.exito) {
+                        $('#tablaEvidencias').html(response.html);
+                    } else {
+                        alert("Error al cargar evidencias: " + response.mensaje);
+                    }
+                }, 'json')
+                .fail(function () {
+                    alert("Error en la comunicación con el servidor.");
+                });
+            }
+
+
+            $(document).on('click', '.verArchivo', function () {
+                const tipo = $(this).data('tipo');
+                const src = $(this).data('src');
+                
+                const contenido = tipo === 'imagen'
+                    ? `<img src="${src}" class="img-fluid rounded">`
+                    : `<video controls autoplay class="w-100 rounded"><source src="${src}" type="video/mp4"></video>`;
+
+                $('#contenidoModal').html(contenido);
+
+                // Cierra cualquier instancia anterior
+                const modalElement = document.getElementById('modalPreview');
+                const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+                modalPreview.style.display = "block";
+            });
+
+
+
         </script>
     </body>
 </html>

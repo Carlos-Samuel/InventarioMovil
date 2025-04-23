@@ -118,6 +118,10 @@
                 });
 
                 $('#botonImportar').on('click', function() {
+                    var boton = $(this);
+
+                    boton.prop('disabled', true);
+                    boton.text('Importando...');
 
                     var dataToSend = {
                         fecha: $('#fecha').val(),
@@ -145,6 +149,10 @@
                         })
                         .catch(error => {
                             alert('Error al importar');
+                        })
+                        .finally(() => {
+                            boton.prop('disabled', false);
+                            boton.text('Importar');
                         });
 
                 });
