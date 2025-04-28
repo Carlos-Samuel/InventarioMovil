@@ -542,3 +542,50 @@ function cerrarModal() {
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalPreview'));
     modal.hide();
 }
+
+// Foto
+$('#fotoCamara').on('change', function () {
+    const formData = new FormData(document.getElementById('formCapturaFoto'));
+
+    fetch('controladores/guardarEvidenciaMovil.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.exito) {
+            $('#resultadoSubidaMovil').html('<div class="alert alert-success">📷 Foto subida exitosamente.</div>');
+            $('#fotoCamara').val('');
+            cargarTabla();
+        } else {
+            $('#resultadoSubidaMovil').html('<div class="alert alert-danger">❌ ' + data.mensaje + '</div>');
+        }
+    })
+    .catch(() => {
+        $('#resultadoSubidaMovil').html('<div class="alert alert-danger">❌ Error al subir la foto.</div>');
+    });
+});
+
+// Video
+$('#videoCamara').on('change', function () {
+    const formData = new FormData(document.getElementById('formCapturaVideo'));
+
+    fetch('controladores/guardarEvidenciaMovil.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.exito) {
+            $('#resultadoSubidaMovilVideo').html('<div class="alert alert-success">🎥 Video subido exitosamente.</div>');
+            $('#videoCamara').val('');
+            cargarTabla();
+        } else {
+            $('#resultadoSubidaMovilVideo').html('<div class="alert alert-danger">❌ ' + data.mensaje + '</div>');
+        }
+    })
+    .catch(() => {
+        $('#resultadoSubidaMovilVideo').html('<div class="alert alert-danger">❌ Error al subir el video.</div>');
+    });
+});
+

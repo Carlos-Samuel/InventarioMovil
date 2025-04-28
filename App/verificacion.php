@@ -283,12 +283,30 @@
                     <div id = "contenidoEscritorio" style="display: none;">
                         <form action="controladores/guardarEvidencia.php" class="dropzone" id="miDropzone"></form>
 
-                        <div id="tablaEvidencias" class="mt-4"></div>
                     </div>
 
                     <div id = "contenidoMovil" style="display: none;">
-                        <h1>Esto es el contenido movil</h1>
+
+                        <h5>Capturar fotos</h5>
+                        <form id="formCapturaFoto" enctype="multipart/form-data">
+                            <input type="file" id="fotoCamara" name="archivoMovil" accept="image/*" capture="environment" required>
+                            <input type="hidden" name="PrfCod" value="<?php echo $prefijo ?>">
+                            <input type="hidden" name="VtaNum" value="<?php echo $numDoc ?>">
+                        </form>
+                        <div id="resultadoSubidaMovil"></div>
+                        <br>     
+                        <h5>Capturar videos</h5>          
+                        <form id="formCapturaVideo" enctype="multipart/form-data">
+                            <input type="file" id="videoCamara" name="archivoMovil" accept="video/*" capture required>
+                            <input type="hidden" name="PrfCod" value="<?php echo $prefijo ?>">
+                            <input type="hidden" name="VtaNum" value="<?php echo $numDoc ?>">
+                        </form>
+                        <div id="resultadoSubidaMovilVideo"></div>
+
+
                     </div>
+
+                    <div id="tablaEvidencias" class="mt-4"></div>
 
                     <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
                     <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>
