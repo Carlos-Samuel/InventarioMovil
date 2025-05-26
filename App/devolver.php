@@ -81,6 +81,7 @@
     $valoresColumnasProductos = [
         ['proid', 'ProId'],
         ['pronom', 'ProNom'],
+        ['ProCod', 'ProCod'],
         ['proubica', 'ProUbica'],
         ['pround', 'ProPresentacion'],
         ['probarcode', 'ProCodBar'],

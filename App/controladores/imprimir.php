@@ -8,7 +8,8 @@
     use PhpOffice\PhpWord\TemplateProcessor;
     use PhpOffice\PhpWord\PhpWord;
 
-    $id_recibido = intval($_POST['idFactura']);
+    $id_recibido = isset($_REQUEST['idFactura']) ? intval($_REQUEST['idFactura']) : 0;
+
     //$id_recibido = $argv[1];
 
 
@@ -132,7 +133,7 @@
 
         try{
 
-            $ruta_gs = "C:\Program Files\gs\gs10.02.0\bin\gswin64c.exe";
+            $ruta_gs = "C:\Program Files\gs\gs10.04.0\bin\gswin64c.exe";
 
             $outputFinal = '../documentos/etiquetas'.$id.'.pdf';
 
