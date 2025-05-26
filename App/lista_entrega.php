@@ -17,7 +17,7 @@
     require_once 'controladores/Connection.php';
 
     $con = Connection::getInstance()->getConnection();
-    $querF = $con->query(
+    $consulta = 
         "SELECT 
             F.*, 
             A.Nombres AS NombresAlistador, 
@@ -40,9 +40,20 @@
             F.idAlistador = A.idUsuarios 
             AND F.idVerificador = V.idUsuarios 
             AND (F.facEstado = 5 OR F.facEstado = 6)
-        ORDER BY vtafec ASC, vtahor ASC
-        ;
-    ");
+    ";
+
+
+    $busqueda = '';
+
+    if (isset($_GET['busqueda']) && is_numeric($_GET['busqueda'])) {
+        $busqueda = $_GET['busqueda'];
+        
+        $consulta .= "AND VtaNum LIKE '%" . $busqueda ."%'";
+    }
+
+    $consulta .= " ORDER BY vtafec ASC, vtahor ASC";
+
+    $querF = $con->query($consulta);
 
 ?>
 <!doctype html>
@@ -67,6 +78,10 @@
                         <br>
                         <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
                         <br>
+                        <form action="lista_entrega.php" method="get" style="display: inline-block;">
+                            <input type="number" name="busqueda" id="busqueda" class="form-control d-inline" style="width: 170px;" min="0" value = <?php echo $busqueda; ?>>
+                            <button type="submit" class="btn btn-info primeButton">Buscar</button>
+                        </form>
                         <br>
                         <table>
                             <thead>

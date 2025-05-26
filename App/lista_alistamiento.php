@@ -23,11 +23,32 @@
 
     $con = Connection::getInstance()->getConnection();
 
-    $consulta = "SELECT * FROM Facturas WHERE (facEstado = 1 OR facEstado = 2) AND Forzado = 0 ORDER BY vtafec ASC, vtahor ASC";
+    $consulta = "SELECT * FROM Facturas WHERE (facEstado = 1 OR facEstado = 2) AND Forzado = 0 ";
 
-    $consulta .= " LIMIT " . (($limite) * 5) .", 5;";
+    $consultaCount = "SELECT COUNT(*) AS total FROM Facturas WHERE (facEstado = 1 OR facEstado = 2) AND Forzado = 0 ";
+
+    $busqueda = '';
+
+    if (isset($_GET['busqueda']) && is_numeric($_GET['busqueda'])) {
+        $busqueda = $_GET['busqueda'];
+        
+        $consulta .= "AND VtaNum LIKE '%" . $busqueda ."%'";
+        $consultaCount .= "AND VtaNum LIKE '%" . $busqueda ."%'";
+    }
+
+
+    $consulta .= "ORDER BY vtafec ASC, vtahor ASC LIMIT " . (($limite) * 5) .", 5;";
 
     $querF = $con->query($consulta);
+
+    $resultado = $con->query($consultaCount);
+
+    $totalRegistros = 0;
+
+    if ($fila = $resultado->fetch_assoc()) {
+        $totalRegistros = $fila['total'];
+    }
+
 
 ?>
 <!doctype html>
@@ -50,23 +71,31 @@
                 <main class="content">
                     <div id = "contenidoMovil" style="display: none;">
                         <br>
-                        <a href = "dashboard.php" ><button class="btn btn-primary primeButton" type="button">Volver</button></a>
+                        <a href="dashboard.php"><button class="btn btn-primary primeButton" type="button">Volver</button></a>
                         <br>
-                        <?php
-                            if ($limite!=0){
-                        ?>
-                        <a href = "lista_alistamiento.php?limit=<?php echo $limite-1; ?> " ><button class="btn btn-warning primeButton" type="button">Pagina anterior</button></a>
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        &nbsp;
-                        <?php
-                            }
-                        ?>
-                        <a href = "lista_alistamiento.php?limit=<?php echo $limite+1; ?>" ><button class="btn btn-success primeButton" type="button">Pagina siguiente</button></a>
+
+                        <?php if ($limite != 0): ?>
+                            <a href="lista_alistamiento.php?busqueda=<?php echo $busqueda; ?>&limit=<?php echo $limite - 1; ?>">
+                                <button class="btn btn-warning primeButton" type="button">Página anterior</button>
+                            </a>
+                        <?php endif; ?>
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                        <?php if ((1+$limite)*5 < $totalRegistros) : ?>
+                            <a href="lista_alistamiento.php?busqueda=<?php echo $busqueda; ?>&limit=<?php echo $limite + 1; ?>">
+                                <button class="btn btn-success primeButton" type="button">Página siguiente</button>
+                            </a>
+                        <?php endif; ?>
+
+                        <br><br>
+
+                        <!-- Formulario de búsqueda por número de página -->
+                        <form action="lista_alistamiento.php" method="get" style="display: inline-block;">
+                            <input type="number" name="busqueda" id="busqueda" class="form-control d-inline" style="width: 170px;" min="0" value = <?php echo $busqueda; ?>>
+                            <input type="hidden" name="limit" id="limit" value = <?php echo $limite; ?>>
+                            <button type="submit" class="btn btn-info primeButton">Buscar</button>
+                        </form>
                         <br>
                         <table>
                             <thead>
