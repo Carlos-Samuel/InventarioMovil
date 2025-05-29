@@ -460,6 +460,7 @@ function iniciarCarga() {
 let PrfCod, VtaNum;
 
 Dropzone.options.miDropzone = {
+    maxFilesize: 1500,
     acceptedFiles: "image/*,video/*",
     init: function () {
         this.on("sending", function(file, xhr, formData) {

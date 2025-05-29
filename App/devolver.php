@@ -27,7 +27,8 @@
 
     try {
 
-        $tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
+        //$tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
+        $tabla = new TableReader("D:\\AgilFE\\LabUnidos\\EMP001\\Datos\\PROFECVNC.DBF", [
             'encoding' => 'CP1252'
         ]);
 
@@ -81,7 +82,8 @@
     $valoresColumnasProductos = [
         ['proid', 'ProId'],
         ['pronom', 'ProNom'],
-        ['ProCod', 'ProCod'],
+        //No quitar el procod esto es porque asi funciona al desplegar
+        ['procod', 'ProCod'],
         ['proubica', 'ProUbica'],
         ['pround', 'ProPresentacion'],
         ['probarcode', 'ProCodBar'],
@@ -361,7 +363,8 @@
 
                         $consultaElementos2 = 
                             "SELECT 
-                                *
+                                pro.procod AS ProCod,
+                                pro.*
                             FROM
                                 Productos AS pro
                             WHERE 
@@ -418,9 +421,9 @@
                             echo "<br>";
                             $elementosAgregar = 
                                 "INSERT INTO Productos
-                                    (VtaId, VtaDetId_res, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant, vncfec, vnclot) 
+                                    (VtaId, VtaDetId_res, ProId, ProNom, ProUbica, ProPresentacion, ProCodBar, VtaCant, vncfec, vnclot, ProCod) 
                                 VALUES 
-                                    ('{$id_recibido}','{$resEle1['vtadetid']}','{$resEle1['proid']}','{$resEle1['pronom']}','{$resEle1['proubica']}','{$resEle1['pround']}','{$resEle1['probarcode']}','{$resEle1['vtacant']}',COALESCE(NULLIF('{$resEle1['vncfec']}', ''), NULL),'{$resEle1['vnclot']}')
+                                    ('{$id_recibido}','{$resEle1['vtadetid']}','{$resEle1['proid']}','{$resEle1['pronom']}','{$resEle1['proubica']}','{$resEle1['pround']}','{$resEle1['probarcode']}','{$resEle1['vtacant']}',COALESCE(NULLIF('{$resEle1['vncfec']}', ''), NULL),'{$resEle1['vnclot']}','{$resEle1['ProCod']}')
                                 ;";
                                 
                             $consultas_actualizacion[] = $elementosAgregar;
