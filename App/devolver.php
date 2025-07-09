@@ -36,14 +36,26 @@
             "procod", "bodcod", "tmicod", "docnum", "vncfec", "vnclot", "vnccan",
             "vncsal", "prfcod", "vncsumres", "vnccns", "vncfecdoc", "empcod"
         ];    
-
+        //echo "Llaves";
         while ($registro = $tabla->nextRecord()) {
             $fila = [];
             foreach ($columnas as $columna) {
-                $fila[$columna] = $registro->get($columna);
+                $nombre = ($columna === 'procod') ? 'ProCod' : $columna;
+                $fila[$nombre] = $registro->get($columna);
             }
 
-            $key = $fila['docnum'] . '|' . $fila['prfcod'] . '|' . $fila['procod'];
+            $key = $fila['docnum'] . '|' . $fila['prfcod'] . '|' . $fila['ProCod'];
+            /*
+            if ( $fila['docnum'] == '46124'){
+                echo "<br>";
+                echo $key;
+                echo "<br>";
+                echo $fila['vncfec'];
+                echo "<br>";
+                echo $fila['vnclot'];
+            }
+                */
+            
 
             if (!isset($indexado[$key])) {
                 $indexado[$key] = [];
@@ -51,7 +63,7 @@
 
             $indexado[$key][] = $fila;
         }
-
+        //echo "<br>";
         $tabla->close();
 
     } catch (Exception $e) {
@@ -82,12 +94,16 @@
     $valoresColumnasProductos = [
         ['proid', 'ProId'],
         ['pronom', 'ProNom'],
-        //No quitar el procod esto es porque asi funciona al desplegar
-        ['procod', 'ProCod'],
+        //Se modifica a ProCod porque al devolver esta fallando si se utiliza procod
+        ['ProCod', 'ProCod'],
         ['proubica', 'ProUbica'],
         ['pround', 'ProPresentacion'],
         ['probarcode', 'ProCodBar'],
-        ['vtacant', 'VtaCant']
+        ['vtacant', 'VtaCant'],
+        ['vnclot', 'vnclot'],
+        ['vncfec', 'vncfec']
+
+        
     ];
 
     $cambios = [];
@@ -234,7 +250,7 @@
                                 COALESCE(TRIM(ved.VtaId), '') AS vtaid, 
                                 COALESCE(TRIM(ved.VtaDetId), '') AS vtadetid, 
                                 COALESCE(TRIM(ved.ProId), '') AS proid, 
-                                COALESCE(TRIM(pro.ProCod), '') AS procod, 
+                                COALESCE(TRIM(pro.ProCod), '') AS ProCod, 
                                 COALESCE(TRIM(ved.ProNom), 'DATO NO DISPONIBLE') AS pronom, 
                                 COALESCE(TRIM(NULLIF(pro.ProUbica, '')), 'DATO NO DISPONIBLE') AS proubica, 
                                 COALESCE(TRIM(NULLIF(pro.ProUnd, '')), 'DATO NO DISPONIBLE') AS pround, 
@@ -260,19 +276,12 @@
                         }
 
 
-
-
-
-
-
-
-
                         foreach ($resultadosElementos1 as $resultado) {
         
                             $VtaId = mysqli_real_escape_string($con, $resultado['vtaid']);
                             $VtaDetId = mysqli_real_escape_string($con, $resultado['vtadetid']);
                             $ProId = mysqli_real_escape_string($con, $resultado['proid']);
-                            $ProCod = mysqli_real_escape_string($con, $resultado['procod']);
+                            $ProCod = mysqli_real_escape_string($con, $resultado['ProCod']);
                             $ProNom = mysqli_real_escape_string($con, $resultado['pronom']);
                             $ProUbica = mysqli_real_escape_string($con, $resultado['proubica']);
                             $ProPresentacion = mysqli_real_escape_string($con, $resultado['pround']);
@@ -282,9 +291,12 @@
                             $indexFactura = $numero . '|' . $prefijo . '|';
 
                             $claveBusqueda = $indexFactura . $ProCod;
+
+                            //echo "<br>";
+                            //echo $claveBusqueda;
     
                             if (isset($indexado[$claveBusqueda])) {
-     
+    
                                 $registros = $indexado[$claveBusqueda];
                                 foreach ($registros as $i => $registro) {
     
@@ -362,9 +374,19 @@
 
 
                         $consultaElementos2 = 
-                            "SELECT 
+                            "SELECT
+                                pro.VtaDetId,
+                                pro.VtaDetId_res,
                                 pro.procod AS ProCod,
-                                pro.*
+                                REPLACE(pro.vncfec, '-', '') AS vncfec,
+                                pro.ProId       AS ProId,
+                                pro.ProNom      AS ProNom,
+                                pro.ProCod      AS ProCod,
+                                pro.ProUbica    AS ProUbica,
+                                pro.ProPresentacion      AS ProPresentacion,
+                                pro.ProCodBar  AS ProCodBar,
+                                pro.VtaCant     AS VtaCant,
+                                pro.vnclot      AS vnclot
                             FROM
                                 Productos AS pro
                             WHERE 

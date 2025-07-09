@@ -571,6 +571,11 @@ $('#fotoCamara').on('change', function () {
 $('#videoCamara').on('change', function () {
     const formData = new FormData(document.getElementById('formCapturaVideo'));
 
+    const form = document.getElementById('formCapturaFoto');
+    const spinner = document.getElementById('spinnerCarga');
+    
+    spinner.style.display = 'block';
+
     fetch('controladores/guardarEvidenciaMovil.php', {
         method: 'POST',
         body: formData
@@ -584,9 +589,11 @@ $('#videoCamara').on('change', function () {
         } else {
             $('#resultadoSubidaMovilVideo').html('<div class="alert alert-danger">❌ ' + data.mensaje + '</div>');
         }
+        spinner.style.display = 'none';
     })
     .catch(() => {
         $('#resultadoSubidaMovilVideo').html('<div class="alert alert-danger">❌ Error al subir el video.</div>');
+        spinner.style.display = 'none';
     });
 });
 

@@ -302,7 +302,12 @@
                             <input type="hidden" name="VtaNum" value="<?php echo $numDoc ?>">
                         </form>
                         <div id="resultadoSubidaMovilVideo"></div>
-
+                        <div id="spinnerCarga" style="display: none; text-align: center;">
+                            <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p>Cargando archivo...</p>
+                        </div>
 
                     </div>
 

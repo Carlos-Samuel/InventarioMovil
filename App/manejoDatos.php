@@ -69,11 +69,26 @@
                     </div>
                     <br>
                     <br>
+                    <!--
                     <h1>Borrar datos</h1>
                     <div style="display: flex; justify-content: space-between;">
                         <div style="width: 45%;">
                             <br>
                             <button id = "botonBorrador" class="btn btn-warning primeButton" type="button">Borrar</button>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    -->
+                    <h1>Borrar registros en alistamiento</h1>
+                    <div style="display: flex; justify-content: space-between;">
+                        <div style="width: 45%;">
+                            <label for="fechaBorradoAlistamiento"><strong>Fecha limite inferior</strong></label>
+                            <input type="date" id="fechaBorradoAlistamiento" name="fechaBorradoAlistamiento">
+                        </div>
+                        <div style="width: 45%;">
+                            <br>
+                            <button id = "botonBorrarAlistamiento" class="btn btn-danger primeButton" type="button">Borrar</button>
                         </div>
                     </div>
                 </main>
@@ -138,6 +153,46 @@
 
                     // Realizar la solicitud utilizando fetch
                     fetch('controladores/importador.php', requestOptions)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Error en la respuesta de la red');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            alert(data.mensaje); // Accede a la propiedad "mensaje" del objeto JSON
+                        })
+                        .catch(error => {
+                            alert('Error al importar');
+                        })
+                        .finally(() => {
+                            boton.prop('disabled', false);
+                            boton.text('Importar');
+                        });
+
+                });
+
+                $('#botonBorrarAlistamiento').on('click', function() {
+                    var boton = $(this);
+
+                    boton.prop('disabled', true);
+                    boton.text('Importando...');
+
+                    var dataToSend = {
+                        fecha: $('#fechaBorradoAlistamiento').val(),
+                    };
+
+                    // Configuración de la solicitud
+                    var requestOptions = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(dataToSend)
+                    };
+
+                    // Realizar la solicitud utilizando fetch
+                    fetch('controladores/borrarAlistamiento.php', requestOptions)
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Error en la respuesta de la red');
