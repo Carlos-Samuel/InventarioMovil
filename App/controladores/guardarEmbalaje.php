@@ -16,13 +16,19 @@
 
             $idFactura = $data['idFactura'];
             $idFactura = $con->real_escape_string($idFactura);
+            $observacion = "";
 
             if (isset($data['embalaje'])){
                 $embalaje = $data['embalaje'];
                 $embalaje = $con->real_escape_string($embalaje);
             }
 
-            $sql = "UPDATE Facturas SET Embalaje = '$embalaje' WHERE vtaid = $idFactura";
+            if (isset($data['observacion'])){
+                $observacion = $data['observacion'];
+                $observacion = $con->real_escape_string($observacion);
+            }
+
+            $sql = "UPDATE Facturas SET Embalaje = '$embalaje', ObservacionesVer = '$observacion' WHERE vtaid = $idFactura";
 
             $resultado = $con->query($sql);            
 

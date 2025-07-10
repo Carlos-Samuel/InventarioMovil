@@ -44,9 +44,9 @@ function ocultarPreview() {
 
 function confirmarAccionCerrar() {
     ocultarDialogo();
-    var embalaje = obtenerValoresDeTabla();
-    var obs = $('#observacionesVer').val();
-    guardar(2, obs,  embalaje);
+    //var embalaje = obtenerValoresDeTabla();
+    //var obs = $('#observacionesVer').val();
+    guardar(2);
 }
 
 function busqueda(){
@@ -313,15 +313,13 @@ function verificarCompleto(){
 
 }
 
-function guardar(estado, observacion, embalaje) {
+function guardar(estado) {
 
     iniciarCarga();
 
     var dataToSend = {
         idFactura: $('#idFactura').val(),
-        idEstado: estado,
-        observacion: observacion,
-        embalaje: embalaje
+        idEstado: estado
     };
 
     // Configuración de la solicitud

@@ -23,16 +23,6 @@
             $idFactura = $con->real_escape_string($idFactura);
             $idEstado = $con->real_escape_string($idEstado);
 
-            if (isset($data['observacion'])){
-                $observacion = $data['observacion'];
-                $observacion = $con->real_escape_string($observacion);
-            }
-
-            if (isset($data['embalaje'])){
-                $embalaje = $data['embalaje'];
-                $embalaje = $con->real_escape_string($embalaje);
-            }
-
             $idVerificador = $_SESSION["idUsuarios"];
 
             switch ($idEstado) {
@@ -48,7 +38,7 @@
                     date_default_timezone_set('America/Bogota');
                     $horaLocal = date('Y-m-d H:i:s');
                     
-                    $sql = "UPDATE Facturas SET facEstado = 5, FinVerificacion = '$horaLocal', idVerificador = $idVerificador, Embalaje = '$embalaje', ObservacionesVer = '$observacion' WHERE vtaid = $idFactura";
+                    $sql = "UPDATE Facturas SET facEstado = 5, FinVerificacion = '$horaLocal', idVerificador = $idVerificador WHERE vtaid = $idFactura";
 
                     bitacoraLog('Verificado', $idFactura);
 

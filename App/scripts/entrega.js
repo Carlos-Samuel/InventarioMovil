@@ -56,7 +56,8 @@ function guardarEmbalaje() {
 
     var dataToSend = {
         idFactura: $('#idFactura').val(),
-        embalaje: obtenerValoresDeTabla()
+        embalaje: obtenerValoresDeTabla(),
+        observacion: $('#observacionesVer').val()
     };
 
     // Configuración de la solicitud
@@ -134,9 +135,6 @@ function imprimirEtiquetas(idFactura) {
         .finally(() => {
             // Ocultar el loader en todos los casos
             document.getElementById('loader').style.display = 'none';
-            console.log("Ruta:");
-            console.log();
-            window.open('documentos/etiquetas' + idFactura + '.pdf', '_blank');
             asignarRutaEtiqueta('documentos/etiquetas' + idFactura + '.pdf');
         });
 }

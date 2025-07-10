@@ -197,6 +197,10 @@
                                 ?>
                             </tbody>
                         </table>
+                        <br>                
+                        <h6>Observaciones</h6>
+                        <br>
+                        <input tipe = "text" id = "observacionesVer" name = "observacionesVer" >
                         <br>
                         <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
                         <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>

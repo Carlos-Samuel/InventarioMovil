@@ -356,11 +356,11 @@
                     </tbody>
                 </table>
                 <br>
-                -->
                 <h6>Observaciones</h6>
                 <br>
                 <input tipe = "text" id = "observacionesVer" name = "observacionesVer" >
                 <br>
+                -->
                 <div class="boton-container">
                     <button id="confirmarCerrar" class="btn btn-success primeButton">Aceptar</button>
                     <button id="cancelarCerrar" class="btn btn-danger primeButton">Cancelar</button>
