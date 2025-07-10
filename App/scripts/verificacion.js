@@ -344,7 +344,9 @@ function guardar(estado, observacion, embalaje) {
         .then(data => {
             console.log('Respuesta:', data);
             if(data.status == 7){
-                window.location.href = "cargaEtiqueta.php?idFactura=" + $('#idFactura').val();
+                //window.location.href = "cargaEtiqueta.php?idFactura=" + $('#idFactura').val();
+                window.location.href = 'lista_verificacion.php';
+
             }else if(data.status == 1){
                 //if (estado == 2){
                 //    window.open('documentos/etiquetas' + $('#idFactura').val() + '.pdf', '_blank');

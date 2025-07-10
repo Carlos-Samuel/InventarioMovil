@@ -2,6 +2,7 @@
 
 
     include_once 'controladores/funciones.php';
+    require_once 'controladores/Connection.php';
 
     session_start(); 	
     date_default_timezone_set('America/Bogota');
@@ -19,7 +20,18 @@
         exit();
     }
 
-    require_once 'controladores/Connection.php';
+    $con = Connection::getInstance()->getConnection();
+    $quer3 = $con->query("SELECT * FROM Embalajes;");
+
+    $datosEmbalajes = array();
+
+    while ($columna = $quer3->fetch_assoc()) {
+        $row['idEmbalajes'] = $columna['idEmbalajes'];
+        $row['Descripcion'] = $columna['Descripcion'];
+
+        $datosEmbalajes[] = $row;
+    }
+
 
     if(isset($_GET['id'])) {
         try{
@@ -154,20 +166,68 @@
                                         <td colspan="2"><strong>OBSERVACIONES</strong></td>
                                         <td colspan="9"><?php echo $observaciones ?></td>
                                     </tr> 
+                                    <!--
                                     <tr>
                                         <td colspan="2"><strong>EMBALAJE</strong></td>
                                         <td colspan="9"><?php echo $embalaje ?></td>
-                                    </tr> 
+                                    </tr>
+                                    -->
                                 </tbody>
                             </table>
                         </div>
+                        <table id = "tablaEmbalaje">
+                            <thead>
+                                <tr>
+                                    <th>Embalaje</th>
+                                    <th class="input-container">Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                    foreach ($datosEmbalajes as $producto) {
+                                ?>
+                                    <tr data-id="<?php echo $producto['idEmbalajes']; ?>">
+                                        <td data-label="Descripcion"><?php echo $producto['Descripcion'] ?></td>
+                                        <td data-label="Cantidad" class="input-container">
+                                            <input type="number" id="numero_<?php echo $producto['idEmbalajes'] ?>" name="numero_<?php echo $producto['idEmbalajes'] ?>">
+                                        </td>
+                                    </tr>
+                                <?php
+                                    }
+                                ?>
+                            </tbody>
+                        </table>
                         <br>
                         <input id ="idFactura" type = "hidden" value = <?php echo $id_recibido?>>
                         <input id ="cedulaUsuario" type = "hidden" value = <?php echo $_SESSION["cedula"]?>>
                         <div class="d-grid gap-2">
+                            <button id="botonGenerarEtiqueta" class="btn btn-primary primeButton" type="button">Generar etiqueta</button>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a href="" id="enlaceEtiqueta" target="_blank" class="btn btn-info primeButton" role="button">
+                                Abrir etiqueta
+                            </a>
+                        </div>
+                        <div class="d-grid gap-2">
                             <button id="botonCerrar" class="btn btn-success primeButton" type="button">Cerrar</button>
                         </div>
                         <br>
+                    </div>
+                    <div id="loader" style="
+                        display: none;
+                        position: fixed;
+                        z-index: 9999;
+                        top: 0;
+                        left: 0;
+                        height: 100%;
+                        width: 100%;
+                        background: rgba(255, 255, 255, 0.8);
+                        text-align: center;
+                        padding-top: 20%;
+                        font-size: 1.5rem;
+                        color: #333;
+                    ">
+                        Generando etiquetas, por favor espera...
                     </div>
                 </main>
             </div>

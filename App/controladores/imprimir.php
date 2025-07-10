@@ -8,10 +8,10 @@
     use PhpOffice\PhpWord\TemplateProcessor;
     use PhpOffice\PhpWord\PhpWord;
 
-    $id_recibido = isset($_REQUEST['idFactura']) ? intval($_REQUEST['idFactura']) : 0;
+    $id_recibido = isset($_GET['idFactura']) ? intval($_GET['idFactura']) : 0;
 
     //$id_recibido = $argv[1];
-
+    //$id_recibido = isset($_REQUEST['idFactura']) ? intval($_REQUEST['idFactura']) : 0;
 
     imprimir($id_recibido);
 
@@ -36,6 +36,7 @@
             $quer = $con->query("SELECT * FROM Facturas WHERE vtaid = " . $id . ";");
         } catch (Exception $e) {
             echo 'Error en la consulta SQL: ' . $e->getMessage();
+            $controlErrores++;
         }
         
         try {

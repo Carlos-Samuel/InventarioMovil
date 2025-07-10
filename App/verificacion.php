@@ -331,6 +331,7 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <p>¿Estás seguro de que desea cerrar el proceso?</p>
+                <!--
                 <br>
                 <table id = "tablaEmbalaje">
                     <thead>
@@ -355,6 +356,7 @@
                     </tbody>
                 </table>
                 <br>
+                -->
                 <h6>Observaciones</h6>
                 <br>
                 <input tipe = "text" id = "observacionesVer" name = "observacionesVer" >

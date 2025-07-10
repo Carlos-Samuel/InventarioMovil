@@ -63,9 +63,45 @@ function ocultarDialogo() {
 }
 
 function confirmarAccionCerrar() {
-    ocultarDialogo();
-    console.log("llega al accion cerrar");
-    guardar(1);
+    var dataToSend = {
+        idFactura: $('#idFactura').val(),
+    };
+
+    // Configuración de la solicitud
+    var requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+    };
+
+    // Realizar la solicitud utilizando fetch
+    fetch('controladores/revisarAlistamiento.php', requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta de la red');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if(!data.estado){
+                Swal.fire({
+                    title: 'Error en alistamiento',
+                    text: 'Recargue la pagina y vuelva a intentarlo',
+                    icon: 'error',
+                    confirmButtonText: 'Entendido'
+                });
+            }else{
+                ocultarDialogo();
+                guardar(1);
+            }
+        
+        })
+        .catch(error => {
+            alert('Error:', error);
+        });
+
 }
 
 function confirmarAccionDevolver() {

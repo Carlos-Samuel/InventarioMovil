@@ -9,7 +9,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Animación de Carga</title>
-<link rel="stylesheet" href="style.css">
 <style>
 
     body {
@@ -44,22 +43,11 @@
 <body>
 
 <div id="loading" class="loading" style="display: none;"></div>
-<!--
-<button id="startBtn">Iniciar Carga</button>
-<button id="stopBtn">Detener Carga</button>
--->
+
 <input type = "hidden" id = "idFactura" value = "<?php echo $idFactura; ?>">
 
 <script>
-    /*
-    document.getElementById('startBtn').addEventListener('click', function() {
-        document.getElementById('loading').style.display = 'block';
-    });
 
-    document.getElementById('stopBtn').addEventListener('click', function() {
-        document.getElementById('loading').style.display = 'none';
-    });
-    */
     document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('loading').style.display = 'block';
