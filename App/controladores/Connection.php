@@ -7,7 +7,7 @@
             $host = "localhost";
             $username = "Agil";
             $password = "Agil";
-            $database = "admincs";
+            $database = "admincs2";
 
             $this->connection = new mysqli($host, $username, $password, $database);
 

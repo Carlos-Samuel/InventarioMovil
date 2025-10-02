@@ -24,10 +24,11 @@
     }
 
     $indexado = [];
-
+    /*
     try {
 
         //$tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
+        
         $tabla = new TableReader("D:\\AgilFE\\LabUnidos\\EMP001\\Datos\\PROFECVNC.DBF", [
             'encoding' => 'CP1252'
         ]);
@@ -45,17 +46,7 @@
             }
 
             $key = $fila['docnum'] . '|' . $fila['prfcod'] . '|' . $fila['ProCod'];
-            /*
-            if ( $fila['docnum'] == '46124'){
-                echo "<br>";
-                echo $key;
-                echo "<br>";
-                echo $fila['vncfec'];
-                echo "<br>";
-                echo $fila['vnclot'];
-            }
-                */
-            
+    
 
             if (!isset($indexado[$key])) {
                 $indexado[$key] = [];
@@ -65,10 +56,12 @@
         }
         //echo "<br>";
         $tabla->close();
+        
 
     } catch (Exception $e) {
         var_dump("Error general: " . $e->getMessage());
     }
+    */
 
     $id_recibido = $_GET['id'];
 

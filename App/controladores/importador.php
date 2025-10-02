@@ -20,7 +20,7 @@
     if (isset($data['fecha']) && !empty($data['fecha'])) {
         $fecha_minima = $data['fecha'];
     } else {
-        $fecha_minima = '2024-11-27';
+        $fecha_minima = '2025-09-30';
         //$fecha_minima = '2025-02-11';
     }
 
@@ -78,10 +78,12 @@
             }
 
             $indexado = [];
-
+            /*
             try {
 
-                $tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
+                //$tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
+                
+                $tabla = new TableReader("D:\\AgilFE\\LabUnidos\\EMP001\\Datos\\PROFECVNC.DBF", [    
                     'encoding' => 'CP1252'
                 ]);
 
@@ -110,6 +112,7 @@
             } catch (Exception $e) {
                 var_dump("Error general: " . $e->getMessage());
             }
+            */
 
         } else {
             $respuesta = array(

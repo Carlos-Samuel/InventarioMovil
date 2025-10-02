@@ -11,15 +11,19 @@ try {
     // Inicia medición total
     $inicioTotal = microtime(true);
 
+    /*
     // Medir tiempo en abrir tabla
     $inicioApertura = microtime(true);
-    $tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
+
+    //$tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
+    
+    $tabla = new TableReader("D:\\AgilFE\\LabUnidos\\EMP001\\Datos\\PROFECVNC.DBF", [    
         'encoding' => 'CP1252'
     ]);
     $finApertura = microtime(true);
 
     echo "Tiempo apertura tabla: " . round($finApertura - $inicioApertura, 4) . " segundos.<br>";
-
+    */
     // Obtener nombres de columnas
     /*
     $columnas = [];
@@ -47,7 +51,7 @@ try {
     //$columnas = [
      //   "procod", "docnum"
     //];    
-
+    /*
     // Lectura registros
     echo "Inicia lectura de registros...<br>";
     $inicioLectura = microtime(true);
@@ -85,7 +89,7 @@ try {
     echo "<pre>";
     print_r($indexado);
     echo "</pre>";
-
+    */
     echo "Termina";
 
 } catch (Exception $e) {
