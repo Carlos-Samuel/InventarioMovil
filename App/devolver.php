@@ -4,6 +4,7 @@
     require_once 'controladores/Connection.php';
     require_once 'controladores/Connection2.php';
     require 'vendor/autoload.php';
+    require_once 'importarDBF.php';
 
     set_time_limit(1400); 
     use XBase\TableReader;
@@ -23,45 +24,7 @@
         exit();
     }
 
-    $indexado = [];
-    /*
-    try {
-
-        //$tabla = new TableReader("C:\\Users\\csamu\\OneDrive\\Escritorio\\LotesyFechas\\PROFECVNC.DBF", [
-        
-        $tabla = new TableReader("D:\\AgilFE\\LabUnidos\\EMP001\\Datos\\PROFECVNC.DBF", [
-            'encoding' => 'CP1252'
-        ]);
-
-        $columnas = [
-            "procod", "bodcod", "tmicod", "docnum", "vncfec", "vnclot", "vnccan",
-            "vncsal", "prfcod", "vncsumres", "vnccns", "vncfecdoc", "empcod"
-        ];    
-        //echo "Llaves";
-        while ($registro = $tabla->nextRecord()) {
-            $fila = [];
-            foreach ($columnas as $columna) {
-                $nombre = ($columna === 'procod') ? 'ProCod' : $columna;
-                $fila[$nombre] = $registro->get($columna);
-            }
-
-            $key = $fila['docnum'] . '|' . $fila['prfcod'] . '|' . $fila['ProCod'];
-    
-
-            if (!isset($indexado[$key])) {
-                $indexado[$key] = [];
-            }
-
-            $indexado[$key][] = $fila;
-        }
-        //echo "<br>";
-        $tabla->close();
-        
-
-    } catch (Exception $e) {
-        var_dump("Error general: " . $e->getMessage());
-    }
-    */
+    $indexado = leerProfecvncIndexado();
 
     $id_recibido = $_GET['id'];
 

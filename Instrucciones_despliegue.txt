@@ -1,19 +1,19 @@
-Instalar XAMPP, habilitar apache como un servicio
-
-
-
-Habilite la libreria en php.ini
-
-    extension=zip
-
-Instalar composer
-
-Ejecutar estos comandos 
+Composer usados:
 
     composer require phpoffice/phpword mpdf/mpdf
 
 	composer require phpoffice/phpword tecnickcom/tcpdf
 
+	composer require hisamu/php-xbase
+
+
+Instalar XAMPP, habilitar apache como un servicio
+
+Instalar composer
+
+Habilite la libreria en php.ini
+
+    extension=zip
 
 instale ghostscript 
 
