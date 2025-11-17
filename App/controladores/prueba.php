@@ -8,6 +8,9 @@
     use PhpOffice\PhpWord\TemplateProcessor;
     use PhpOffice\PhpWord\PhpWord;
 
+    $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+    $dotenv->load();
+
     $id_recibido = 269363;
 
 
@@ -131,7 +134,7 @@
 
         try{
 
-            $ruta_gs = "C:\Program Files\gs\gs10.02.0\bin\gswin64c.exe";
+            $ruta_gs = $_ENV['RUTA_GS'] ?? null;;
 
             $outputFinal = '../documentos/etiquetas'.$id.'.pdf';
 
