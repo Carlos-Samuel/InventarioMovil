@@ -4,7 +4,7 @@
     require_once 'controladores/Connection.php';
     require_once 'controladores/Connection2.php';
     require 'vendor/autoload.php';
-    require_once 'importarDBF.php';
+    require_once 'controladores/importarDBF.php';
 
     set_time_limit(1400); 
     use XBase\TableReader;
@@ -24,7 +24,7 @@
         exit();
     }
 
-    $indexado = leerProfecvncIndexado();
+    $indexado = leerProfecvncIndexado(null);
 
     $id_recibido = $_GET['id'];
 

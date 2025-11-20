@@ -44,7 +44,7 @@
         
         try {
             $row = $quer->fetch_assoc();
-            utf8_encode_array($row);
+            $row;
         } catch (Exception $e) {
             echo 'Error al recuperar datos o al ejecutar utf8_encode_array: ' . $e->getMessage();
             $controlErrores++;
