@@ -243,7 +243,7 @@
                             <a class="btn btn-primary primeButton"  onclick="leerCodigo();" role = "button">Leer Codigo</a>
                         </div>
                         <br>
-                        <div class="table">
+                        <div class="table" style="overflow-x:auto;">
                             <table id = "tablaVerificacion">
                                 <thead>
                                     <tr>

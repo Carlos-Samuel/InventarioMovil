@@ -131,7 +131,7 @@
                         <br>
                     </div>
                     <div class="col-sm-12">
-                        <div class="table">
+                        <div class="table" style="overflow-x:auto;">
                             <table>
                                 <thead>
                                     <tr>

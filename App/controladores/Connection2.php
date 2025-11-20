@@ -1,13 +1,19 @@
 <?php
+
+    require_once realpath(__DIR__ . '/../vendor/autoload.php');
+
+    $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+    $dotenv->load();
+
     class Connection2 {
         private static $instance = null;
         private $connection;
 
         private function __construct() {
-            $host = "localhost";
-            $username = "Agil";
-            $password = "Agil";
-            $database = "labunidos";
+            $host     = $_ENV['DB2_HOST'] ?? 'localhost';
+            $username = $_ENV['DB2_USER'] ?? 'root';
+            $password = $_ENV['DB2_PASS'] ?? '';
+            $database = $_ENV['DB2_NAME'] ?? '';
 
             $this->connection = new mysqli($host, $username, $password, $database);
 

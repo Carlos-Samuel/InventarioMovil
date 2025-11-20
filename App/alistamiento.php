@@ -175,7 +175,7 @@
                             <a class="btn btn-success primeBUtton"  onclick="busqueda();" role = "button">Buscar</a>
                         </div>
                         <br>
-                        <div class="table">
+                        <div class="table" style="overflow-x:auto;">
                             <table id = "tablaAlistamiento">
                                 <thead>
                                     <tr>

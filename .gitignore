@@ -1,5 +1,7 @@
 # Ignorar todos los archivos dentro de App/documentos
 App/documentos/*
+App/evidencia/*
 
 # Excepciones para no ignorar la carpeta App/documentos
 !App/documentos/
+!App/evidencia/

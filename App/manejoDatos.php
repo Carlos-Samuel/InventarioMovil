@@ -83,7 +83,7 @@
                     <h1>Borrar registros en alistamiento</h1>
                     <div style="display: flex; justify-content: space-between;">
                         <div style="width: 45%;">
-                            <label for="fechaBorradoAlistamiento"><strong>Fecha limite inferior</strong></label>
+                            <label for="fechaBorradoAlistamiento"><strong>Fecha limite superior</strong></label>
                             <input type="date" id="fechaBorradoAlistamiento" name="fechaBorradoAlistamiento">
                         </div>
                         <div style="width: 45%;">
@@ -176,7 +176,7 @@
                     var boton = $(this);
 
                     boton.prop('disabled', true);
-                    boton.text('Importando...');
+                    boton.text('Borrando...');
 
                     var dataToSend = {
                         fecha: $('#fechaBorradoAlistamiento').val(),
@@ -207,7 +207,7 @@
                         })
                         .finally(() => {
                             boton.prop('disabled', false);
-                            boton.text('Importar');
+                            boton.text('Borrar');
                         });
 
                 });

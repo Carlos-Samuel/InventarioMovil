@@ -6,14 +6,14 @@
         $data = json_decode(file_get_contents("php://input"), true);
 
         if (isset($data['fecha']) && !empty($data['fecha'])) {
-            $fecha_minima = $data['fecha'];
+            $fecha_maxima = $data['fecha'];
         } else {
-            $fecha_minima = '2024-11-26';
+            $fecha_maxima = '2030-11-26';
         }
 
         $con = Connection::getInstance()->getConnection();
 
-        $sql = "UPDATE Facturas SET facEstado = 9 WHERE vtafec > '$fecha_minima' AND InicioAlistamiento IS NULL";
+        $sql = "UPDATE Facturas SET facEstado = 9 WHERE vtafec < '$fecha_maxima' AND InicioAlistamiento IS NULL";
         $resultado = $con->query($sql);
 
         $respuesta = array(

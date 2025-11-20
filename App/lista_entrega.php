@@ -89,7 +89,7 @@
                                     <th>#Factura</th>
                                     <th>Fecha y Hora Venta</th>
                                     <th>Nombre Cliente</th>
-                                    <th>Razón Social</th>
+                                    <!-- <th>Razón Social</th> -->
                                     <th>Ciudad</th>
                                     <th>Vendedor</th>
                                     <th>Alistador</th>
@@ -110,7 +110,7 @@
                                         <td><?php echo $verificacion['PrfCod'] . " " . $verificacion['VtaNum'] ?></td>
                                         <td><?php echo $verificacion['vtafec'] . " " . $verificacion['vtahor'] ?></td>
                                         <td><?php echo utf8_encode($verificacion['TerNom']) ?></td>
-                                        <td><?php echo utf8_encode($verificacion['TerRaz']) ?></td>
+                                        <!-- <td><?php echo utf8_encode($verificacion['TerRaz']) ?></td> -->
                                         <td><?php echo utf8_encode($verificacion['CiuNom']) ?></td>
                                         <td><?php echo utf8_encode($verificacion['VenNom']) ?></td>
                                         <td><?php echo utf8_encode($verificacion['NombresAlistador']) . " " . utf8_encode($verificacion['ApellidosAlistador']) ?></td>
@@ -158,7 +158,7 @@
                                     <th>#Factura</th>
                                     <th>Fecha y Hora Venta</th>
                                     <th>Nombre Cliente</th>
-                                    <th>Razón Social</th>
+                                    <!-- <th>Razón Social</th> -->
                                     <th>Ciudad</th>
                                     <th>Vendedor</th>
                                     <th>Alistador</th>
@@ -216,7 +216,7 @@
                         {data: 'id', name:'id', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'fecha', name:'fecha', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'nombre', name:'nombre', orderable: true, searchable: true, className: 'dt-body-center'},
-                        {data: 'razon', name:'razon', orderable: true, searchable: true, className: 'dt-body-center'},
+                        // {data: 'razon', name:'razon', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'ciudad', name:'ciudad', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'vendedor', name:'vendedor', orderable: true, searchable: true, className: 'dt-body-center'},
                         {data: 'alistador', name:'alistador', orderable: true, searchable: true, className: 'dt-body-center'},

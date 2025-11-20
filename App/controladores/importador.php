@@ -21,7 +21,7 @@
     if (isset($data['fecha']) && !empty($data['fecha'])) {
         $fecha_minima = $data['fecha'];
     } else {
-        $fecha_minima = '2025-09-30';
+        $fecha_minima = '2024-09-30';
     }
 
             
@@ -80,7 +80,32 @@
             }
 
             
-            $indexado = leerProfecvncIndexado();
+            // Construir cadena de vtaid de esta importación
+            $vtaids = array_column($resultados, 'vtaid');
+            $cadenaVtaids = implode(',', $vtaids);
+            $cantidadFacturas = count($vtaids);
+
+            // Registrar inicio de importación
+            $stmtImp = $con->prepare(
+                "INSERT INTO importaciones_dbf (fecha_inicio, vtaids_concatenados, cantidad_facturas)
+                VALUES (NOW(), ?, ?)"
+            );
+            if (!$stmtImp) {
+                throw new RuntimeException("Error al preparar insert de importación: " . $con->error);
+            }
+
+            $stmtImp->bind_param("si", $cadenaVtaids, $cantidadFacturas);
+
+            if (!$stmtImp->execute()) {
+                throw new RuntimeException("Error al ejecutar insert de importación: " . $stmtImp->error);
+            }
+
+            $importacionId = $stmtImp->insert_id;
+            $stmtImp->close();
+
+            sleep(10);
+
+            $indexado = leerProfecvncIndexado($importacionId);
             
 
             foreach ($resultados as $resultado) {
@@ -233,6 +258,17 @@
                     echo "Error al preparar la consulta: " . $con->error;
                 }
 
+            }
+
+            if (isset($importacionId)) {
+                $stmtFin = $con->prepare(
+                    "UPDATE importaciones_dbf SET fecha_fin = NOW() WHERE id = ?"
+                );
+                if ($stmtFin) {
+                    $stmtFin->bind_param("i", $importacionId);
+                    $stmtFin->execute();
+                    $stmtFin->close();
+                }
             }
 
             $respuesta = array(

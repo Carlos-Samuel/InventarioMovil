@@ -1,18 +1,23 @@
 <?php
 
-require '../vendor/autoload.php';
+    require_once 'Connection.php';
+    require_once 'Connection2.php';
+    require_once realpath(__DIR__ . '/../vendor/autoload.php');
 
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load();
+    use XBase\TableReader;
 
-function leerProfecvncIndexado(): array
+    $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+    $dotenv->load();
+
+function leerProfecvncIndexado($importacionId): array
 {
-    $habilitado = filter_var($_ENV['PROFECVNC_ENABLED'] ?? 'true', FILTER_VALIDATE_BOOLEAN);
+    $habilitado = filter_var($_ENV['PROFECVNC_ENABLED'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
     if (!$habilitado) {
         return [];
     }
 
     $ruta = $_ENV['PROFECVNC_PATH'] ?? null;
+
     if (!$ruta) {
         throw new RuntimeException('Falta la variable de entorno PROFECVNC_PATH.');
     }
@@ -21,10 +26,11 @@ function leerProfecvncIndexado(): array
     }
 
     $indexado = [];
+    $todosRegistros = [];
     $tabla = null;
 
     try {
-        $tabla = new \TableReader($ruta, ['encoding' => 'CP1252']);
+        $tabla = new TableReader($ruta, ['encoding' => 'CP1252']);
 
         $columnas = [
             "procod","bodcod","tmicod","docnum","vncfec","vnclot","vnccan",
@@ -37,6 +43,9 @@ function leerProfecvncIndexado(): array
                 $fila[$columna] = $registro->get($columna);
             }
 
+            // Guardar para snapshot global
+            $todosRegistros[] = $fila;
+
             $key = $fila['docnum'] . '|' . $fila['prfcod'] . '|' . $fila['procod'];
             $indexado[$key] ??= [];
             $indexado[$key][] = $fila;
@@ -47,8 +56,73 @@ function leerProfecvncIndexado(): array
         }
     }
 
+    if ($importacionId !== null && !empty($todosRegistros)) {
+        $ultimos100 = array_slice($todosRegistros, -100); // últimos 100
+        guardarSnapshotDbf($importacionId, $ultimos100);
+    }
+
     return $indexado;
 }
 
-// Uso:
-$indexado = leerProfecvncIndexado();
+function guardarSnapshotDbf(int $importacionId, array $registros): void
+{
+
+
+    $habilitadoLog = filter_var($_ENV['PROFECVNC_LOG_ENABLED'] ?? 'false', FILTER_VALIDATE_BOOLEAN);
+
+    if ($habilitadoLog){
+
+        $con = Connection::getInstance()->getConnection();
+
+        $sql = "INSERT INTO importaciones_dbf_detalle
+                (importacion_id, secuencia, procod, bodcod, tmicod, docnum,
+                vncfec, vnclot, vnccan, vncsal, prfcod, vncsumres, vnccns, vncfecdoc, empcod)
+                VALUES
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        if (!$stmt = $con->prepare($sql)) {
+            throw new RuntimeException("Error al preparar insert de snapshot DBF: " . $con->error);
+        }
+
+        foreach ($registros as $i => $fila) {
+            $secuencia = $i + 1; // 1..100
+
+            $procod    = $fila['procod']    ?? null;
+            $bodcod    = $fila['bodcod']    ?? null;
+            $tmicod    = $fila['tmicod']    ?? null;
+            $docnum    = $fila['docnum']    ?? null;
+            $vncfec    = $fila['vncfec']    ?? null;
+            $vnclot    = $fila['vnclot']    ?? null;
+            $vnccan    = $fila['vnccan']    ?? null;
+            $vncsal    = $fila['vncsal']    ?? null;
+            $prfcod    = $fila['prfcod']    ?? null;
+            $vncsumres = $fila['vncsumres'] ?? null;
+            $vnccns    = $fila['vnccns']    ?? null;
+            $vncfecdoc = $fila['vncfecdoc'] ?? null;
+            $empcod    = $fila['empcod']    ?? null;
+
+            $stmt->bind_param(
+                "iisssssssssssss",
+                $importacionId,
+                $secuencia,
+                $procod,
+                $bodcod,
+                $tmicod,
+                $docnum,
+                $vncfec,
+                $vnclot,
+                $vnccan,
+                $vncsal,
+                $prfcod,
+                $vncsumres,
+                $vnccns,
+                $vncfecdoc,
+                $empcod
+            );
+
+            $stmt->execute();
+        }
+
+        $stmt->close();
+    }
+}
